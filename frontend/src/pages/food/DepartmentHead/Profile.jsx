@@ -69,7 +69,7 @@ const ProfileHeadFood = () => {
                   alt="Profile"
                   className="rounded-full w-64 h-64 mb-4 object-cover"
                 />
-                <h2 className="text-3xl font-bold ">Dasindu Dinsara</h2>
+                <h2 className="text-3xl font-bold ">Nisal Amarasekara</h2>
 
                 {isEditing && (
                   <button
@@ -94,12 +94,12 @@ const ProfileHeadFood = () => {
               <div className="grid grid-cols-2 gap-8">
                 <div className="flex flex-col items-start">
                   <label className={`block text-lg font-semibold ${darkMode ? "text-gray-300" : "text-blue-900"}`}>First Name</label>
-                  <p className="font-bold">Dasindu</p>
+                  <p className="font-bold">Nisal</p>
                 </div>
 
                 <div className="flex flex-col items-start">
                   <label className={`block text-lg font-semibold ${darkMode ? "text-gray-300" : "text-blue-900"}`}>Last Name</label>
-                  <p className="font-bold">Dinsara</p>
+                  <p className="font-bold">Amarasekara</p>
                 </div>
 
                 <div className="flex flex-col items-start">
@@ -109,7 +109,7 @@ const ProfileHeadFood = () => {
 
                 <div className="flex flex-col items-start">
                   <label className={`block text-lg font-semibold ${darkMode ? "text-gray-300" : "text-blue-900"}`}>Email</label>
-                  <p className="font-bold">dinsaradasindu@gmail.com</p>
+                  <p className="font-bold">nisalamarasekara@gmail.com</p>
                 </div>
 
                 <div className="flex flex-col items-start">

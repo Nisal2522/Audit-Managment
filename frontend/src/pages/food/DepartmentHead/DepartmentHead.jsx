@@ -56,7 +56,7 @@ const DepartmentheadFood = () => {
           {/* Top Bar */}
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center space-x-3">
-              <h1 className="text-2xl font-semibold">Hello Dasindu,</h1>
+              <h1 className="text-2xl font-semibold">Hello Nisal,</h1>
               <span className="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded-full animate-pulse">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mr-1.5"></span>
                 Active
