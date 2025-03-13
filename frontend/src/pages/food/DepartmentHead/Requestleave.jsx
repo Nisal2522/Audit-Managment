@@ -131,10 +131,10 @@ const RequestLeaveFood = () => {
                       >
                         <div className="bg-white dark:bg-gray-800 text-black dark:text-white w-1/3 p-6 rounded-lg shadow-lg">
                           <h2 className="text-2xl font-bold mb-4">{selectedRequest.employeeName}'s Leave Request</h2>
-                          <p><strong>👤 Employee:</strong> {selectedRequest.employeeName}</p>
-                          <p><strong>📅 Type:</strong> {selectedRequest.leaveType}</p>
-                          <p><strong>🗓️ Start Date:</strong> {selectedRequest.startDate}</p>
-                          <p><strong>🗓️ End Date:</strong> {selectedRequest.endDate}</p>
+                          <p><strong>👤 Employee:</strong> {selectedRequest.employeeName}</p> 
+                          <p><strong>📃 Type:</strong> {selectedRequest.leaveType}</p>
+                          <p><strong>📅 Start Date:</strong> {selectedRequest.startDate}</p>
+                          <p><strong>📅 End Date:</strong> {selectedRequest.endDate}</p>
                           <p className="border-l-4 pl-2"><strong>✍️ Reason:</strong> {selectedRequest.reason}</p>
 
                           {/* Approval / Rejection / Close Buttons */}
