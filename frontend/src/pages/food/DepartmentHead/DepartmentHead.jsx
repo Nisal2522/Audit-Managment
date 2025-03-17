@@ -9,7 +9,7 @@ import {
 } from "chart.js";
 import { FiShare2, FiMoreHorizontal, FiSun, FiMoon } from "react-icons/fi";
 import Sidebar from "./Sidebar";
-import Header from "./Header";
+import Navbar from '../../../Components/NavBar';
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
@@ -46,7 +46,7 @@ const DepartmentheadFood = () => {
       }`}
     >
       {/* Header */}
-      <Header />
+      <Navbar />
 
       <div className="flex flex-grow">
         {/* Sidebar */}

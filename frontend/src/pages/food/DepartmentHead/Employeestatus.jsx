@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Header from "./Header";
+import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
 
 const employees = [
@@ -33,7 +33,7 @@ const EmployeeStatusFood = () => {
 
   return (
     <div className={`min-h-screen flex flex-col ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
-      <Header />
+      <Navbar />
      
       <div className="flex flex-grow">
         <Sidebar />

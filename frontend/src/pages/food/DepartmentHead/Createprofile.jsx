@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Header from "./Header";
+import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
 
 const CreateprofileFood = () => {
@@ -55,7 +55,7 @@ const CreateprofileFood = () => {
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
       {/* Header */}
-      <Header />
+      <Navbar />
 
      {/* Dark Mode Button */}
             <div className="absolute top-[19%] right-8 transform -translate-y-1/2">

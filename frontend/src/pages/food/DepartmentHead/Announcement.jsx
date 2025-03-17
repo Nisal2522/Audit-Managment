@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Header from './Header';
+import Navbar from '../../../Components/NavBar';
 import Sidebar from './Sidebar';
 
 const AnnouncementsFoodHead = () => {
@@ -65,7 +65,7 @@ const AnnouncementsFoodHead = () => {
 
   return (
     <div className={`min-h-screen flex flex-col ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-200 text-black'}`}>
-      <Header />
+      <Navbar />
       <div className="flex flex-grow">
         <Sidebar />
         <main className={`flex-grow p-8 ${darkMode ? 'bg-gray-900' : 'bg-gray-100'} rounded-xl shadow-lg transition-all duration-300 ease-in-out`}>

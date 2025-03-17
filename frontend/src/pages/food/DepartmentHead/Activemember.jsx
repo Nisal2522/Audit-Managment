@@ -1,13 +1,13 @@
 // src/components/food/departmenthead.jsx
 import React from 'react';
-import Header from './Header';
+import Navbar from '../../../Components/NavBar';
 import Sidebar from './Sidebar'
 
 const Activeaccountfood = () => {
   return (
     <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <Header />
+      <Navbar />
 
       <div className="flex flex-grow">
         {/* Sidebar */}
