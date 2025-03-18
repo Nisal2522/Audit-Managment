@@ -22,45 +22,41 @@ import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import ProjectCreatorDash from './pages/food/Project-Creator/Dashboard';
 
 function App() {
-
-
   return (
     <BrowserRouter>
-      <div className="App">
+      <div className="App min-h-screen bg-[#02090D] ">
         {/* Tailwind-styled blue-screen header */}
         {(location.pathname === '/' || location.pathname === '/login') && (
-          <div className="bg-blue-700 text-white w-full h-16 fixed top-0 z-50 flex items-center justify-center text-2xl font-bold shadow-lg">
+          <div className=" text-white w-full h-16 fixed top-0 z-50 flex items-center justify-center text-2xl font-bold shadow-lg">
             Audit Planning System
           </div>
         )}
 
-        <Routes>
-          <Route path="/" element={<RegisterPage />} />
-          <Route path="/projectCreator" element={<ProjectCreatorDash />} />
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/food/admin" element={<AdminFood />} />
-          <Route path="/food/reviewer" element={<ReviewerFood />} />
-          <Route path="/food/certifier" element={<CertifierFood />} />
-          <Route path="/food/Head" element={<DepartmentheadFood />} />
-          <Route path="/organic/Certifier" element={<Certifierorganic />} />
-          <Route path="/organic/Reviewer" element={<ReviewerOrganic />} />
-          <Route path="/organic/ProjectCreator" element={<ProjectOrganic />} />
-          <Route path="/organic/Planner" element={<PlannerOrganic />} />
-          <Route path="/organic/Contractor" element={<ContractorOrganic />} />
-          <Route path="/organic/Auditor" element={<AuditorOrganic />} />
-          <Route path="/food/Head/Createaccount" element={<CreateprofileFood />} />
-          <Route path="/food/Head/ActiveMembers" element={<Activeaccountfood />} />
-          <Route path="/food/Head/Employeestatus" element={<EmployeeStatusFood />} />
-          <Route path="/food/Head/Requestleave" element={<Requestleavefood />} />
-          <Route path="/food/Head/ProfileHeadFood" element={<ProfileHeadFood />} />
-          <Route path="/food/Head/Announcement" element={<AnnouncementsFoodHead />} />
-          <Route path="/food/Head/Reportview" element={<Reportviewfoodhead />} />
-
-
-        </Routes>
-
+        <div className="pt-16"> {/* Adds padding to the content below the fixed header */}
+          <Routes>
+            <Route path="/" element={<RegisterPage />} />
+            <Route path="/projectCreator" element={<ProjectCreatorDash />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/admin-dashboard" element={<AdminDashboard />} />
+            <Route path="/food/admin" element={<AdminFood />} />
+            <Route path="/food/reviewer" element={<ReviewerFood />} />
+            <Route path="/food/certifier" element={<CertifierFood />} />
+            <Route path="/food/Head" element={<DepartmentheadFood />} />
+            <Route path="/organic/Certifier" element={<Certifierorganic />} />
+            <Route path="/organic/Reviewer" element={<ReviewerOrganic />} />
+            <Route path="/organic/ProjectCreator" element={<ProjectOrganic />} />
+            <Route path="/organic/Planner" element={<PlannerOrganic />} />
+            <Route path="/organic/Contractor" element={<ContractorOrganic />} />
+            <Route path="/organic/Auditor" element={<AuditorOrganic />} />
+            <Route path="/food/Head/Createaccount" element={<CreateprofileFood />} />
+            <Route path="/food/Head/ActiveMembers" element={<Activeaccountfood />} />
+            <Route path="/food/Head/Employeestatus" element={<EmployeeStatusFood />} />
+            <Route path="/food/Head/Requestleave" element={<Requestleavefood />} />
+            <Route path="/food/Head/ProfileHeadFood" element={<ProfileHeadFood />} />
+            <Route path="/food/Head/Announcement" element={<AnnouncementsFoodHead />} />
+            <Route path="/food/Head/Reportview" element={<Reportviewfoodhead />} />
+          </Routes>
+        </div>
       </div>
     </BrowserRouter>
   );

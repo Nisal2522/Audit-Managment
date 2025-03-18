@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRouter from './routes/auth.js';
+import customerRouter from './routes/customer.route.js';
 import connectToDatabase from './db/db.js';
 
 dotenv.config();  // Load environment variables
@@ -17,6 +18,7 @@ app.use(express.json());
 
 // Register the auth routes
 app.use('/api/auth', authRouter);
+app.use('/api/customers', customerRouter);
 
 // Start the server
 app.listen(process.env.PORT, () => {

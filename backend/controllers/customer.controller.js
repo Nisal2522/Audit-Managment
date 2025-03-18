@@ -5,7 +5,7 @@ export const getCustomers = async (req, res) => {
   try {
     const customers = await Customer.find({});
     res.status(200).json({ success: true, data: customers });
-    console.log("Customers: ", customers);
+    // console.log("Customers: ", customers);
   } catch (error) {
     console.error("Error in fetching customers: ", error.message);
     res.status(500).json({ success: false, message: "Server Error" });

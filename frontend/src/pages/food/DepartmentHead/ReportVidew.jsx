@@ -22,9 +22,9 @@ const Reportviewfoodhead = () => {
 
 
         </main>
-        </div>  
-        </div>
-    
+      </div>
+    </div>
+
   );
 };
 
