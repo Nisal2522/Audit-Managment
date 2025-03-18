@@ -20,6 +20,7 @@ import ProfileHeadFood from './pages/food/DepartmentHead/Profile';
 import AnnouncementsFoodHead from './pages/food/DepartmentHead/Announcement';
 import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import ProjectCreatorDash from './pages/food/Project-Creator/Dashboard';
+import MoreInfo from './pages/food/Project-Creator/moreCustomerDetails';
 
 function App() {
   return (
@@ -32,10 +33,12 @@ function App() {
           </div>
         )}
 
-        <div className="pt-16"> {/* Adds padding to the content below the fixed header */}
+        <div className="pt-5 min-h-screen px-20 py-30"> {/* Adds padding to the content below the fixed header */}
           <Routes>
             <Route path="/" element={<RegisterPage />} />
             <Route path="/projectCreator" element={<ProjectCreatorDash />} />
+            <Route path="/projectCreator/:id" element={<MoreInfo />} />
+
             <Route path="/login" element={<Login />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/food/admin" element={<AdminFood />} />

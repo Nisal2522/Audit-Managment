@@ -132,7 +132,7 @@ const CreateCustomerDashboard = () => {
                                             className={`${index % 2 === 0 ? "bg-[#02090D]" : "bg-[#1A242F]"} `}
                                         >
                                             <Link
-                                                to={`/CustomerDetails/${customer._id}`}
+                                                to={`/projectCreator/${customer._id}`}
                                                 className="contents"
                                             >
                                                 <td className="border-b border-gray-200 px-4 py-3 text-sm text-white">
@@ -157,7 +157,7 @@ const CreateCustomerDashboard = () => {
                                                         e.stopPropagation();
                                                         handleDelete(customer._id);
                                                     }}
-                                                    className="border p-2 border-red-500 rounded-lg text-red-500 hover:text-white hover:bg-red-500 transition-colors ml-4"
+                                                    className="border p-2 border-blue-400 rounded-lg text-blue-400 hover:text-white hover:bg-red-500 transition-colors ml-4"
                                                 >
                                                     Delete
                                                 </button>
