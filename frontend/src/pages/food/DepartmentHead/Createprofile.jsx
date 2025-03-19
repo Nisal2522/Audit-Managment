@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
-  import { createEmployee } from "../../../services/employeeservice";
+import { createEmployee } from "../../../services/employeeservice";
+import bcrypt from "bcryptjs";
 
 const CreateprofileFood = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const CreateprofileFood = () => {
     dob: "",
     employeeId: " ",
     profilePicture: null,
+    department: "Food",
   });
 
   const [darkMode, setDarkMode] = useState(
@@ -21,16 +23,15 @@ const CreateprofileFood = () => {
   );
 
   const [qualifiedPrograms, setQualifiedPrograms] = useState({
-    GOTS: false,
-    GRS: false,
-    OCS: false,
-    RCS: false,
-    SRCCS: false,
-    REGENAGRI: false,
-    "BCI Cotton": false,
-    PPRS: false,
+    GOTS: { selected: false, startDate: "", expireDate: "" },
+    GRS: { selected: false, startDate: "", expireDate: "" },
+    OCS: { selected: false, startDate: "", expireDate: "" },
+    RCS: { selected: false, startDate: "", expireDate: "" },
+    SRCCS: { selected: false, startDate: "", expireDate: "" },
+    REGENAGRI: { selected: false, startDate: "", expireDate: "" },
+    "BCI Cotton": { selected: false, startDate: "", expireDate: "" },
+    PPRS: { selected: false, startDate: "", expireDate: "" },
   });
-
 
   // Function to generate random Employee ID
   const generateEmployeeId = () => {
@@ -39,8 +40,8 @@ const CreateprofileFood = () => {
     return `${prefix}${randomNum}`;
   };
 
-   // Function to generate random Password (based on the user's name)
-   const generatePassword = (name) => {
+  // Function to generate random Password (based on the user's name)
+  const generatePassword = (name) => {
     const namePart = name.replace(/\s+/g, '').slice(2, 6).toLowerCase(); // Remove spaces and use first 3 characters
     const randomNum = Math.floor(Math.random() * 9000) + 1000; // Generate a random number between 1000 and 9999
     const specialChars = "!@#$%^&*";
@@ -53,46 +54,34 @@ const CreateprofileFood = () => {
     const newPassword = generatePassword(formData.name); // Generate new password based on current name
     setFormData((prev) => ({ ...prev, password: newPassword })); // Update password in the formData
   };
-  
-  
-  
-  const [expandedProgram, setExpandedProgram] = useState(null);
 
-  // Handle Checkbox Change
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target;
-  
+  // Handle Date Change for Qualified Programs
+  const handleDateChange = (e, program, field) => {
+    const { value } = e.target;
     setQualifiedPrograms((prev) => ({
       ...prev,
-      [name]: checked ? { startDate: "", expireDate: "" } : undefined,
+      [program]: {
+        ...prev[program],
+        [field]: value,
+        ...(field === "startDate" && {
+          expireDate: new Date(new Date(value).setFullYear(new Date(value).getFullYear() + 1))
+            .toISOString()
+            .split("T")[0],
+        }),
+      },
     }));
-  
-    // Set the expanded program to the current one if checked, otherwise reset
-    setExpandedProgram(checked ? name : null);
   };
-  
 
-  
-
-  const handleDateChange = (e, program) => {
-    const { value } = e.target;
-  
-    setQualifiedPrograms((prev) => {
-      const startDate = new Date(value);
-      startDate.setFullYear(startDate.getFullYear() + 1); // Add one year
-      const expireDate = startDate.toISOString().split("T")[0]; // Format as YYYY-MM-DD
-  
-      return {
-        ...prev,
-        [program]: { startDate: value, expireDate: expireDate },
-      };
-    });
+  // Handle Program Selection
+  const handleProgramSelection = (program) => {
+    setQualifiedPrograms((prev) => ({
+      ...prev,
+      [program]: {
+        ...prev[program],
+        selected: !prev[program].selected,
+      },
+    }));
   };
-  
-  
-  
-
-  
 
   // Apply Dark Mode
   useEffect(() => {
@@ -104,7 +93,6 @@ const CreateprofileFood = () => {
       localStorage.setItem("theme", "light");
     }
   }, [darkMode]);
-
 
   useEffect(() => {
     const employeeId = generateEmployeeId(); // Generate a new ID on mount
@@ -118,15 +106,12 @@ const CreateprofileFood = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-
   const handleToggleDarkMode = () => {
     setDarkMode(!darkMode);
     document.documentElement.classList.toggle("dark", !darkMode);
   };
 
-
-  
-
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -136,14 +121,13 @@ const CreateprofileFood = () => {
   
     // Convert `qualifiedPrograms` from an object to an array
     const formattedPrograms = Object.entries(qualifiedPrograms)
-      .filter(([_, program]) => program) // Keep only selected programs
+      .filter(([_, program]) => program.selected) // Keep only selected programs
       .map(([name, program]) => ({
         name,
-        startDate: program.startDate || "", // Ensure date exists
-        expireDate: program.expireDate || "", // Ensure date exists
+        startDate: program.startDate || "",
+        expireDate: program.expireDate || "",
       }));
   
-    // Check if at least one Qualified Program is selected
     if (formattedPrograms.length === 0) {
       alert("Please select at least one Qualified Program before submitting.");
       return;
@@ -162,14 +146,20 @@ const CreateprofileFood = () => {
     }
   
     try {
-      // Send data to backend, ensuring qualifiedPrograms is an array
-      await createEmployee({ 
-        ...formData, 
-        qualifiedPrograms: formattedPrograms, 
-        employeeId: formData.employeeId 
+      // Hash the password before sending it to the backend
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(formData.password, salt); // Hash the password
+  
+      // Send data to backend, including the hashed password
+      await createEmployee({
+        ...formData,
+        password: hashedPassword, // Replace plain text password with hashed password
+        qualifiedPrograms: formattedPrograms,
+        employeeId: formData.employeeId,
       });
   
-      alert("Account Created Successfully!");
+      // Show the popup
+      setIsPopupVisible(true);
   
       // Reset form after submission
       setFormData({
@@ -183,18 +173,51 @@ const CreateprofileFood = () => {
         employeeId: "",
       });
   
-      setQualifiedPrograms({}); // Reset selected programs
+      setQualifiedPrograms({
+        GOTS: { selected: false, startDate: "", expireDate: "" },
+        GRS: { selected: false, startDate: "", expireDate: "" },
+        OCS: { selected: false, startDate: "", expireDate: "" },
+        RCS: { selected: false, startDate: "", expireDate: "" },
+        SRCCS: { selected: false, startDate: "", expireDate: "" },
+        REGENAGRI: { selected: false, startDate: "", expireDate: "" },
+        "BCI Cotton": { selected: false, startDate: "", expireDate: "" },
+        PPRS: { selected: false, startDate: "", expireDate: "" },
+      });
   
     } catch (error) {
       alert("Error creating account. Please try again.");
     }
   };
+
+ // Popup Component
+ const Popup = ({ isVisible, onClose, darkMode }) => {
+  if (!isVisible) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className={`${darkMode ? "bg-gray-800 text-white" : "bg-white text-black"} p-6 rounded-lg shadow-lg max-w-sm w-full`}>
+        <h2 className="text-2xl font-bold mb-4">Success</h2>
+        <p className="mb-4">Account Created Successfully!</p>
+        <button
+          onClick={onClose}
+          className={`w-full ${
+            darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-600 hover:bg-blue-700"
+          } text-white py-2 rounded-md transition duration-300`}
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+};
+
+
   
 
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
       {/* Header */}
-      <Navbar />
+      <Navbar/>
 
      {/* Dark Mode Button */}
             <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
@@ -365,63 +388,66 @@ const CreateprofileFood = () => {
                 ></textarea>
               </div>
 
-              {/* Qualified Programs Section */}
+              
+
 {/* Qualified Programs Section */}
-{/* Qualified Programs Section */}
+<div className="mt-6">
+                <label className={`text-lg font-semibold ${darkMode ? "text-white" : "text-black"}`}>
+                  Qualified Programs
+                </label>
+                <div className="grid grid-cols-2 gap-4 mt-2">
+                  {Object.entries(qualifiedPrograms).map(([program, data]) => (
+                    <div key={program} className="flex flex-col space-y-2">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          checked={data.selected}
+                          onChange={() => handleProgramSelection(program)}
+                          className="mr-2"
+                        />
+                        <span className={`${darkMode ? "text-white" : "text-black"}`}>
+                          {program}
+                        </span>
+                      </div>
+                      {data.selected && (
+                        <div className="flex flex-col space-y-2">
+                        {/* Start Date Label and Input */}
+                        <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
+                          Start Date
+                        </label>
+                        <input
+                          type="date"
+                          value={data.startDate}
+                          onChange={(e) => handleDateChange(e, program, "startDate")}
+                          className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
+                            ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
+                          `}
+                          placeholder="Start Date"
+                        />
+                      
+                        {/* Expire Date Label and Input */}
+                        <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
+                          Expire Date
+                        </label>
+                        <input
+                          type="date"
+                          value={data.expireDate}
+                          onChange={(e) => handleDateChange(e, program, "expireDate")}
+                          className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
+                            ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
+                          `}
+                          placeholder="Expire Date"
+                          readOnly
+                        />
+                      </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
 
 
 
-
-<div>
-  <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
-    Qualified Programs
-  </label>
-  <div className="grid grid-cols-2 gap-3 text-black font-bold">
-    {["GOTS", "GRS", "OCS", "RCS", "SRCCS", "REGENAGRI", "BCI Cotton", "PPRS"].map(
-      (program) => (
-        <div
-          key={program}
-          className={`flex flex-col border p-3 rounded-md shadow-sm bg-gray-50 transition-all duration-300 ${
-            expandedProgram === program ? "flex-col-reverse" : "flex-col"
-          }`}
-        >
-          {/* Show Date Inputs above Checkbox when checked */}
-          {qualifiedPrograms[program] && (
-            <div className="flex flex-col gap-2 mb-2 mt-8">
-              <label className="text-sm">Start Date</label>
-              <input
-                type="date"
-                value={qualifiedPrograms[program]?.startDate || ""}
-                onChange={(e) => handleDateChange(e, program)}
-                className="border border-gray-300 p-2 rounded-md"
-              />
-
-              <label className="text-sm">Expire Date</label>
-              <input
-                type="date"
-                value={qualifiedPrograms[program]?.expireDate || ""}
-                readOnly
-                className="border border-gray-300 p-2 rounded-md bg-gray-200 cursor-not-allowed"
-              />
-            </div>
-          )}
-
-          {/* Checkbox */}
-          <label className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              name={program}
-              checked={!!qualifiedPrograms[program]}
-              onChange={handleCheckboxChange}
-              className="h-5 w-5 text-blue-500 focus:ring-blue-400 border-gray-300 rounded"
-            />
-            <span className="text-sm">{program}</span>
-          </label>
-        </div>
-      )
-    )}
-  </div>
-</div>
 
 
 
@@ -437,6 +463,12 @@ const CreateprofileFood = () => {
           </div>
         </main>
       </div>
+      <Popup
+  isVisible={isPopupVisible}
+  onClose={() => setIsPopupVisible(false)}
+  darkMode={darkMode}
+/>
+
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Header from "./Header";
+import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
 import moment from "moment"; // Import moment for date formatting
 
@@ -160,7 +160,7 @@ const ProfileHeadFood = () => {
 
   return (
     <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col`}>
-      <Header />
+      <Navbar />
 
       <div className="flex flex-grow">
         <Sidebar />

@@ -3,44 +3,46 @@
 import Employee from '../models/employee.js';
 
 export const createEmployee = async (req, res) => {
-    try {
-      const { name, email, phone, role, dob, address, employeeId ,qualifiedPrograms  } = req.body;
-  
-      // Check if the email already exists
-      const existingEmployee = await Employee.findOne({ email });
-      if (existingEmployee) {
-        return res.status(400).json({ error: 'Email already exists' });
-      }
+  try {
+    const { name, email, phone, role, dob, address, employeeId, department, password, qualifiedPrograms } = req.body;
 
-      let formattedDob = null;
-      if (dob) {
-        formattedDob = new Date(dob).toISOString().split('T')[0]; // Extract YYYY-MM-DD
-      }
-
-      const formattedPrograms = Array.isArray(qualifiedPrograms) ? qualifiedPrograms.map(program => ({
-        programname: program.name,
-        startDate: new Date(program.startDate).toISOString().split('T')[0], // YYYY-MM-DD
-        expireDate: new Date(program.expireDate).toISOString().split('T')[0] // YYYY-MM-DD
-      })) : [];
-  
-      // Create a new employee if email is unique
-      const newEmployee = new Employee({
-        name,
-        email,
-        phone,
-        role,
-        dob: formattedDob, // Save as a string
-        address,
-        employeeId, // Include employeeId in the database
-        qualifiedPrograms: formattedPrograms,
-
-      });
-      const savedEmployee = await newEmployee.save();
-      res.status(201).json(savedEmployee);
-    } catch (err) {
-      console.error('Error creating employee:', err); // Log the full error details
-      res.status(500).json({ error: 'Internal Server Error', details: err.message }); // Include details in the response
+    // Check if the email already exists
+    const existingEmployee = await Employee.findOne({ email });
+    if (existingEmployee) {
+      return res.status(400).json({ error: 'Email already exists' });
     }
+
+    let formattedDob = null;
+    if (dob) {
+      formattedDob = new Date(dob).toISOString().split('T')[0]; // Extract YYYY-MM-DD
+    }
+
+    const formattedPrograms = Array.isArray(qualifiedPrograms) ? qualifiedPrograms.map(program => ({
+      programname: program.name,
+      startDate: new Date(program.startDate).toISOString().split('T')[0], // YYYY-MM-DD
+      expireDate: new Date(program.expireDate).toISOString().split('T')[0] // YYYY-MM-DD
+    })) : [];
+
+    // Create a new employee if email is unique
+    const newEmployee = new Employee({
+      name,
+      email,
+      phone,
+      role,
+      dob: formattedDob, // Save as a string
+      address,
+      employeeId, 
+      department, 
+      password, 
+      qualifiedPrograms: formattedPrograms,
+    });
+
+    const savedEmployee = await newEmployee.save();
+    res.status(201).json(savedEmployee);
+  } catch (err) {
+    console.error('Error creating employee:', err); // Log the full error details
+    res.status(500).json({ error: 'Internal Server Error', details: err.message }); // Include details in the response
+  }
 };
 
 
