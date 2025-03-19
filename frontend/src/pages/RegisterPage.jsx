@@ -8,24 +8,55 @@ const RegisterPage = () => {
     firstname: '',
     lastname: '',
     department: '',
-    position: '',
+    position: 'Department Head',
     email: '',
     password: '',
+    phone: '',
+    employeeid: '', // This will be auto-generated
   });
 
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Function to generate Employee ID
+  const generateEmployeeId = (department) => {
+    const departmentCodes = {
+      Food: 'DHFO',
+      Textile: 'DHTE',
+      Organic: 'DHOR',
+      Forest: 'DHFOR',
+    };
+
+    // Get the department code
+    const departmentCode = departmentCodes[department] || 'DHEM'; // Default code if department is not found
+
+    // Generate a random 4-digit number
+    const randomDigits = Math.floor(1000 + Math.random() * 9000);
+
+    
+
+    // Combine everything to form the Employee ID
+    return `${departmentCode}-${randomDigits}`;
+  };
+
+  
+
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+      // Auto-generate Employee ID when department changes
+      employeeid: name === 'department' ? generateEmployeeId(value) : prevData.employeeid,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/register', formData);
+      const response = await axios.post('http://localhost:5005/api/auth/register', formData);
 
       if (response.data.success) {
         alert('Registration Successful!');
@@ -96,23 +127,13 @@ const RegisterPage = () => {
 
           <div className="mb-3">
             <label className="block text-sm mb-1 text-blue-700 font-medium text-left">Position:</label>
-            <select
+            <input
+              type="text"
               name="position"
-              value={formData.position}
-              onChange={handleChange}
-              required
-              className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
-            >
-              <option value="">Select Position</option>
-              <option value="Project Creator">Project Creator</option>
-              <option value="Planner">Planner</option>
-              <option value="Contractor">Contractor</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Certifier">Certifier</option>
-              <option value="Reviewer">Reviewer</option>
-              <option value="Admin">Admin</option>
-              <option value="Department Head">Department Head</option>
-            </select>
+              value="Department Head"
+              readOnly
+              className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
+            />
           </div>
 
           <div className="mb-3">
@@ -124,6 +145,29 @@ const RegisterPage = () => {
               onChange={handleChange}
               required
               className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="block text-sm mb-1 text-blue-700 font-medium text-left">Phone Number:</label>
+            <input
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+              className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
+            />
+          </div>
+
+          <div className="mb-3">
+            <label className="block text-sm mb-1 text-blue-700 font-medium text-left">Employee ID:</label>
+            <input
+              type="text"
+              name="employeeid"
+              value={formData.employeeid}
+              readOnly
+              className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 text-gray-700 cursor-not-allowed"
             />
           </div>
 

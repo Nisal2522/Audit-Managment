@@ -20,41 +20,39 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when form is submitted
+    setLoading(true);
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/login', formData);
+      const response = await axios.post('http://localhost:5005/api/auth/login', formData);
       if (response.data.success) {
-        const { department, position } = response.data.user;
+        const { user, token } = response.data;
+        localStorage.setItem('user', JSON.stringify(user)); // Store user data in localStorage
+        localStorage.setItem('token', token); // Store token in localStorage
 
-        // Define a mapping object to handle redirection
+        // Redirect based on department and position
         const redirectPaths = {
-          'Food': {
-            'Admin': '/food/Admin',
-            'Reviewer': '/food/Reviewer',
-            'Certifier': '/food/Certifier',
-            'Department Head': '/food/DepartmentHead/DepartmentHead'
+          Food: {
+            'Department Head': '/food/Head',
           },
-          'Organic': {
-            'Reviewer': '/organic/Reviewer',
-            'Certifier': '/organic/Certifier',
-            'ProjectCreator':'/organic/ProjectCreator',
-            'Planner':'/organic/Planner',
-            'Contractor':'/organic/Contractor',
-            'Contractor':'/organic/Auditor',
+          Organic: {
+            Reviewer: '/organic/Reviewer',
+            Certifier: '/organic/Certifier',
+            ProjectCreator: '/organic/ProjectCreator',
+            Planner: '/organic/Planner',
+            Contractor: '/organic/Contractor',
+            Auditor: '/organic/Auditor',
           },
         };
 
-        // Use the mapping to redirect based on department and position
-        const redirectTo = redirectPaths[department]?.[position] || '/dashboard'; // Default to '/dashboard' if not found
-        navigate(redirectTo); // Redirect to the specific page
+        const redirectTo = redirectPaths[user.department]?.[user.position] || '/dashboard';
+        navigate(redirectTo);
       } else {
-        setError(response.data.message); // Display error if login fails
+        setError(response.data.message);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-      console.error('Login error:', err); // Log the error for debugging purposes
+      console.error('Login error:', err);
     } finally {
-      setLoading(false); // Set loading to false when the request is finished
+      setLoading(false);
     }
   };
 

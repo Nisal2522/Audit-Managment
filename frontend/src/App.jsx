@@ -26,12 +26,7 @@ function App() {
   return (
     <BrowserRouter>
     <div className="App">
-        {/* Tailwind-styled blue-screen header */}
-        {(location.pathname === '/' || location.pathname === '/login') && (
-          <div className="bg-blue-700 text-white w-full h-16 fixed top-0 z-50 flex items-center justify-center text-2xl font-bold shadow-lg">
-            Audit Planning System
-          </div>
-        )}
+    
 
         <Routes>
           <Route path="/" element={<RegisterPage />} />

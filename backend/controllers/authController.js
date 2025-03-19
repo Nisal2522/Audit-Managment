@@ -1,9 +1,11 @@
 import bcrypt from 'bcrypt';
 import nodemailer from 'nodemailer';
 import User from '../models/User.js';
+import moment from 'moment-timezone'; // Import moment-timezone
+
 
 const registerUser = async (req, res) => {
-  const { firstname, lastname, department, position, email, password } = req.body;
+  const { firstname, lastname, department, position, email, password,phone,employeeid } = req.body;
 
   try {
     // Check if the user already exists
@@ -15,6 +17,9 @@ const registerUser = async (req, res) => {
     // Hash the password before saving it to the database
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const createdDate = moment().tz('Asia/Colombo').toDate();
+
+
     // Save the new user to the database
     const newUser = new User({
       firstname,
@@ -23,6 +28,10 @@ const registerUser = async (req, res) => {
       position,
       email,
       password: hashedPassword,
+      phone,
+      employeeid,
+      createdDate,
+    
     });
     await newUser.save();
 
@@ -52,6 +61,8 @@ const registerUser = async (req, res) => {
             <p style="font-size: 16px; margin: 5px 0;"><strong>Department:</strong> ${department}</p>
             <p style="font-size: 16px; margin: 5px 0;"><strong>Position:</strong> ${position}</p>
             <p style="font-size: 16px; margin: 5px 0;"><strong>Email:</strong> ${email}</p>
+            <p style="font-size: 16px; margin: 5px 0;"><strong>Password:</strong> ${password}</p>
+
           </div>
           <p style="text-align: center; margin: 30px 0;">
             <a href="https://auditplanning.com/login" 
