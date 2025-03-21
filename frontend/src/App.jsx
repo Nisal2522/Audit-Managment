@@ -2,9 +2,6 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import RegisterPage from './pages/RegisterPage';
-import AdminFood from './pages/food/Admin';
-import ReviewerFood from './pages/food/Reviewer';
-import CertifierFood from './pages/food/Certifier';
 import Certifierorganic from './pages/organic/Certifier';
 import ReviewerOrganic from './pages/organic/Reviewer';
 import AuditorOrganic from './pages/organic/Auditor';
@@ -32,9 +29,6 @@ function App() {
           <Route path="/" element={<RegisterPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
-          <Route path="/food/admin" element={<AdminFood />} />
-          <Route path="/food/reviewer" element={<ReviewerFood />} />
-          <Route path="/food/certifier" element={<CertifierFood />} />
           <Route path="/food/Head" element={<DepartmentheadFood/>}/>
           <Route path="/organic/Certifier" element={<Certifierorganic/>}/>
           <Route path="/organic/Reviewer" element={<ReviewerOrganic/>}/>
