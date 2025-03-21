@@ -1,9 +1,9 @@
 import { Menu, Search, Grid } from "lucide-react";
-import logo from "../assets/logo.png";
+import logo from "../../src/assets/logon.png";
 
 export default function NavBar() {
     return (
-        <nav className="flex items-center justify-between bg-gray-900 text-white p-4">
+            <nav className="flex items-center justify-between text-white p-4" style={{ backgroundColor: "#064979" }}>
             {/* Left Section - Logo & Title */}
             <div className="flex items-center gap-3">
                 <button className="text-white hover:text-gray-400">
@@ -27,6 +27,6 @@ export default function NavBar() {
                     className="w-8 h-8 rounded-full cursor-pointer"
                 />
             </div>
-        </nav>
-    );
+        </nav>
+    );
 }

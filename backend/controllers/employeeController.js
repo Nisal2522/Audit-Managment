@@ -4,7 +4,7 @@ import Employee from '../models/employee.js';
 
 export const createEmployee = async (req, res) => {
   try {
-    const { name, email, phone, role, dob, address, employeeId, department, password, qualifiedPrograms } = req.body;
+    const { name, email, phone, role, dob, address, employeeId, department, password, qualifiedPrograms  } = req.body;
 
     // Check if the email already exists
     const existingEmployee = await Employee.findOne({ email });
@@ -57,15 +57,15 @@ export const getEmployees = async (req, res) => {
   }
 };
 
-// Update employee status
-export const updateEmployeeStatus = async (req, res) => {
+
+export const updateEmployee = async (req, res) => {
   try {
     const { id } = req.params;
-    const { status } = req.body;
+    const updatedData = req.body;
 
     const updatedEmployee = await Employee.findByIdAndUpdate(
       id,
-      { status },
+      updatedData,
       { new: true }
     );
 
@@ -75,7 +75,24 @@ export const updateEmployeeStatus = async (req, res) => {
 
     res.status(200).json(updatedEmployee);
   } catch (error) {
-    console.error("Error updating employee status:", error);
+    console.error("Error updating employee:", error);
     res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+
+export const deleteEmployee = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedEmployee = await Employee.findByIdAndDelete(id);
+
+    if (!deletedEmployee) {
+      return res.status(404).json({ error: "Employee not found" });
+    }
+
+    res.status(200).json({ message: "Employee deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting employee:", error);
+    res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 };

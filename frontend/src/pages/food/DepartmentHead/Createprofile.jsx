@@ -3,6 +3,8 @@ import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
 import { createEmployee } from "../../../services/employeeservice";
 import bcrypt from "bcryptjs";
+import {  FaSun, FaMoon } from "react-icons/fa";
+
 
 const CreateprofileFood = () => {
   const [formData, setFormData] = useState({
@@ -160,6 +162,10 @@ const CreateprofileFood = () => {
   
       // Show the popup
       setIsPopupVisible(true);
+
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      },4000);
   
       // Reset form after submission
       setFormData({
@@ -189,27 +195,7 @@ const CreateprofileFood = () => {
     }
   };
 
- // Popup Component
- const Popup = ({ isVisible, onClose, darkMode }) => {
-  if (!isVisible) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`${darkMode ? "bg-gray-800 text-white" : "bg-white text-black"} p-6 rounded-lg shadow-lg max-w-sm w-full`}>
-        <h2 className="text-2xl font-bold mb-4">Success</h2>
-        <p className="mb-4">Account Created Successfully!</p>
-        <button
-          onClick={onClose}
-          className={`w-full ${
-            darkMode ? "bg-blue-600 hover:bg-blue-700" : "bg-blue-600 hover:bg-blue-700"
-          } text-white py-2 rounded-md transition duration-300`}
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  );
-};
+ 
 
 
   
@@ -217,16 +203,15 @@ const CreateprofileFood = () => {
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
       {/* Header */}
-      <Navbar/>
+      <Navbar />
 
      {/* Dark Mode Button */}
             <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
-            <button
-                    onClick={handleToggleDarkMode}
-                    className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
-                  >
-                    {darkMode ? "☀️" : "🌙"}
-              </button>
+             <button  onClick={() => setDarkMode(!darkMode)}   className={`p-2 text-xl focus:outline-none transform duration-200 ease-in-out hover:scale-105 -translate-y-1 text-2xl ${
+             darkMode ? "text-white" : "text-gray-700"
+             } cursor-pointer`}   >
+           {darkMode ? <FaSun className="inline-block" /> : <FaMoon className="inline-block" />}
+           </button>
             </div>
 
 
@@ -241,12 +226,12 @@ const CreateprofileFood = () => {
           <div className={`shadow-lg rounded-xl p-8 w-full max-w-3xl transition duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
             
             {/* Label with Dynamic Text Color */}
-            <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block ${darkMode ? 'bg-teal-600 text-white' : 'bg-slate-400 text-black'} shadow-lg`}>
-              Create Account 
+            <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block shadow-lg ${  darkMode ? 'text-white' : 'bg-slate-400 text-black' }`} style={darkMode ? { backgroundColor: "#064979" } : {}} >         
+                   Create Account 
             </label>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4 mt-8">
               <div className="grid grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div>
@@ -340,7 +325,7 @@ const CreateprofileFood = () => {
                   <option value="Auditor">Auditor</option>
                   <option value="Planner">Planner</option>
                   <option value="Reviwer">Reviewer</option>
-                  <option value="creator">Project Creator</option>
+                  <option value="Project creator">Project Creator</option>
                   <option value="Contractor">Contractor</option>
                 </select>
               </div>
@@ -463,11 +448,14 @@ const CreateprofileFood = () => {
           </div>
         </main>
       </div>
-      <Popup
-  isVisible={isPopupVisible}
-  onClose={() => setIsPopupVisible(false)}
-  darkMode={darkMode}
-/>
+      {isPopupVisible && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+            <div className={`px-6 py-4 rounded-lg shadow-lg text-2xl font-bold ${
+            darkMode ? "bg-white text-[#064979]" : "bg-gray-900 text-white" }`}  >     
+                   Employee created successfully!
+          </div>
+        </div>
+      )}
 
     </div>
   );
