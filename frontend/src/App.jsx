@@ -1,13 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Login from './pages/LoginPage';
-import AdminDashboard from './pages/AdminDashboard';
 import RegisterPage from './pages/RegisterPage';
-import Certifierorganic from './pages/organic/Certifier';
-import ReviewerOrganic from './pages/organic/Reviewer';
-import AuditorOrganic from './pages/organic/Auditor';
-import ContractorOrganic from './pages/organic/Contractor';
-import PlannerOrganic from './pages/organic/Planner';
-import ProjectOrganic from './pages/organic/ProjectCreator';
 import DepartmentheadFood from './pages/food/DepartmentHead/DepartmentHead';
 import CreateprofileFood from './pages/food/DepartmentHead/Createprofile';
 import Activeaccountfood from './pages/food/DepartmentHead/Activemember';
@@ -28,14 +21,7 @@ function App() {
         <Routes>
           <Route path="/" element={<RegisterPage />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/food/Head" element={<DepartmentheadFood/>}/>
-          <Route path="/organic/Certifier" element={<Certifierorganic/>}/>
-          <Route path="/organic/Reviewer" element={<ReviewerOrganic/>}/>
-          <Route path="/organic/ProjectCreator" element={<ProjectOrganic/>}/>
-          <Route path="/organic/Planner" element={<PlannerOrganic/>}/>
-          <Route path="/organic/Contractor" element={<ContractorOrganic/>}/>
-          <Route path="/organic/Auditor" element={<AuditorOrganic/>}/>
           <Route path="/food/Head/Createaccount" element={<CreateprofileFood/>}/>
           <Route path="/food/Head/ActiveMembers" element={<Activeaccountfood/>}/>
           <Route path="/food/Head/Employeestatus" element={<EmployeeStatusFood/>}/>
