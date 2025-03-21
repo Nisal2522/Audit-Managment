@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       fontFamily: {
         "arabic": ['"Amiri"', 'serif'], 
+        poppins: ["Poppins", "sans-serif"],
         
     },
     colors: {
@@ -20,5 +21,5 @@ module.exports = {
 
   },
 },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }

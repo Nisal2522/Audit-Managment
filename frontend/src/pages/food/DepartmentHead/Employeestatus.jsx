@@ -132,7 +132,7 @@ const EmployeeStatusFood = () => {
       <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
         <div className={`w-11/12 max-w-2xl p-6 rounded-lg shadow-lg ${darkMode ? "bg-gray-800 text-white" : "bg-white text-black"}`}>
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-2xl font-bold">Notifications</h3>
+            <h3 className="text-2xl font-bold font-poppins">Notifications</h3>
             <button
               onClick={onClose}
               className={`p-2 rounded-full hover:bg-opacity-20 ${darkMode ? "hover:bg-white" : "hover:bg-gray-800"}`}
@@ -144,7 +144,7 @@ const EmployeeStatusFood = () => {
             notifications.map((notification, index) => (
               <div
                 key={index}
-                className={`mb-4 p-3 rounded-lg ${
+                className={`mb-4 p-3 rounded-lg font-poppins ${
                   notification.status === "red"
                     ? "bg-red-100 text-red-800"
                     : notification.status === "yellow"
@@ -442,7 +442,7 @@ const EmployeeStatusFood = () => {
 
         <div className="flex justify-between items-center w-full">
                 <label
-                  className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block ${
+                  className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block font-poppins ${
                     darkMode ? "bg-teal-600 text-white" : "bg-slate-400 text-black"
                   } shadow-lg`}
                 >
@@ -456,7 +456,7 @@ const EmployeeStatusFood = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Name Field (Read-Only) */}
         <div className="flex flex-col">
-          <label className="font-medium">Name:</label>
+          <label className="font-medium font-poppins">Name:</label>
           <input
             type="text"
             name="name"
@@ -472,7 +472,7 @@ const EmployeeStatusFood = () => {
 
         {/* Employee ID Field (Read-Only) */}
         <div className="flex flex-col">
-          <label className="font-medium">Employee ID:</label>
+          <label className="font-medium font-poppins">Employee ID:</label>
           <input
             type="text"
             name="employeeId"
@@ -488,7 +488,7 @@ const EmployeeStatusFood = () => {
 
         {/* Phone Number Field (Editable) */}
         <div className="flex flex-col">
-          <label className="font-medium">Phone No:</label>
+          <label className="font-medium font-poppins">Phone No:</label>
           <input
             type="text"
             name="phone"
@@ -505,7 +505,7 @@ const EmployeeStatusFood = () => {
 
         {/* Address Field (Editable) */}
         <div className="flex flex-col">
-          <label className="font-medium">Address:</label>
+          <label className="font-medium font-poppins">Address:</label>
           <input
             type="text"
             name="address"
@@ -522,7 +522,7 @@ const EmployeeStatusFood = () => {
 
         {/* Email Field (Editable) */}
         <div className="flex flex-col">
-          <label className="font-medium">Email:</label>
+          <label className="font-medium font-poppins">Email:</label>
           <input
             type="email"
             name="email"
@@ -539,7 +539,7 @@ const EmployeeStatusFood = () => {
 
         {/* Role Field (Read-Only) */}
         <div className="flex flex-col">
-          <label className="font-medium">Role:</label>
+          <label className="font-medium font-poppins">Role:</label>
           <input
             type="text"
             name="role"
@@ -555,7 +555,7 @@ const EmployeeStatusFood = () => {
 
         {/* Qualification Programs Field */}
         <div className="flex flex-col">
-          <label className="font-medium">Qualification Programs:</label>
+          <label className="font-medium font-poppins">Qualification Programs:</label>
           <div className={`p-4 rounded-lg ${darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-900"}`}>
             {selectedEmployee?.qualifiedPrograms?.length > 0 ? (
               <div className="space-y-4">
@@ -564,13 +564,13 @@ const EmployeeStatusFood = () => {
                     <div className="flex flex-col space-y-2">
                       {/* Program Name */}
                       <div className="flex justify-between">
-                        <span className="font-medium">Program Name:</span>
+                        <span className="font-medium font-poppins">Program Name:</span>
                         <span>{program.programname}</span>
                       </div>
 
                       {/* Start Date */}
                       <div className="flex justify-between">
-                        <span className="font-medium">Start Date:</span>
+                        <span className="font-medium font-poppins">Start Date:</span>
                         <input
                           type="date"
                           value={program.startDate}
@@ -587,7 +587,7 @@ const EmployeeStatusFood = () => {
                       {/* Expire Date */}
                      {/* Expire Date (Read-Only) */}
                         <div className="flex justify-between">
-                          <span className="font-medium">Expire Date:</span>
+                          <span className="font-medium font-poppins">Expire Date:</span>
                           <input
                             type="date"
                             value={program.expireDate}
@@ -604,13 +604,13 @@ const EmployeeStatusFood = () => {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500">No qualification programs available.</p>
+              <p className="text-gray-500 font-poppins">No qualification programs available.</p>
             )}
           </div>
         </div>
         {/* Activate/Inactivate Toggle Button */}
         <div className="flex flex-col">
-          <label className="font-medium">Status:</label>
+          <label className="font-medium font-poppins">Status:</label>
           <div className="flex items-center">
             <span className={`mr-2 ${darkMode ? "text-white" : "text-gray-700"}`}>
               {selectedEmployee?.status === "active" ? "Active" : "Inactive"}
@@ -651,14 +651,14 @@ const EmployeeStatusFood = () => {
               <button
                 type="button"
                 onClick={() => setEditMode(false)}
-                className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+                className="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-poppins"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={isEditing ? handleSave : () => setIsEditing(true)}
-                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+                className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 font-poppins"
               >
                 {isEditing ? "Save" : "Edit"}
               </button>
@@ -672,13 +672,9 @@ const EmployeeStatusFood = () => {
             <>
               {/* Main Content */}
               <div className="flex justify-between items-center mb-6">
-              <label
-                 className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block shadow-lg ${  darkMode ? 'text-white' : 'bg-slate-400 text-black'
-                 }`}
-                style={darkMode ? { backgroundColor: "#064979" } : {}}
-                  >
-                  Employee Status
-               </label>
+              <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block shadow-lg font-poppins ${ darkMode ? 'text-white' : 'text-white'}`}style={{ backgroundColor: darkMode ? "#064979" : "#064979" }}>
+              Employee Status
+              </label>
 
 
 
@@ -720,13 +716,13 @@ const EmployeeStatusFood = () => {
                   {showDownloadPopup && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                       <div className={`p-6 rounded-lg shadow-lg ${darkMode ? "bg-gray-800" : "bg-white"}`}>
-                        <h2 className={`text-xl font-semibold mb-4 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                        <h2 className={`text-xl font-semibold mb-4 font-poppins${darkMode ? "text-white" : "text-gray-900"}`}>
                           Download Options
                         </h2>
 
                         {/* Filter by Status (Active/Inactive) */}
                         <div className="mb-4">
-                          <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                          <label className={`block text-sm font-medium mb-2 font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
                             Filter by Status
                           </label>
                           <select
@@ -743,7 +739,7 @@ const EmployeeStatusFood = () => {
 
                         {/* Filter by Creation Date */}
                         <div className="mb-4">
-                          <label className={`block text-sm font-medium mb-2 ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                          <label className={`block text-sm font-medium mb-2 font-poppins${darkMode ? "text-gray-300" : "text-gray-700"}`}>
                             Filter by Creation Date
                           </label>
                           <input
@@ -756,7 +752,7 @@ const EmployeeStatusFood = () => {
                         </div>
 
                         {/* Buttons */}
-                        <div className="flex justify-end space-x-4">
+                        <div className="flex justify-end space-x-4 font-poppins">
                           <button
                             onClick={() => setShowDownloadPopup(false)}
                             className={`px-4 py-2 rounded-lg ${
@@ -769,7 +765,7 @@ const EmployeeStatusFood = () => {
                           </button>
                           <button
                             onClick={() => handleDownload("pdf")} // Download as PDF
-                            className={`px-4 py-2 rounded-lg ${
+                            className={`px-4 py-2 rounded-lg font-poppins ${
                               darkMode
                                 ? "bg-[#022847] text-white hover:bg-[#064979]" // Dark mode styles
                                   : "bg-[#022847] text-white hover:bg-[#064979]"
@@ -779,7 +775,7 @@ const EmployeeStatusFood = () => {
                           </button>
                           <button
                               onClick={() => handleDownload("excel")} // Download as Excel
-                              className={`px-4 py-2 rounded-lg ${
+                              className={`px-4 py-2 rounded-lg font-poppins${
                                 darkMode
                                   ? "bg-[#022847] text-white hover:bg-[#064979]" // Dark mode styles
                                   : "bg-[#022847] text-white hover:bg-[#064979]" // Light mode styles
@@ -797,7 +793,7 @@ const EmployeeStatusFood = () => {
                 </div>
               </div>
 
-              <div className="flex border-b mb-6 space-x-6">
+              <div className="flex border-b mb-6 space-x-6 font-poppins">
                 {[
                   { id: "active", label: "Active Members" },
                   { id: "inactive", label: "Inactive Members" },
@@ -815,7 +811,7 @@ const EmployeeStatusFood = () => {
               </div>
 
               {activeTab === "active" && (
-                <div className="flex border-b mb-6 space-x-6">
+                <div className="flex border-b mb-6 space-x-6 font-poppins">
                   {[
                     { id: "online", label: "Online" },
                     { id: "offline", label: "Offline" },
@@ -834,8 +830,8 @@ const EmployeeStatusFood = () => {
               )}
 
               <div className="mt-6">
-                <div className={`p-6 rounded-xl shadow-lg ${darkMode ? "bg-gray-700 text-white" : "bg-white text-gray-900"}`}>
-                  <h2 className="text-2xl font-semibold">
+                <div className={`p-6 rounded-xl shadow-lg ${darkMode ? "bg-gray-700 text-white" : "bg-[#022847] text-white"}`}>
+                  <h2 className="text-2xl font-semibold font-poppins">
                     {activeTab === "active" ? "Active Members" : "Inactive Members"}
                   </h2>
                   {filteredEmployees.length > 0 ? (
@@ -857,10 +853,10 @@ const EmployeeStatusFood = () => {
                             className="w-12 h-12 rounded-full border-2 border-gray-300"
                           />
                           <div className="flex flex-col">
-                            <span className="font-medium text-lg">{emp.name}</span>
+                            <span className="font-medium text-lg font-poppins">{emp.name}</span>
                             <span
-                              className={`px-4 py-1 rounded-full text-sm font-semibold ${
-                                emp.status === "active" ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+                              className={`px-4 py-1 rounded-full text-sm font-semibold font-poppins ${
+                                emp.status === "active" ? "bg-green-200 text-green-800 " : "bg-red-200 text-red-800"
                               }`}
                             >
                               {emp.status}
@@ -868,8 +864,8 @@ const EmployeeStatusFood = () => {
                           </div>
                           {emp.status === "active" && (
                             <span
-                              className={`px-3 py-1 text-xs rounded-full font-bold ${
-                                emp.online ? "bg-blue-200 text-blue-800" : "bg-red-200 text-red-800"
+                              className={`px-3 py-1 text-xs rounded-full font-bold font-poppins ${
+                                emp.online ? "bg-blue-200 text-blue-800 font-poppins" : "bg-red-200 text-red-800 font-poppins"
                               }`}
                             >
                               {emp.online ? "🟢 Online" : "🔴 Offline"}
@@ -881,7 +877,7 @@ const EmployeeStatusFood = () => {
                       ))}
                     </ul>
                   ) : (
-                    <p className="mt-4">No employees found.</p>
+                    <p className="mt-4 font-poppins">No employees found.</p>
                   )}
                 </div>
               </div>
@@ -892,11 +888,11 @@ const EmployeeStatusFood = () => {
 
       {/* Popup for updating status */}
       {showPopup && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 font-poppins">
           <div className={`p-8 rounded-lg shadow-xl w-96 ${darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}>
             {/* Popup Header */}
             <div className="flex justify-between items-center mb-6 border-b pb-4">
-              <h2 className="text-2xl font-semibold">Details of {selectedEmployee?.name}</h2>
+              <h2 className="text-2xl font-semibold font-poppins">Details of {selectedEmployee?.name}</h2>
               <div className="flex space-x-4">
                 {/* Edit Icon */}
                 <FaEdit
@@ -927,19 +923,19 @@ const EmployeeStatusFood = () => {
             {/* Employee Details */}
             <div className="space-y-4">
               <div className="flex justify-between">
-                <span className="font-medium">Name:</span>
+                <span className="font-medium font-poppins">Name:</span>
                 <span>{selectedEmployee?.name}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">Employee ID:</span>
+                <span className="font-medium font-poppins">Employee ID:</span>
                 <span>{selectedEmployee?.employeeId}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">Email:</span>
+                <span className="font-medium font-poppins">Email:</span>
                 <span>{selectedEmployee?.email}</span>
               </div>
               <div className="flex justify-between">
-                <span className="font-medium">Role:</span>
+                <span className="font-medium font-poppins">Role:</span>
                 <span>{selectedEmployee?.role}</span>
               </div>
             </div>
@@ -947,7 +943,7 @@ const EmployeeStatusFood = () => {
             {/* Close Button */}
             <button
               onClick={() => setShowPopup(false)}
-              className="mt-6 w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600"
+              className="mt-6 w-full px-4 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 font-poppins"
             >
               Close
             </button>
@@ -957,7 +953,7 @@ const EmployeeStatusFood = () => {
       )}
        {deleteSuccess && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className={`px-6 py-4 rounded-lg shadow-lg text-2xl font-bold ${
+            <div className={`px-6 py-4 rounded-lg shadow-lg text-2xl font-bold font-poppins ${
             darkMode ? "bg-white text-[#064979]" : "bg-gray-900 text-white"
             }`}  >
               Employee deleted successfully!
@@ -966,7 +962,7 @@ const EmployeeStatusFood = () => {
         )}
         {updateSuccess && (
           <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className={`px-6 py-4 rounded-lg shadow-lg text-2xl font-bold ${
+          <div className={`px-6 py-4 rounded-lg shadow-lg text-2xl font-bold font-poppins ${
             darkMode ? "bg-white text-[#064979]" : "bg-gray-900 text-white"
             }`}  >
                      Employee Details Updated Successfully!

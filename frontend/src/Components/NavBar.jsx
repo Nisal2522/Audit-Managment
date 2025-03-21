@@ -3,7 +3,7 @@ import logo from "../../src/assets/logon.png";
 
 export default function NavBar() {
     return (
-            <nav className="flex items-center justify-between text-white p-4" style={{ backgroundColor: "#064979" }}>
+            <nav className="flex items-center justify-between text-white p-4" style={{ backgroundColor: "#022847" }}>
             {/* Left Section - Logo & Title */}
             <div className="flex items-center gap-3">
                 <button className="text-white hover:text-gray-400">
