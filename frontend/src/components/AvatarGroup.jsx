@@ -1,7 +1,7 @@
 import React from "react";
-import avatar1 from "../../assets/Project-Creator/avatar1.jpeg";
-import avatar2 from "../../assets/Project-Creator/avatar2.jpeg";
-import avatar3 from "../../assets/Project-Creator/avatar3.jpeg";
+import avatar1 from "../assets/Project-Creator/avatar1.jpeg";
+import avatar2 from "../assets/Project-Creator/avatar2.jpeg";
+import avatar3 from "../assets/Project-Creator/avatar3.jpeg";
 
 const AvatarGroup = ({ names }) => {
     // Array of avatars with imported image paths
@@ -19,7 +19,7 @@ const AvatarGroup = ({ names }) => {
                         <img
                             src={avatar.src}
                             alt={avatar.alt}
-                            className="w-8 h-8 rounded-full border-4 border-[#02090D] bg-[#02090D]"
+                            className="w-8 h-8 rounded-full border-4 border-[#022847] bg-[#022847] "
                         />
                     </div>
                 ))}

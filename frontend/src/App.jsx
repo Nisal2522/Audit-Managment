@@ -25,7 +25,7 @@ import MoreInfo from './pages/food/Project-Creator/moreCustomerDetails';
 function App() {
   return (
     <BrowserRouter>
-      <div className="App min-h-screen bg-[#02090D] ">
+      <div className="App min-h-screen ">
         {/* Tailwind-styled blue-screen header */}
         {(location.pathname === '/' || location.pathname === '/login') && (
           <div className=" text-white w-full h-16 fixed top-0 z-50 flex items-center justify-center text-2xl font-bold shadow-lg">
@@ -33,7 +33,7 @@ function App() {
           </div>
         )}
 
-        <div className="pt-5 min-h-screen px-20 py-30"> {/* Adds padding to the content below the fixed header */}
+        <div className="pt-5 min-h-screen px-10">
           <Routes>
             <Route path="/" element={<RegisterPage />} />
             <Route path="/projectCreator" element={<ProjectCreatorDash />} />

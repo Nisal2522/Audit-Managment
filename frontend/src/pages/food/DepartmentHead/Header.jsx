@@ -1,6 +1,6 @@
 import React from 'react';
-import log from '/src/assets/log.jpg';
-import { FaUserCircle, FaSearch,FaApple  } from 'react-icons/fa'; // Using react-icons
+import log from '../../../assets/Logo.png';
+import { FaUserCircle, FaSearch, FaApple } from 'react-icons/fa'; // Using react-icons
 
 const Header = () => {
   return (
@@ -16,7 +16,7 @@ const Header = () => {
         <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center space-x-6">
           <FaSearch className="text-white-400 text-2xl cursor-pointer" /> {/* Search icon */}
           <FaUserCircle className="text-white text-2xl cursor-pointer" /> {/* Profile icon */}
-          <FaApple className="text-white text-2xl cursor-pointer" /> 
+          <FaApple className="text-white text-2xl cursor-pointer" />
         </div>
       </div>
     </header>

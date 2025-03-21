@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { Search } from "lucide-react";
 
 const CreateCustomerDashboard = () => {
     const [customers, setCustomers] = useState([]);
@@ -68,28 +69,39 @@ const CreateCustomerDashboard = () => {
     };
 
     return (
-        <div className="bg-[#02090D] min-h-screen">
-            <div className="container mx-auto px-4 py-8">
+        <div className="bg-white ">
+            <div className="container py-8">
                 {/* Page Title */}
                 {/* <h1 className="text-2xl font-bold text-gray-800 mb-6">
                     Customer Management
                 </h1> */}
 
                 {/* Search Input */}
-                <div className="mb-6">
-                    <input
-                        type="text"
-                        placeholder="Search by name, department, email, or address..."
-                        value={searchQuery}
-                        onChange={handleSearchChange}
-                        className="w-full p-3 border border-gray-300 rounded-lg bg-[#02090D] text-white"
-                    />
-                </div>
+
 
                 {/* Customer Table */}
-                <div className="bg-[#02090D] shadow-lg rounded-lg p-6">
-                    <h2 className="text-lg font-bold text-white mb-4">
-                        All Customers
+                <div className="bg-[#022847] shadow-lg rounded-lg p-6">
+                    <div className="relative w-full">
+                        {/* Search Icon */}
+                        <button
+                            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white hover:text-gray-400"
+                            style={{ pointerEvents: 'none' }} // Disable button interaction
+                        >
+                            <Search size={20} />
+                        </button>
+
+                        {/* Search Input */}
+                        <input
+                            type="text"
+                            placeholder="Search by name, department, email, or address..."
+                            value={searchQuery}
+                            onChange={handleSearchChange}
+                            className=" p-3 pl-12  rounded-lg bg-[#022847]  text-white"
+                        />
+                    </div>
+
+                    <h2 className="text-2xl pt-5 font-bold text-white mb-4">
+                        All Customers / Projects
                     </h2>
 
                     {loading ? (
@@ -99,7 +111,7 @@ const CreateCustomerDashboard = () => {
                     ) : filteredCustomers.length > 0 ? (
                         <table className="min-w-full table-auto border-collapse border border-gray-200 rounded-lg overflow-hidden">
                             <thead>
-                                <tr className="bg-[#02090D] text-blue-700">
+                                <tr className="bg-[#022847] text-blue-700">
                                     <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-semibold text-white">
                                         ID
                                     </th>
@@ -129,7 +141,7 @@ const CreateCustomerDashboard = () => {
                                             animate={{ opacity: 1, y: 0 }}
                                             exit={{ opacity: 0, x: -100 }}
                                             transition={{ duration: 0.5 }}
-                                            className={`${index % 2 === 0 ? "bg-[#02090D]" : "bg-[#1A242F]"} `}
+                                            className={`${index % 2 === 0 ? "bg-[#022847]" : "bg-[#022847]"} `}
                                         >
                                             <Link
                                                 to={`/projectCreator/${customer._id}`}
