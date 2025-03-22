@@ -168,7 +168,7 @@ const ProfileHeadFood = () => {
         <main className={`flex-grow p-8 ${darkMode ? "bg-gray-00" : "bg-white"} rounded-lg shadow-md`}>
           {/* Label & Dark Mode Toggle in One Row */}
           <div className="flex items-center justify-between mb-6 font-poppins">
-            <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block ${darkMode ? 'bg-teal-600 text-white' : 'bg-[#064979] text-white' } shadow-lg`}>
+            <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block ${darkMode ? 'bg-[#064979] text-white' : 'bg-[#064979] text-white' } shadow-lg`}>
               Profile
             </label>
 

@@ -3,8 +3,7 @@ import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
 import { createEmployee } from "../../../services/employeeservice";
 import bcrypt from "bcryptjs";
-import {  FaSun, FaMoon } from "react-icons/fa";
-
+import { FaSun, FaMoon } from "react-icons/fa";
 
 const CreateprofileFood = () => {
   const [formData, setFormData] = useState({
@@ -19,11 +18,9 @@ const CreateprofileFood = () => {
     profilePicture: null,
     department: "Food",
   });
-
   const [darkMode, setDarkMode] = useState(
     localStorage.getItem("theme") === "dark"
   );
-
   const [qualifiedPrograms, setQualifiedPrograms] = useState({
     GOTS: { selected: false, startDate: "", expireDate: "" },
     GRS: { selected: false, startDate: "", expireDate: "" },
@@ -117,10 +114,8 @@ const CreateprofileFood = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
     // Check if all form fields are filled
     const isFormComplete = Object.values(formData).every((value) => value !== "");
-  
     // Convert `qualifiedPrograms` from an object to an array
     const formattedPrograms = Object.entries(qualifiedPrograms)
       .filter(([_, program]) => program.selected) // Keep only selected programs
@@ -129,29 +124,28 @@ const CreateprofileFood = () => {
         startDate: program.startDate || "",
         expireDate: program.expireDate || "",
       }));
-  
+
     if (formattedPrograms.length === 0) {
       alert("Please select at least one Qualified Program before submitting.");
       return;
     }
-  
+
     // Check if all selected programs have Start Dates
     const isDateProvided = formattedPrograms.every((program) => program.startDate);
     if (!isDateProvided) {
       alert("Please provide a Start Date for the selected program(s) before submitting.");
       return;
     }
-  
+
     if (!isFormComplete) {
       alert("Please fill in all fields before submitting.");
       return;
     }
-  
+
     try {
       // Hash the password before sending it to the backend
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(formData.password, salt); // Hash the password
-  
       // Send data to backend, including the hashed password
       await createEmployee({
         ...formData,
@@ -159,14 +153,13 @@ const CreateprofileFood = () => {
         qualifiedPrograms: formattedPrograms,
         employeeId: formData.employeeId,
       });
-  
+
       // Show the popup
       setIsPopupVisible(true);
-
       setTimeout(() => {
         setIsPopupVisible(false);
-      },4000);
-  
+      }, 4000);
+
       // Reset form after submission
       setFormData({
         name: "",
@@ -178,7 +171,6 @@ const CreateprofileFood = () => {
         dob: "",
         employeeId: "",
       });
-  
       setQualifiedPrograms({
         GOTS: { selected: false, startDate: "", expireDate: "" },
         GRS: { selected: false, startDate: "", expireDate: "" },
@@ -189,72 +181,69 @@ const CreateprofileFood = () => {
         "BCI Cotton": { selected: false, startDate: "", expireDate: "" },
         PPRS: { selected: false, startDate: "", expireDate: "" },
       });
-  
     } catch (error) {
       alert("Error creating account. Please try again.");
     }
   };
 
- 
-
-
-  
-
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
       {/* Header */}
       <Navbar />
-
-     {/* Dark Mode Button */}
-            <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
-             <button  onClick={() => setDarkMode(!darkMode)}   className={`p-2 text-xl focus:outline-none transform duration-200 ease-in-out hover:scale-105 -translate-y-1 text-2xl ${
-             darkMode ? "text-white" : "text-gray-700"
-             } cursor-pointer`}   >
-           {darkMode ? <FaSun className="inline-block" /> : <FaMoon className="inline-block" />}
-           </button>
-            </div>
-
-
-
+      {/* Dark Mode Button */}
+      <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
+        <button
+          onClick={() => setDarkMode(!darkMode)}
+          className={`p-2 text-xl focus:outline-none transform duration-200 ease-in-out hover:scale-105 -translate-y-1 text-2xl ${
+            darkMode ? "text-white" : "text-gray-700"
+          } cursor-pointer`}
+        >
+          {darkMode ? <FaSun className="inline-block" /> : <FaMoon className="inline-block" />}
+        </button>
+      </div>
       <div className="flex flex-grow">
         {/* Sidebar */}
         <Sidebar />
-
         {/* Main Section */}
         <main className="flex-grow flex items-center justify-center p-6">
           {/* Card Container */}
-          <div className={`shadow-lg rounded-xl p-8 w-full max-w-3xl transition duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-white text-black"}`}>
-            
+          <div
+            className={`shadow-lg rounded-xl p-8 w-full max-w-3xl transition duration-300 ${
+              darkMode ? "bg-blue-300 text-white" : "bg-blue-300 text-black"
+            }`}
+            style={{ maxHeight: "80vh", overflowY: "auto" }}
+          >
             {/* Label with Dynamic Text Color */}
-            <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block shadow-lg ${  darkMode ? 'text-white' : 'bg-slate-400 text-black' }`} style={darkMode ? { backgroundColor: "#064979" } : {}} >         
-                   Create Account 
+            <label
+              className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block shadow-lg font-poppins ${
+                darkMode ? "text-white" : "text-white"
+              }`}
+              style={{ backgroundColor: "#064979" }}
+            >
+              Create Account
             </label>
-
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 mt-8">
               <div className="grid grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div>
-                    <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
-                      Full Name
-                    </label>
-                    <input
-                      type="text"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
-                        ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                      `}
-                      required
-                    />
-                  </div>
-
-
-
+                  <label className={`font-medium font-poppins${darkMode ? "text-white" : "text-black"}`}>
+                    Full Name
+                  </label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
+                      ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
+                    `}
+                    required
+                  />
+                </div>
                 {/* Email */}
                 <div>
-                  <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>Email</label>
+                  <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Email</label>
                   <input
                     type="email"
                     name="email"
@@ -262,43 +251,40 @@ const CreateprofileFood = () => {
                     onChange={handleChange}
                     className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
                       ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                    `}                    required
+                    `}
+                    required
                   />
                 </div>
               </div>
-
               {/* Password (Automatically generated) */}
               <div className="mb-4 relative">
-                      <label htmlFor="password" className={`block text-sm font-medium ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
-                        Password
-                      </label>
-                      <input
-                        type="text"
-                        id="password"
-                        name="password"
-                        value={formData.password}
-                        readOnly
-                        className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
-                          ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                        `}
-                      />
+                <label htmlFor="password" className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-black"}`}>
+                  Password
+                </label>
+                <input
+                  type="text"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  readOnly
+                  className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
+                    ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
+                  `}
+                />
               </div>
-
-               {/* Button to regenerate password */}
-                    <div className="mb-4 flex justify-end">
-                      <button
-                        type="button"
-                        onClick={handleRegeneratePassword}
-                        className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
-                      >
-                        Regenerate Password
-                      </button>
-                    </div>
-
-
+              {/* Button to regenerate password */}
+              <div className="mb-4 flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleRegeneratePassword}
+                  className="p-2 bg-[#064979] text-white rounded-md hover:bg-[#043a63] focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-poppins"
+                >
+                  Regenerate Password
+                </button>
+              </div>
               {/* Employee ID */}
               <div>
-                <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>Employee ID</label>
+                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Employee ID</label>
                 <input
                   type="text"
                   name="employeeId"
@@ -306,20 +292,21 @@ const CreateprofileFood = () => {
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
                     ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                  `}                  readOnly
+                  `}
+                  readOnly
                 />
               </div>
-
               {/* Role */}
               <div>
-                <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>Role</label>
+                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Role</label>
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
                     ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                  `}                  required
+                  `}
+                  required
                 >
                   <option value="">Select Role</option>
                   <option value="Auditor">Auditor</option>
@@ -329,11 +316,10 @@ const CreateprofileFood = () => {
                   <option value="Contractor">Contractor</option>
                 </select>
               </div>
-
               {/* Phone & DOB */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>Phone Number</label>
+                  <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Phone Number</label>
                   <input
                     type="tel"
                     name="phone"
@@ -341,12 +327,12 @@ const CreateprofileFood = () => {
                     onChange={handleChange}
                     className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
                       ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                    `}                    required
+                    `}
+                    required
                   />
                 </div>
-
                 <div>
-                  <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>Date of Birth</label>
+                  <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Date of Birth</label>
                   <input
                     type="date"
                     name="dob"
@@ -354,33 +340,31 @@ const CreateprofileFood = () => {
                     onChange={handleChange}
                     className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
                       ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                    `}                    required
+                    `}
+                    required
                   />
                 </div>
               </div>
-
               {/* Address */}
               <div>
-                <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>Address</label>
+                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Address</label>
                 <textarea
                   name="address"
                   value={formData.address}
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
                     ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                  `}                  rows="2"
+                  `}
+                  rows="2"
                   required
                 ></textarea>
               </div>
-
-              
-
-{/* Qualified Programs Section */}
-<div className="mt-6">
-                <label className={`text-lg font-semibold ${darkMode ? "text-white" : "text-black"}`}>
+              {/* Qualified Programs Section */}
+              <div className="mt-6">
+                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>
                   Qualified Programs
                 </label>
-                <div className="grid grid-cols-2 gap-4 mt-2">
+                <div className="grid grid-cols-2 gap-4 mt-2 font-medium font-poppins">
                   {Object.entries(qualifiedPrograms).map(([program, data]) => (
                     <div key={program} className="flex flex-col space-y-2">
                       <div className="flex items-center">
@@ -396,51 +380,43 @@ const CreateprofileFood = () => {
                       </div>
                       {data.selected && (
                         <div className="flex flex-col space-y-2">
-                        {/* Start Date Label and Input */}
-                        <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
-                          Start Date
-                        </label>
-                        <input
-                          type="date"
-                          value={data.startDate}
-                          onChange={(e) => handleDateChange(e, program, "startDate")}
-                          className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
-                            ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                          `}
-                          placeholder="Start Date"
-                        />
-                      
-                        {/* Expire Date Label and Input */}
-                        <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
-                          Expire Date
-                        </label>
-                        <input
-                          type="date"
-                          value={data.expireDate}
-                          onChange={(e) => handleDateChange(e, program, "expireDate")}
-                          className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
-                            ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
-                          `}
-                          placeholder="Expire Date"
-                          readOnly
-                        />
-                      </div>
+                          {/* Start Date Label and Input */}
+                          <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
+                            Start Date
+                          </label>
+                          <input
+                            type="date"
+                            value={data.startDate}
+                            onChange={(e) => handleDateChange(e, program, "startDate")}
+                            className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
+                              ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
+                            `}
+                            placeholder="Start Date"
+                          />
+                          {/* Expire Date Label and Input */}
+                          <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
+                            Expire Date
+                          </label>
+                          <input
+                            type="date"
+                            value={data.expireDate}
+                            onChange={(e) => handleDateChange(e, program, "expireDate")}
+                            className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
+                              ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
+                            `}
+                            placeholder="Expire Date"
+                            readOnly
+                          />
+                        </div>
                       )}
                     </div>
                   ))}
                 </div>
               </div>
-
-
-
-
-
-
-
               {/* Submit Button */}
               <button
                 type="submit"
-                className="w-full bg-blue-600 dark:bg-blue-500 text-white py-2 rounded-md hover:bg-blue-700 dark:hover:bg-blue-600 transition duration-300"
+                className="w-full bg-[#064979] text-white font-medium font-poppins py-2 rounded-md hover:bg-[#043a63] transition duration-300"
               >
                 Create Account
               </button>
@@ -450,13 +426,15 @@ const CreateprofileFood = () => {
       </div>
       {isPopupVisible && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-            <div className={`px-6 py-4 rounded-lg shadow-lg text-2xl font-bold ${
-            darkMode ? "bg-white text-[#064979]" : "bg-gray-900 text-white" }`}  >     
-                   Employee created successfully!
+          <div
+            className={`px-6 py-4 rounded-lg shadow-lg text-2xl font-bold ${
+              darkMode ? "bg-white text-[#064979]" : "bg-gray-900 text-white"
+            }`}
+          >
+            Employee created successfully!
           </div>
         </div>
       )}
-
     </div>
   );
 };
