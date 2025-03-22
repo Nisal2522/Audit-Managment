@@ -288,35 +288,35 @@ const ProfileHeadFood = () => {
                 <svg className="w-6 h-6 mr-2 text-white font-poppins" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 5v14m7-7H5"></path>
                 </svg>
-                <p><strong>Created By:</strong> Admin</p>
+                <p className="text-white font-poppins"><strong>Created By:</strong> Admin</p>
               </div>
 
               <div className="flex items-center mb-2">
                 <svg className="w-6 h-6 mr-2 text-white font-poppins" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 10h18M3 14h18M3 18h18"></path>
                 </svg>
-                <p><strong>Created Date:</strong> {formattedCreatedDate}</p>
+                <p className="text-white font-poppins"><strong>Created Date:</strong> {formattedCreatedDate}</p>
               </div>
 
               <div className="flex items-center mb-2">
                 <svg className="w-6 h-6 mr-2 text-white font-poppins" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M21 12.79l-4.8-1.9m0 0L17 8l-7 7 5 5 6-7.21z"></path>
                 </svg>
-                <p class="text-white"><strong>Last Update:</strong> {formattedLastUpdate} ({lastUpdateAgo})</p>
+                <p class="text-white font-poppins"><strong>Last Update:</strong> {formattedLastUpdate} ({lastUpdateAgo})</p>
               </div>
 
               <div className="flex items-center mb-2">
                 <svg className="w-6 h-6 mr-2 text-white font-poppins" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 4v16m8-8H4"></path>
                 </svg>
-                <p><strong>Expiry Date:</strong> 2025-12-01</p>
+                <p class="text-white font-poppins"><strong>Expiry Date:</strong> 2025-12-01</p>
               </div>
 
               <div className="flex items-center mb-2">
                 <svg className="w-6 h-6 mr-2 text-white font-poppins" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 9v6m0 4h0"></path>
                 </svg>
-                <p><strong>Status:</strong> Active</p>
+                <p className="text-white font-poppins"><strong>Status:</strong> Active</p>
               </div>
             </div>
           </div>
