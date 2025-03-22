@@ -12,6 +12,7 @@ const ProfileHeadFood = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
   const [loading, setLoading] = useState(true);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [lastUpdate, setLastUpdate] = useState(() => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData ? userData.lastUpdate : null;
@@ -158,11 +159,11 @@ const ProfileHeadFood = () => {
   const formattedLastUpdate = lastUpdate ? moment(lastUpdate).format('YYYY-MM-DD') : "N/A";
   const lastUpdateAgo = lastUpdate ? moment(lastUpdate).fromNow() : "N/A";
 
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  
 
   return (
     <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col`}>
-      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
+     <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
 
       <div className="flex flex-grow">
       {!isSidebarVisible && <Sidebar />}
