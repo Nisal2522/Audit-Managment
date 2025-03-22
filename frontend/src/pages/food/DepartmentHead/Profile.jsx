@@ -158,12 +158,14 @@ const ProfileHeadFood = () => {
   const formattedLastUpdate = lastUpdate ? moment(lastUpdate).format('YYYY-MM-DD') : "N/A";
   const lastUpdateAgo = lastUpdate ? moment(lastUpdate).fromNow() : "N/A";
 
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
   return (
     <div className={`${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} min-h-screen flex flex-col`}>
-      <Navbar />
+      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
 
       <div className="flex flex-grow">
-        <Sidebar />
+      {!isSidebarVisible && <Sidebar />}
 
         <main className={`flex-grow p-8 ${darkMode ? "bg-gray-00" : "bg-white"} rounded-lg shadow-md`}>
           {/* Label & Dark Mode Toggle in One Row */}

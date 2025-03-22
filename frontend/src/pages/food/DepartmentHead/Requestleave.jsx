@@ -45,11 +45,13 @@ const RequestLeaveFood = () => {
   const pendingRequests = leaveRequests.filter(req => req.status === "Pending");
   const previousRequests = leaveRequests.filter(req => req.status !== "Pending");
 
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
   return (
     <div className={`min-h-screen flex flex-col ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
-      <Navbar />
+      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
       <div className="flex flex-grow">
-        <Sidebar />
+      {!isSidebarVisible && <Sidebar />}
         <main className="flex-grow p-8 shadow-lg rounded-lg">
           <div className="flex justify-between items-center mb-6">
             <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block ${darkMode ? 'bg-teal-600 text-white' : 'bg-slate-400 text-black'} shadow-lg`}>

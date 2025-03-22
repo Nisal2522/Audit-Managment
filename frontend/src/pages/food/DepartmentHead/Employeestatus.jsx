@@ -27,7 +27,7 @@ const EmployeeStatusFood = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
-
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
 
 
   // Load the notification state from localStorage on initial render
@@ -417,6 +417,7 @@ const EmployeeStatusFood = () => {
 
 
 
+
   // Filter employees based on search query, status, and online status
   const filteredEmployees = employees.filter(
     (emp) =>
@@ -430,11 +431,13 @@ const EmployeeStatusFood = () => {
     return <div>Loading...</div>;
   }
 
+  
+
   return (
     <div className={`min-h-screen flex flex-col ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
-      <Navbar />
+      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
       <div className="flex flex-grow">
-        <Sidebar />
+      {!isSidebarVisible && <Sidebar />}
         <main className={`flex-grow p-8 rounded-lg shadow-xl ${darkMode ? "bg-gray-900" : "bg-white"}`}>
           {/* Edit Mode: Show Employee Details Form */}
           {editMode ? (
