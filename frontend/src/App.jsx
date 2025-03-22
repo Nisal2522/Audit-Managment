@@ -3,7 +3,6 @@ import Login from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DepartmentheadFood from './pages/food/DepartmentHead/DepartmentHead';
 import CreateprofileFood from './pages/food/DepartmentHead/Createprofile';
-import Activeaccountfood from './pages/food/DepartmentHead/Activemember';
 import EmployeeStatusFood from './pages/food/DepartmentHead/Employeestatus';
 import Requestleavefood from './pages/food/DepartmentHead/Requestleave';
 import ProfileHeadFood from './pages/food/DepartmentHead/Profile';
@@ -23,7 +22,6 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/food/Head" element={<DepartmentheadFood/>}/>
           <Route path="/food/Head/Createaccount" element={<CreateprofileFood/>}/>
-          <Route path="/food/Head/ActiveMembers" element={<Activeaccountfood/>}/>
           <Route path="/food/Head/Employeestatus" element={<EmployeeStatusFood/>}/>
           <Route path="/food/Head/Requestleave" element={<Requestleavefood/>}/>
           <Route path="/food/Head/ProfileHeadFood" element={<ProfileHeadFood/>}/>
