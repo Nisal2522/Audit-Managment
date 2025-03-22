@@ -77,6 +77,8 @@ const CreateprofileFood = () => {
     }));
   };
 
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
   const handleProgramSelection = (program) => {
     setQualifiedPrograms((prev) => ({
       ...prev,
@@ -424,7 +426,7 @@ const CreateprofileFood = () => {
 
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
-      <Navbar />
+     <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
       <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
         <button
           onClick={() => setDarkMode(!darkMode)}
@@ -436,7 +438,7 @@ const CreateprofileFood = () => {
         </button>
       </div>
       <div className="flex flex-grow">
-        <Sidebar />
+      {!isSidebarVisible && <Sidebar />}
         <main className="flex-grow flex items-center justify-center p-6">
           <div
             className={`shadow-lg rounded-xl p-8 w-full max-w-3xl transition duration-300 ${
