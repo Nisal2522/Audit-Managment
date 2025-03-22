@@ -1,7 +1,7 @@
 // src/components/food/departmenthead.jsx
 import React from 'react';
 import Navbar from '../../../Components/NavBar';
-import Sidebar from './Sidebar'
+import Sidebar from './Sidebar';
 
 const Activeaccountfood = () => {
   return (
