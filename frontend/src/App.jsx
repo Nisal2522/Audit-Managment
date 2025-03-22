@@ -22,6 +22,7 @@ import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import ProjectCreatorDash from './pages/food/Project-Creator/Dashboard';
 import MoreInfo from './pages/food/Project-Creator/moreCustomerDetails';
 import AddCustomer from './pages/food/Project-Creator/addCustomer';
+import ProjectCreatorProfile from './pages/food/Project-Creator/ProjectCreatorProfile';
 
 
 function App() {
@@ -43,6 +44,7 @@ function App() {
 
 
             <Route path="/projectCreator/addCustomer" element={<AddCustomer />} />
+            <Route path="/projectCreator/profile" element={<ProjectCreatorProfile />} />
 
             <Route path="/login" element={<Login />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />

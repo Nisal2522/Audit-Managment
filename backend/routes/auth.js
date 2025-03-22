@@ -46,5 +46,22 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Route to fetch user data by ID
+router.get('/user/:id', async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    res.status(200).json({ success: true, user });
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    res.status(500).json({ success: false, message: 'Something went wrong while fetching user data.' });
+  }
+});
+
+
+
+
 export default router;
 

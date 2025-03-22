@@ -22,7 +22,7 @@ const LoginPage = () => {
     e.preventDefault();
     setLoading(true); // Set loading to true when form is submitted
     try {
-      const response = await axios.post('http://localhost:5001/api/auth/login', formData);
+      const response = await axios.post('http://localhost:5006/api/auth/login', formData);
       if (response.data.success) {
         const { department, position } = response.data.user;
 
@@ -37,10 +37,10 @@ const LoginPage = () => {
           'Organic': {
             'Reviewer': '/organic/Reviewer',
             'Certifier': '/organic/Certifier',
-            'ProjectCreator':'/organic/ProjectCreator',
-            'Planner':'/organic/Planner',
-            'Contractor':'/organic/Contractor',
-            'Contractor':'/organic/Auditor',
+            'ProjectCreator': '/organic/ProjectCreator',
+            'Planner': '/organic/Planner',
+            'Contractor': '/organic/Contractor',
+            'Contractor': '/organic/Auditor',
           },
         };
 

@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search } from "lucide-react";
+// import AutoTable from 'jsautotable';
+
 
 const CreateCustomerDashboard = () => {
     const [customers, setCustomers] = useState([]);
@@ -17,7 +19,7 @@ const CreateCustomerDashboard = () => {
                 const response = await fetch("http://localhost:5006/api/customers");
                 const data = await response.json();
                 setCustomers(data.data);
-                setFilteredCustomers(data.data); // Initialize filtered customers
+                setFilteredCustomers(data.data);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -68,19 +70,101 @@ const CreateCustomerDashboard = () => {
         }
     };
 
+    // Handle export functionality
+    const handleExport = () => {
+        const csvContent =
+            "data:text/csv;charset=utf-8," +
+            [
+                ["ID", "Company Name", "Department", "Main Email", "Address"].join(","),
+                ...customers.map((customer) =>
+                    [
+                        customer._id,
+                        customer.name,
+                        customer.department || "",
+                        customer.email?.mainEmail || "",
+                        customer.address?.mainAddress || "",
+                    ].join(",")
+                ),
+            ]
+                .join("\n")
+                .replace(/(^\[)|(\]$)/gm, "");
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "customers.csv");
+        document.body.appendChild(link);
+        link.click();
+    };
+
+    const handleExportPDF = async () => {
+        try {
+            // Dynamically import jspdf and jspdf-autotable
+            const { default: jsPDF } = await import("jspdf");
+            await import("jspdf-autotable");
+
+            // Initialize the PDF document
+            const doc = new jsPDF();
+
+            // Define table columns
+            const tableColumns = ["ID", "Company Name", "Department", "Main Email", "Address"];
+            const tableRows = [];
+
+            // Populate table rows with customer data
+            customers.forEach((customer) => {
+                const customerData = [
+                    customer._id,
+                    customer.name,
+                    customer.department || "",
+                    customer.email?.mainEmail || "",
+                    customer.address?.mainAddress || "",
+                ];
+                tableRows.push(customerData);
+            });
+
+            // Add a title to the PDF
+            doc.text("Customer List", 14, 15);
+
+            // Generate the table using autoTable
+            doc.autoTable(tableColumns, tableRows, { startY: 20 });
+
+            // Save the PDF
+            doc.save("customers.pdf");
+        } catch (error) {
+            console.error("Error exporting PDF:", error.message);
+            alert("Failed to export PDF. Please try again.");
+        }
+    };
+
     return (
         <div className="bg-white">
             <div className="container py-8">
                 {/* Page Title */}
                 <h1 className="text-2xl font-bold text-gray-800 mb-6 flex justify-between items-center">
                     <span>Customer Management</span>
-                    {/* Add Customer Button */}
-                    <Link
-                        to="/projectCreator/addCustomer"
-                        className="bg-[#022847] text-base hover:bg-[#0228476a] text-white py-2 px-4 rounded-lg transition-colors"
-                    >
-                        + Add Customer
-                    </Link>
+                    {/* Buttons Container */}
+                    <div className="flex gap-4">
+                        {/* Add Customer Button */}
+                        <Link
+                            to="/projectCreator/addCustomer"
+                            className="bg-[#022847] text-base hover:bg-[#0228476a] text-white py-2 px-4 rounded-lg transition-colors"
+                        >
+                            + Add Customer
+                        </Link>
+                        {/* Export Button */}
+                        <button
+                            onClick={handleExport}
+                            className="bg-green-500 text-base hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors"
+                        >
+                            Export CSV
+                        </button>
+                        <button
+                            onClick={handleExportPDF}
+                            className="bg-blue-500 text-base hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors"
+                        >
+                            Export PDF
+                        </button>
+                    </div>
                 </h1>
 
                 {/* Search Input */}
