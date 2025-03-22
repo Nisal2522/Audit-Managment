@@ -140,7 +140,7 @@ const CreateCustomerDashboard = () => {
         <div className="bg-white">
             <div className="container py-8">
                 {/* Page Title */}
-                <h1 className="text-2xl font-bold text-gray-800 mb-6 flex justify-between items-center">
+                <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-between items-center">
                     <span>Customer Management</span>
                     {/* Buttons Container */}
                     <div className="flex gap-4">
@@ -154,7 +154,7 @@ const CreateCustomerDashboard = () => {
                         {/* Export Button */}
                         <button
                             onClick={handleExport}
-                            className="bg-green-500 text-base hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors"
+                            className="bg-blue-500 text-base hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors"
                         >
                             Export CSV
                         </button>
@@ -199,23 +199,23 @@ const CreateCustomerDashboard = () => {
                     ) : filteredCustomers.length > 0 ? (
                         <table className="min-w-full table-auto border-collapse border border-gray-200 rounded-lg overflow-hidden">
                             <thead>
-                                <tr className="bg-[#022847] text-blue-700">
-                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-semibold text-white">
+                                <tr className="bg-[#02090d59] text-blue-700">
+                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         ID
                                     </th>
-                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-semibold text-white">
+                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         Company Name
                                     </th>
-                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-semibold text-white">
+                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         Department
                                     </th>
-                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-semibold text-white">
+                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         Main Email
                                     </th>
-                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-semibold text-white">
+                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         Address
                                     </th>
-                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-sm font-semibold text-white">
+                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         Action
                                     </th>
                                 </tr>

@@ -1,4 +1,3 @@
-//LoginPage.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -20,43 +19,26 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true when form is submitted
+    setLoading(true);
     try {
       const response = await axios.post('http://localhost:5006/api/auth/login', formData);
       if (response.data.success) {
-        const { department, position } = response.data.user;
-
-        // Define a mapping object to handle redirection
-        const redirectPaths = {
-          'Food': {
-            'Admin': '/food/Admin',
-            'Reviewer': '/food/Reviewer',
-            'Certifier': '/food/Certifier',
-            'Department Head': '/food/DepartmentHead/DepartmentHead'
-          },
-          'Organic': {
-            'Reviewer': '/organic/Reviewer',
-            'Certifier': '/organic/Certifier',
-            'ProjectCreator': '/organic/ProjectCreator',
-            'Planner': '/organic/Planner',
-            'Contractor': '/organic/Contractor',
-            'Contractor': '/organic/Auditor',
-          },
-        };
-
-        // Use the mapping to redirect based on department and position
-        const redirectTo = redirectPaths[department]?.[position] || '/dashboard'; // Default to '/dashboard' if not found
-        navigate(redirectTo); // Redirect to the specific page
+        const { user, token } = response.data;
+        localStorage.setItem("user", JSON.stringify(user)); // Store user data in localStorage
+        localStorage.setItem("token", token); // Store token in localStorage
+        window.location.href = "/projectCreator"; // Redirect to the dashboard
       } else {
-        setError(response.data.message); // Display error if login fails
+        setError(response.data.message);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-      console.error('Login error:', err); // Log the error for debugging purposes
+      console.error('Login error:', err);
     } finally {
-      setLoading(false); // Set loading to false when the request is finished
+      setLoading(false);
     }
   };
+
+
 
   return (
     <div className="register-page flex justify-center items-center h-screen overflow-hidden bg-white">

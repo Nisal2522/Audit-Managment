@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id, email: user.email, department: user.department, position: user.position },
+      { userId: user._id, email: user.email, department: user.department, position: user.role },
       process.env.JWT_KEY,  // Secret key from environment
       { expiresIn: '1h' }
     );
@@ -38,7 +38,7 @@ router.post('/login', async (req, res) => {
       success: true,
       message: 'Login successful!',
       token,
-      user: { email: user.email, department: user.department, position: user.position },
+      user: { userId: user._id,email: user.email, department: user.department, position: user.role },
     });
   } catch (error) {
     console.error('Error during login:', error);

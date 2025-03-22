@@ -39,6 +39,7 @@ function App() {
         <div className="pt-5 min-h-screen px-10">
           <Routes>
             <Route path="/" element={<RegisterPage />} />
+            <Route path="/login" element={<Login />} />
             <Route path="/projectCreator" element={<ProjectCreatorDash />} />
             <Route path="/projectCreator/:id" element={<MoreInfo />} />
 
@@ -46,7 +47,6 @@ function App() {
             <Route path="/projectCreator/addCustomer" element={<AddCustomer />} />
             <Route path="/projectCreator/profile" element={<ProjectCreatorProfile />} />
 
-            <Route path="/login" element={<Login />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/food/admin" element={<AdminFood />} />
             <Route path="/food/reviewer" element={<ReviewerFood />} />
