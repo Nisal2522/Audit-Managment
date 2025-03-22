@@ -17,6 +17,8 @@ const DepartmentheadFood = () => {
   const [activeTab, setActiveTab] = useState("overview");
   const [darkMode, setDarkMode] = useState(false);
 
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+
   const chartData = {
     labels: ["Jan", "Feb", "Mar"],
     datasets: [
@@ -46,11 +48,11 @@ const DepartmentheadFood = () => {
       }`}
     >
       {/* Header */}
-      <Navbar />
+      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
 
       <div className="flex flex-grow">
         {/* Sidebar */}
-        <Sidebar />
+        {!isSidebarVisible && <Sidebar />}
 
         <main className="flex-grow p-8 rounded-lg shadow-md">
           {/* Top Bar */}
