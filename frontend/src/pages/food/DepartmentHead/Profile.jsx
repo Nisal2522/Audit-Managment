@@ -3,6 +3,7 @@ import axios from "axios";
 import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
 import moment from "moment"; // Import moment for date formatting
+import {  FaSun, FaMoon } from "react-icons/fa";
 
 const ProfileHeadFood = () => {
   const [user, setUser] = useState(null);
@@ -176,11 +177,11 @@ const ProfileHeadFood = () => {
             </label>
 
             <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
-            >
-              {darkMode ? "☀️" : "🌙"}
-            </button>
+                          onClick={() => setDarkMode(!darkMode)}
+                          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
+                        >
+                           {darkMode ? <FaSun /> : <FaMoon />}
+                        </button>
           </div>
 
           <div className="flex mt-8 ml-16">

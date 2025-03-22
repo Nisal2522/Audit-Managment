@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../../../Components/NavBar';
 import Sidebar from './Sidebar';
+import {  FaSun, FaMoon } from "react-icons/fa";
 
 const AnnouncementsFoodHead = () => {
   const [announcement, setAnnouncement] = useState('');
@@ -76,11 +77,11 @@ const AnnouncementsFoodHead = () => {
               Announcement
             </label>
             <button
-              onClick={handleToggleDarkMode}
-              className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
-            >
-              {darkMode ? "☀️" : "🌙"}
-            </button>
+                          onClick={() => setDarkMode(!darkMode)}
+                          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
+                        >
+                           {darkMode ? <FaSun /> : <FaMoon />}
+                        </button>
           </div>
 
           <div className="mb-6">

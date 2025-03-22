@@ -694,12 +694,11 @@ const EmployeeStatusFood = () => {
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
-                         <button  onClick={() => setDarkMode(!darkMode)}
-                          className={`p-2 text-xl focus:outline-none transform duration-200 ease-in-out hover:scale-105 -translate-y-1 text-2xl ${
-                            darkMode ? "text-white" : "text-gray-700"
-                          } cursor-pointer`}
+                        <button
+                          onClick={() => setDarkMode(!darkMode)}
+                          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
                         >
-                          {darkMode ? <FaSun className="inline-block" /> : <FaMoon className="inline-block" />}
+                           {darkMode ? <FaSun /> : <FaMoon />}
                         </button>
 
                  <div className="relative">

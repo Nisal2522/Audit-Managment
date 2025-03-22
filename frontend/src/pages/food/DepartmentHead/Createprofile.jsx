@@ -428,14 +428,11 @@ const CreateprofileFood = () => {
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
       <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
-        <button
+      <button
           onClick={() => setDarkMode(!darkMode)}
-          className={`p-2 text-xl focus:outline-none transform duration-200 ease-in-out hover:scale-105 -translate-y-1 text-2xl ${
-            darkMode ? "text-white" : "text-gray-700"
-          } cursor-pointer`}
-        >
-          {darkMode ? <FaSun className="inline-block" /> : <FaMoon className="inline-block" />}
-        </button>
+          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out">
+          {darkMode ? <FaSun /> : <FaMoon />}
+      </button>
       </div>
       <div className="flex flex-grow">
       {!isSidebarVisible && <Sidebar />}

@@ -10,6 +10,7 @@ import {
 import { FiShare2, FiMoreHorizontal, FiSun, FiMoon } from "react-icons/fi";
 import Sidebar from "./Sidebar";
 import Navbar from '../../../Components/NavBar';
+import {  FaSun, FaMoon } from "react-icons/fa";
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
 
@@ -70,15 +71,11 @@ const DepartmentheadFood = () => {
               </button>
               <FiMoreHorizontal className="text-gray-400 text-xl cursor-pointer" />
               <button
-                onClick={() => setDarkMode(!darkMode)}
-                className="p-2 rounded-full bg-gray-300 dark:bg-gray-700"
-              >
-                {darkMode ? (
-                  <FiSun className="text-yellow-400" />
-                ) : (
-                  <FiMoon className="text-gray-800" />
-                )}
-              </button>
+                          onClick={() => setDarkMode(!darkMode)}
+                          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
+                        >
+                           {darkMode ? <FaSun /> : <FaMoon />}
+                        </button>
             </div>
           </div>
 

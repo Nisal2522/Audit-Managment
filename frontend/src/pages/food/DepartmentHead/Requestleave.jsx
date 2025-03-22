@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Navbar from '../../../Components/NavBar';
 import Sidebar from "./Sidebar";
 import { motion } from "framer-motion";
+import {  FaSun, FaMoon } from "react-icons/fa";
 
 const RequestLeaveFood = () => {
   const [leaveRequests, setLeaveRequests] = useState([
@@ -58,11 +59,11 @@ const RequestLeaveFood = () => {
               Request Leave
             </label>
             <button
-              onClick={toggleDarkMode}
-              className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
-            >
-              {darkMode ? "☀️" : "🌙"}
-            </button>
+                          onClick={() => setDarkMode(!darkMode)}
+                          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
+                        >
+                           {darkMode ? <FaSun /> : <FaMoon />}
+                        </button>
           </div>
 
           {/* Pending Requests */}
