@@ -69,17 +69,21 @@ const CreateCustomerDashboard = () => {
     };
 
     return (
-        <div className="bg-white ">
+        <div className="bg-white">
             <div className="container py-8">
                 {/* Page Title */}
-                {/* <h1 className="text-2xl font-bold text-gray-800 mb-6">
-                    Customer Management
-                </h1> */}
+                <h1 className="text-2xl font-bold text-gray-800 mb-6 flex justify-between items-center">
+                    <span>Customer Management</span>
+                    {/* Add Customer Button */}
+                    <Link
+                        to="/projectCreator/addCustomer"
+                        className="bg-[#022847] text-base hover:bg-[#0228476a] text-white py-2 px-4 rounded-lg transition-colors"
+                    >
+                        + Add Customer
+                    </Link>
+                </h1>
 
                 {/* Search Input */}
-
-
-                {/* Customer Table */}
                 <div className="bg-[#022847] shadow-lg rounded-lg p-6">
                     <div className="relative w-full">
                         {/* Search Icon */}
@@ -96,7 +100,7 @@ const CreateCustomerDashboard = () => {
                             placeholder="Search by name, department, email, or address..."
                             value={searchQuery}
                             onChange={handleSearchChange}
-                            className=" p-3 pl-12  rounded-lg bg-[#022847]  text-white"
+                            className="p-3 pl-12 rounded-lg bg-[#022847] text-white w-full"
                         />
                     </div>
 

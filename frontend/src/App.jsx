@@ -21,6 +21,8 @@ import AnnouncementsFoodHead from './pages/food/DepartmentHead/Announcement';
 import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import ProjectCreatorDash from './pages/food/Project-Creator/Dashboard';
 import MoreInfo from './pages/food/Project-Creator/moreCustomerDetails';
+import AddCustomer from './pages/food/Project-Creator/addCustomer';
+
 
 function App() {
   return (
@@ -38,6 +40,9 @@ function App() {
             <Route path="/" element={<RegisterPage />} />
             <Route path="/projectCreator" element={<ProjectCreatorDash />} />
             <Route path="/projectCreator/:id" element={<MoreInfo />} />
+
+
+            <Route path="/projectCreator/addCustomer" element={<AddCustomer />} />
 
             <Route path="/login" element={<Login />} />
             <Route path="/admin-dashboard" element={<AdminDashboard />} />

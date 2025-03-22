@@ -13,11 +13,11 @@ export default function Sidebar() {
                     <User size={20} />
                     <span>Dashboard</span>
                 </Link>
-                <Link to="/profile" className="flex bg-white text-black items-center space-x-3 p-2 hover:bg-[#5c97c876] rounded hover:text-white">
+                <Link to="/projectCreator/notifications" className="flex bg-white text-black items-center space-x-3 p-2 hover:bg-[#5c97c876] rounded hover:text-white">
                     <User size={20} />
                     <span>Notifications</span>
                 </Link>
-                <Link to="/profile" className="flex bg-white text-black items-center space-x-3 p-2 hover:bg-[#5c97c876] rounded hover:text-white">
+                <Link to="/projectCreator/profile" className="flex bg-white text-black items-center space-x-3 p-2 hover:bg-[#5c97c876] rounded hover:text-white">
                     <User size={20} />
                     <span>Profile</span>
                 </Link>
