@@ -227,7 +227,7 @@ const CreateprofileFood = () => {
               <div className="grid grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div>
-                  <label className={`font-medium font-poppins${darkMode ? "text-white" : "text-black"}`}>
+                  <label className={`font-medium font-poppins${darkMode ? "text-black" : "text-black"}`}>
                     Full Name
                   </label>
                   <input
@@ -243,7 +243,7 @@ const CreateprofileFood = () => {
                 </div>
                 {/* Email */}
                 <div>
-                  <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Email</label>
+                  <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>Email</label>
                   <input
                     type="email"
                     name="email"
@@ -258,7 +258,7 @@ const CreateprofileFood = () => {
               </div>
               {/* Password (Automatically generated) */}
               <div className="mb-4 relative">
-                <label htmlFor="password" className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-black"}`}>
+                <label htmlFor="password" className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>
                   Password
                 </label>
                 <input
