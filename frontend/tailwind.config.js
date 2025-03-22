@@ -9,6 +9,7 @@ module.exports = {
     },
     colors: {
       'Blue1': '#2e51af',
+      'blue' :'#064979'
     },
 
     darkMode: 'class', // Enable dark mode with a class

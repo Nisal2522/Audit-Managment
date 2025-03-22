@@ -4,21 +4,26 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRouter from './routes/auth.js';
 import connectToDatabase from './db/db.js';
+import auditRouter from './routes/audit.route.js';
 
-dotenv.config();  // Load environment variables
+dotenv.config();  
 
-connectToDatabase();  // Connect to MongoDB
+connectToDatabase();  
 
 const app = express();
 
-// Middleware
-app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:5174', 
+  credentials: true
+}));
 app.use(express.json());
 
-// Register the auth routes
-app.use('/api/auth', authRouter);
 
-// Start the server
+app.use('/api/auth', authRouter);
+app.use('/api/audits', auditRouter );
+
+
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });

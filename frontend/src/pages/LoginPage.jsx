@@ -39,7 +39,7 @@ const LoginPage = () => {
             'Certifier': '/organic/Certifier',
             'ProjectCreator':'/organic/ProjectCreator',
             'Planner':'/organic/Planner',
-            'Contractor':'/organic/Contractor',
+            
             'Contractor':'/organic/Auditor',
           },
         };

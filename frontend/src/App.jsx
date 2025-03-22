@@ -19,6 +19,7 @@ import Requestleavefood from './pages/food/DepartmentHead/Requestleave';
 import ProfileHeadFood from './pages/food/DepartmentHead/Profile';
 import AnnouncementsFoodHead from './pages/food/DepartmentHead/Announcement';
 import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
+import Auditor_dash from './pages/Auditor_dash';
 
 function App() {
 
@@ -54,6 +55,7 @@ function App() {
           <Route path="/food/Head/ProfileHeadFood" element={<ProfileHeadFood/>}/>
           <Route path="/food/Head/Announcement" element={<AnnouncementsFoodHead/>}/>
           <Route path="/food/Head/Reportview" element={<Reportviewfoodhead/>}/>
+          <Route path="/auditorDash" element={<Auditor_dash/>} />
            
            
         </Routes>
