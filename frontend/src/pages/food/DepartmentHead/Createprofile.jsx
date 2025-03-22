@@ -227,7 +227,7 @@ const CreateprofileFood = () => {
               <div className="grid grid-cols-2 gap-4">
                 {/* Full Name */}
                 <div>
-                  <label className={`font-medium font-poppins${darkMode ? "text-black" : "text-black"}`}>
+                  <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>
                     Full Name
                   </label>
                   <input
@@ -284,7 +284,7 @@ const CreateprofileFood = () => {
               </div>
               {/* Employee ID */}
               <div>
-                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Employee ID</label>
+                <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>Employee ID</label>
                 <input
                   type="text"
                   name="employeeId"
@@ -298,13 +298,13 @@ const CreateprofileFood = () => {
               </div>
               {/* Role */}
               <div>
-                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Role</label>
+                <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>Role</label>
                 <select
                   name="role"
                   value={formData.role}
                   onChange={handleChange}
                   className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 
-                    ${darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"}
+                    ${darkMode ? "border-gray-600 bg-gray-800 text-white font-poppins font-semibold" : "border-gray-300 bg-gray-100 text-black font-poppins font-semibold"}
                   `}
                   required
                 >
@@ -319,7 +319,7 @@ const CreateprofileFood = () => {
               {/* Phone & DOB */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Phone Number</label>
+                  <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>Phone Number</label>
                   <input
                     type="tel"
                     name="phone"
@@ -332,7 +332,7 @@ const CreateprofileFood = () => {
                   />
                 </div>
                 <div>
-                  <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Date of Birth</label>
+                  <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>Date of Birth</label>
                   <input
                     type="date"
                     name="dob"
@@ -347,7 +347,7 @@ const CreateprofileFood = () => {
               </div>
               {/* Address */}
               <div>
-                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>Address</label>
+                <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>Address</label>
                 <textarea
                   name="address"
                   value={formData.address}
@@ -361,7 +361,7 @@ const CreateprofileFood = () => {
               </div>
               {/* Qualified Programs Section */}
               <div className="mt-6">
-                <label className={`font-medium font-poppins ${darkMode ? "text-white" : "text-black"}`}>
+                <label className={`font-medium font-poppins ${darkMode ? "text-black" : "text-black"}`}>
                   Qualified Programs
                 </label>
                 <div className="grid grid-cols-2 gap-4 mt-2 font-medium font-poppins">
@@ -374,14 +374,14 @@ const CreateprofileFood = () => {
                           onChange={() => handleProgramSelection(program)}
                           className="mr-2"
                         />
-                        <span className={`${darkMode ? "text-white" : "text-black"}`}>
+                        <span className={`${darkMode ? "text-black" : "text-black"}`}>
                           {program}
                         </span>
                       </div>
                       {data.selected && (
                         <div className="flex flex-col space-y-2">
                           {/* Start Date Label and Input */}
-                          <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
+                          <label className={`font-medium ${darkMode ? "text-black" : "text-black"}`}>
                             Start Date
                           </label>
                           <input
@@ -394,7 +394,7 @@ const CreateprofileFood = () => {
                             placeholder="Start Date"
                           />
                           {/* Expire Date Label and Input */}
-                          <label className={`font-medium ${darkMode ? "text-white" : "text-black"}`}>
+                          <label className={`font-medium ${darkMode ? "text-black" : "text-black"}`}>
                             Expire Date
                           </label>
                           <input
