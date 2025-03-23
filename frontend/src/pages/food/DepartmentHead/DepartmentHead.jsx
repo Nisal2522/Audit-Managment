@@ -59,14 +59,14 @@ const DepartmentheadFood = () => {
           {/* Top Bar */}
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center space-x-3">
-              <h1 className="text-2xl font-semibold">Hello Nisal,</h1>
+              <h1 className="text-2xl font-semibold text-[#022847]">Hello Nisal,</h1>
               <span className="flex items-center bg-blue-100 text-blue-800 text-sm font-semibold px-2.5 py-0.5 rounded-full animate-pulse">
                 <span className="w-2 h-2 bg-blue-500 rounded-full mr-1.5"></span>
                 Active
               </span>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="bg-blue-500 text-white text-lg px-4 py-2 rounded-lg cursor-pointer">
+              <button className="bg-[#022847] text-white text-lg px-4 py-2 rounded-lg cursor-pointer">
                 Share
               </button>
               <FiMoreHorizontal className="text-gray-400 text-xl cursor-pointer" />

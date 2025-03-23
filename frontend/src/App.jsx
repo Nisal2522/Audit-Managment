@@ -18,8 +18,8 @@ function App() {
     
 
         <Routes>
-          <Route path="/" element={<RegisterPage />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/registerpage" element={<RegisterPage/>} />
           <Route path="/food/Head" element={<DepartmentheadFood/>}/>
           <Route path="/food/Head/Createaccount" element={<CreateprofileFood/>}/>
           <Route path="/food/Head/Employeestatus" element={<EmployeeStatusFood/>}/>

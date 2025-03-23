@@ -26,6 +26,8 @@ const EmployeeStatusFood = () => {
   const [hasNewNotifications, setHasNewNotifications] = useState(false);
   const [showDownloadPopup, setShowDownloadPopup] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const [phoneError, setPhoneError] = useState(""); // State to store phone number validation error
+  const [emailError, setEmailError] = useState(""); // State to store email validation error
 
   useEffect(() => {
     const savedNotificationState = localStorage.getItem("hasNewNotifications");
@@ -156,7 +158,32 @@ const EmployeeStatusFood = () => {
     setHasNewNotifications(false);
   };
 
+  const validatePhoneNumber = (phone) => {
+    const phoneRegex = /^\d{10}$/; // Simple regex for 10-digit phone number
+    return phoneRegex.test(phone);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Basic email regex
+    return emailRegex.test(email);
+  };
+
   const handleSave = async () => {
+    // Validate phone number and email before saving
+    if (!validatePhoneNumber(selectedEmployee.phone)) {
+      setPhoneError("Invalid phone number. Please enter a 10-digit number.");
+      return;
+    } else {
+      setPhoneError("");
+    }
+
+    if (!validateEmail(selectedEmployee.email)) {
+      setEmailError("Invalid email address. Please enter a valid email.");
+      return;
+    } else {
+      setEmailError("");
+    }
+
     try {
       const response = await axios.put(
         `http://localhost:5005/api/employees/${selectedEmployee._id}`,
@@ -188,6 +215,23 @@ const EmployeeStatusFood = () => {
       ...prevEmployee,
       [name]: value,
     }));
+
+    // Validate phone number and email on input change
+    if (name === "phone") {
+      if (!validatePhoneNumber(value)) {
+        setPhoneError("Invalid phone number. Please enter a 10-digit number.");
+      } else {
+        setPhoneError("");
+      }
+    }
+
+    if (name === "email") {
+      if (!validateEmail(value)) {
+        setEmailError("Invalid email address. Please enter a valid email.");
+      } else {
+        setEmailError("");
+      }
+    }
   };
 
   const handleDelete = async (employeeId) => {
@@ -435,6 +479,9 @@ const EmployeeStatusFood = () => {
                           : "bg-white text-black border-gray-300 hover:border-blue-500 focus:border-blue-500"
                       } ${!isEditing ? "cursor-not-allowed" : ""}`}
                     />
+                    {phoneError && (
+                      <p className="text-red-500 text-sm mt-1">{phoneError}</p>
+                    )}
                   </div>
 
                   <div className="flex flex-col">
@@ -473,6 +520,9 @@ const EmployeeStatusFood = () => {
                           : "bg-white text-black border-gray-300 hover:border-blue-500 focus:border-blue-500"
                       } ${!isEditing ? "cursor-not-allowed" : ""}`}
                     />
+                    {emailError && (
+                      <p className="text-red-500 text-sm mt-1">{emailError}</p>
+                    )}
                   </div>
 
                   <div className="flex flex-col">

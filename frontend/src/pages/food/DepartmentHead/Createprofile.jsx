@@ -3,7 +3,7 @@ import Navbar from "../../../Components/NavBar";
 import Sidebar from "./Sidebar";
 import { createEmployee } from "../../../services/employeeservice";
 import bcrypt from "bcryptjs";
-import { FaSun, FaMoon, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarker,FaKey,FaIdCard,FaUserTie} from "react-icons/fa";
+import { FaSun, FaMoon, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarker, FaKey, FaIdCard, FaUserTie } from "react-icons/fa";
 
 const CreateprofileFood = () => {
   const [formData, setFormData] = useState({
@@ -20,8 +20,8 @@ const CreateprofileFood = () => {
   });
   const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const [errors, setErrors] = useState({ name: "", phone: "" });
-  const [currentStep, setCurrentStep] = useState(1); // Track current step in the form
+  const [errors, setErrors] = useState({ name: "", phone: "", email: "" }); // Added email error
+  const [currentStep, setCurrentStep] = useState(1);
   const [qualifiedPrograms, setQualifiedPrograms] = useState({
     GOTS: { selected: false, startDate: "", expireDate: "" },
     GRS: { selected: false, startDate: "", expireDate: "" },
@@ -33,33 +33,28 @@ const CreateprofileFood = () => {
     PPRS: { selected: false, startDate: "", expireDate: "" },
   });
 
-  // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
 
-  // Function to generate random Employee ID
   const generateEmployeeId = () => {
-    const prefix = "AFD"; // Food department prefix
-    const randomNum = Math.floor(Math.random() * 10000) + 1000; // Generates a number between 1000 and 19999
+    const prefix = "AFD";
+    const randomNum = Math.floor(Math.random() * 10000) + 1000;
     return `${prefix}${randomNum}`;
   };
 
-  // Function to generate random Password (based on the user's name)
   const generatePassword = (name) => {
-    const namePart = name.replace(/\s+/g, "").slice(2, 6).toLowerCase(); // Remove spaces and use first 3 characters
-    const randomNum = Math.floor(Math.random() * 9000) + 1000; // Generate a random number between 1000 and 9999
+    const namePart = name.replace(/\s+/g, "").slice(2, 6).toLowerCase();
+    const randomNum = Math.floor(Math.random() * 9000) + 1000;
     const specialChars = "!@#$%^&*";
     const randomSpecialChar = specialChars[Math.floor(Math.random() * specialChars.length)];
-    const password = `${namePart}${randomNum}${randomSpecialChar}`;
-    return password;
+    return `${namePart}${randomNum}${randomSpecialChar}`;
   };
 
   const handleRegeneratePassword = () => {
-    const newPassword = generatePassword(formData.name); // Generate new password based on current name
-    setFormData((prev) => ({ ...prev, password: newPassword })); // Update password in the formData
+    const newPassword = generatePassword(formData.name);
+    setFormData((prev) => ({ ...prev, password: newPassword }));
   };
 
-  // Handle Date Change for Qualified Programs
   const handleDateChange = (e, program, field) => {
     const { value } = e.target;
     setQualifiedPrograms((prev) => ({
@@ -76,7 +71,6 @@ const CreateprofileFood = () => {
     }));
   };
 
-  // Handle Program Selection
   const handleProgramSelection = (program) => {
     setQualifiedPrograms((prev) => ({
       ...prev,
@@ -87,7 +81,6 @@ const CreateprofileFood = () => {
     }));
   };
 
-  // Apply Dark Mode
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -99,15 +92,14 @@ const CreateprofileFood = () => {
   }, [darkMode]);
 
   useEffect(() => {
-    const employeeId = generateEmployeeId(); // Generate a new ID on mount
-    const password = generatePassword(formData.name); // Generate password based on name
-    setFormData((prev) => ({ ...prev, employeeId, password })); // Set password only once
-  }, []); // This effect should run only once when the component mounts
+    const employeeId = generateEmployeeId();
+    const password = generatePassword(formData.name);
+    setFormData((prev) => ({ ...prev, employeeId, password }));
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Name validation: No numbers allowed
     if (name === "name") {
       const namePattern = /^[A-Za-z\s]*$/;
       if (!namePattern.test(value)) {
@@ -117,7 +109,6 @@ const CreateprofileFood = () => {
       }
     }
 
-    // Phone validation: Only 10 digits allowed
     if (name === "phone") {
       const phonePattern = /^\d{10}$/;
       if (!phonePattern.test(value)) {
@@ -127,27 +118,33 @@ const CreateprofileFood = () => {
       }
     }
 
+    if (name === "email") {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(value)) {
+        setErrors((prev) => ({ ...prev, email: "Please enter a valid email address." }));
+      } else {
+        setErrors((prev) => ({ ...prev, email: "" }));
+      }
+    }
+
     setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if all form fields are filled
     const isFormComplete = Object.values(formData).every((value) => value !== "");
-
-    // Ensure there are no errors before submitting
     const hasErrors = Object.values(errors).some((error) => error !== "");
+
     if (hasErrors) {
       setModalMessage("Please correct the errors before submitting.");
       setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+      setTimeout(() => setIsModalOpen(false), 3000);
       return;
     }
 
-    // Convert `qualifiedPrograms` from an object to an array
     const formattedPrograms = Object.entries(qualifiedPrograms)
-      .filter(([_, program]) => program.selected) // Keep only selected programs
+      .filter(([_, program]) => program.selected)
       .map(([name, program]) => ({
         name,
         startDate: program.startDate || "",
@@ -157,45 +154,40 @@ const CreateprofileFood = () => {
     if (formattedPrograms.length === 0) {
       setModalMessage("Please select at least one Qualified Program before submitting.");
       setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+      setTimeout(() => setIsModalOpen(false), 3000);
       return;
     }
 
-    // Check if all selected programs have Start Dates
     const isDateProvided = formattedPrograms.every((program) => program.startDate);
     if (!isDateProvided) {
       setModalMessage("Please provide a Start Date for the selected program(s) before submitting.");
       setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+      setTimeout(() => setIsModalOpen(false), 3000);
       return;
     }
 
     if (!isFormComplete) {
       setModalMessage("Please fill in all fields before submitting.");
       setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+      setTimeout(() => setIsModalOpen(false), 3000);
       return;
     }
 
     try {
-      // Hash the password before sending it to the backend
       const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(formData.password, salt); // Hash the password
+      const hashedPassword = await bcrypt.hash(formData.password, salt);
 
-      // Send data to backend, including the hashed password
       await createEmployee({
         ...formData,
-        password: hashedPassword, // Replace plain text password with hashed password
+        password: hashedPassword,
         qualifiedPrograms: formattedPrograms,
         employeeId: formData.employeeId,
       });
 
-      // Show success message
       setModalMessage("Employee created successfully!");
       setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+      setTimeout(() => setIsModalOpen(false), 3000);
 
-      // Reset form after submission
       setFormData({
         name: "",
         email: "",
@@ -216,19 +208,17 @@ const CreateprofileFood = () => {
         "BCI Cotton": { selected: false, startDate: "", expireDate: "" },
         PPRS: { selected: false, startDate: "", expireDate: "" },
       });
-      setCurrentStep(1); // Reset progress bar
+      setCurrentStep(1);
     } catch (error) {
       setModalMessage("Error creating account. Please try again.");
       setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+      setTimeout(() => setIsModalOpen(false), 3000);
     }
   };
 
   return (
     <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
-      {/* Header */}
       <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
-      {/* Dark Mode Button */}
       <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
         <button
           onClick={() => setDarkMode(!darkMode)}
@@ -239,14 +229,10 @@ const CreateprofileFood = () => {
       </div>
 
       <div className="flex flex-grow">
-        {/* Sidebar */}
         {!isSidebarVisible && <Sidebar />}
 
-        {/* Main Section */}
         <main className="flex-grow flex items-center justify-center p-6">
-          {/* Card Container */}
           <div className={`shadow-lg rounded-xl p-8 w-full max-w-3xl transition duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-[#022847] text-black"}`}>
-            {/* Progress Bar */}
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center space-x-2">
                 <div
@@ -280,12 +266,10 @@ const CreateprofileFood = () => {
               </div>
             </div>
 
-            {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 mt-8">
               {currentStep === 1 && (
                 <>
                   <div className="grid grid-cols-2 gap-4">
-                    {/* Full Name */}
                     <div>
                       <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
                         <FaUser className="mr-2" /> Full Name
@@ -295,13 +279,13 @@ const CreateprofileFood = () => {
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
+                        placeholder="Enter your full name"
                         className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                           darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100"
                         }`}
                       />
                       {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
                     </div>
-                    {/* Email */}
                     <div>
                       <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
                         <FaEnvelope className="mr-2" /> Email
@@ -311,14 +295,15 @@ const CreateprofileFood = () => {
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
+                        placeholder="Enter your email address"
                         className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                           darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
                         }`}
                         required
                       />
+                      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                     </div>
                   </div>
-                  {/* Password (Automatically generated) */}
                   <div className="mb-4 relative">
                     <label htmlFor="password" className={`block font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
                       <FaKey className="mr-2" /> Password
@@ -329,12 +314,12 @@ const CreateprofileFood = () => {
                       name="password"
                       value={formData.password}
                       readOnly
+                      placeholder="Auto-generated password"
                       className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                         darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
                       }`}
                     />
                   </div>
-                  {/* Button to regenerate password */}
                   <div className="mb-4 flex justify-end">
                     <button
                       type="button"
@@ -344,7 +329,6 @@ const CreateprofileFood = () => {
                       Regenerate Password
                     </button>
                   </div>
-                  {/* Employee ID */}
                   <div>
                     <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
                       <FaIdCard className="mr-2" /> Employee ID
@@ -354,13 +338,13 @@ const CreateprofileFood = () => {
                       name="employeeId"
                       value={formData.employeeId}
                       onChange={handleChange}
+                      placeholder="Auto-generated employee ID"
                       className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                         darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
                       }`}
                       readOnly
                     />
                   </div>
-                  {/* Role */}
                   <div>
                     <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
                       <FaUserTie className="mr-2" /> Role
@@ -382,7 +366,6 @@ const CreateprofileFood = () => {
                       <option value="Contractor" className="font-poppins">Contractor</option>
                     </select>
                   </div>
-                  {/* Next Button */}
                   <button
                     type="button"
                     onClick={() => {
@@ -390,7 +373,7 @@ const CreateprofileFood = () => {
                       if (!namePattern.test(formData.name)) {
                         setModalMessage("Full Name must not contain numbers or special characters. Please re-enter.");
                         setIsModalOpen(true);
-                        setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+                        setTimeout(() => setIsModalOpen(false), 3000);
                         return;
                       }
                       setCurrentStep(2);
@@ -403,7 +386,6 @@ const CreateprofileFood = () => {
               )}
               {currentStep === 2 && (
                 <>
-                  {/* Phone & DOB */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
                       <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
@@ -415,6 +397,7 @@ const CreateprofileFood = () => {
                         value={formData.phone}
                         onChange={handleChange}
                         maxLength={10}
+                        placeholder="Enter your phone number"
                         className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                           darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100"
                         }`}
@@ -430,6 +413,7 @@ const CreateprofileFood = () => {
                         name="dob"
                         value={formData.dob}
                         onChange={handleChange}
+                        placeholder="Select your date of birth"
                         className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                           darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
                         }`}
@@ -437,7 +421,6 @@ const CreateprofileFood = () => {
                       />
                     </div>
                   </div>
-                  {/* Address */}
                   <div>
                     <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
                       <FaMapMarker className="mr-2" /> Address
@@ -446,6 +429,7 @@ const CreateprofileFood = () => {
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
+                      placeholder="Enter your address"
                       className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                         darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
                       }`}
@@ -453,7 +437,6 @@ const CreateprofileFood = () => {
                       required
                     ></textarea>
                   </div>
-                  {/* Navigation Buttons */}
                   <div className="flex justify-between">
                     <button
                       type="button"
@@ -469,7 +452,7 @@ const CreateprofileFood = () => {
                         if (!phonePattern.test(formData.phone)) {
                           setModalMessage("Phone number must be exactly 10 digits. Please re-enter.");
                           setIsModalOpen(true);
-                          setTimeout(() => setIsModalOpen(false), 3000); // Auto-dismiss after 3 seconds
+                          setTimeout(() => setIsModalOpen(false), 3000);
                           return;
                         }
                         setCurrentStep(3);
@@ -483,7 +466,6 @@ const CreateprofileFood = () => {
               )}
               {currentStep === 3 && (
                 <>
-                  {/* Qualified Programs Section */}
                   <div className="mt-6">
                     <label className={`text-lg font-poppins ${darkMode ? "text-white" : "text-white"}`}>Qualified Programs</label>
                     <div className="grid grid-cols-2 gap-4 mt-2">
@@ -500,7 +482,6 @@ const CreateprofileFood = () => {
                           </div>
                           {data.selected && (
                             <div className="flex flex-col space-y-2">
-                              {/* Start Date Label and Input */}
                               <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Start Date</label>
                               <input
                                 type="date"
@@ -509,9 +490,8 @@ const CreateprofileFood = () => {
                                 className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                                   darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
                                 }`}
-                                placeholder="Start Date"
+                                placeholder="Select start date"
                               />
-                              {/* Expire Date Label and Input */}
                               <label className={`font-poppins ${darkMode ? "text-white" : "text-white"} font-normal`}>Expire Date</label>
                               <input
                                 type="date"
@@ -520,7 +500,7 @@ const CreateprofileFood = () => {
                                 className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
                                   darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
                                 }`}
-                                placeholder="Expire Date"
+                                placeholder="Auto-generated expire date"
                                 readOnly
                               />
                             </div>
@@ -529,7 +509,6 @@ const CreateprofileFood = () => {
                       ))}
                     </div>
                   </div>
-                  {/* Navigation Buttons */}
                   <div className="flex justify-between">
                     <button
                       type="button"
@@ -552,7 +531,6 @@ const CreateprofileFood = () => {
         </main>
       </div>
 
-      {/* Modal Component */}
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
