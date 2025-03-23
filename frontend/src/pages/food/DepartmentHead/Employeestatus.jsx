@@ -459,7 +459,7 @@ const EmployeeStatusFood = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {/* Name Field (Read-Only) */}
         <div className="flex flex-col">
-          <label className="font-medium">Name:</label>
+          <label className="font-bold font-poppins">Name:</label>
           <input
             type="text"
             name="name"
@@ -475,7 +475,7 @@ const EmployeeStatusFood = () => {
 
         {/* Employee ID Field (Read-Only) */}
         <div className="flex flex-col">
-          <label className="font-medium">Employee ID:</label>
+          <label className="font-bold font-poppins">Employee ID:</label>
           <input
             type="text"
             name="employeeId"
@@ -491,7 +491,7 @@ const EmployeeStatusFood = () => {
 
         {/* Phone Number Field (Editable) */}
         <div className="flex flex-col">
-          <label className="font-medium">Phone No:</label>
+          <label className="font-bold font-poppins">Phone No:</label>
           <input
             type="text"
             name="phone"
@@ -508,7 +508,7 @@ const EmployeeStatusFood = () => {
 
         {/* Address Field (Editable) */}
         <div className="flex flex-col">
-          <label className="font-medium">Address:</label>
+          <label className="font-bold font-poppins">Address:</label>
           <input
             type="text"
             name="address"
@@ -525,7 +525,7 @@ const EmployeeStatusFood = () => {
 
         {/* Email Field (Editable) */}
         <div className="flex flex-col">
-          <label className="font-medium">Email:</label>
+          <label className="font-bold font-poppins">Email:</label>
           <input
             type="email"
             name="email"
