@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import './utils/App.css';
 import Login from './pages/LoginPage';
 import AdminDashboard from './pages/AdminDashboard';
 import RegisterPage from './pages/RegisterPage';
@@ -21,7 +22,7 @@ import AnnouncementsFoodHead from './pages/food/DepartmentHead/Announcement';
 import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import ProjectCreatorDash from './pages/food/Project-Creator/Dashboard';
 import MoreInfo from './pages/food/Project-Creator/moreCustomerDetails';
-import AddCustomer from './pages/food/Project-Creator/addCustomer';
+import AddCustomer from './pages/food/Project-Creator/AddCustomer';
 import ProjectCreatorProfile from './pages/food/Project-Creator/ProjectCreatorProfile';
 
 

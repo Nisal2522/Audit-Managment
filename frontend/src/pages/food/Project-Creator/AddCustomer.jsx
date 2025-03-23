@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom"; // Import for navigation
 import NavBar from "../../../components/NavBar";
+import { ArrowLeft } from "lucide-react";
 
 const CreateCustomerForm = () => {
     const [formData, setFormData] = useState({
@@ -199,8 +200,21 @@ const CreateCustomerForm = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1, transition: { duration: 0.6 } }}
             >
+                <button>
+                    <motion.button
+                        type="button"
+                        onClick={() => navigate(-1)}
+                        className="ml-2"
+                        whileHover="hover"
+                        whileTap="tap"
+                        variants={buttonHover}
+                    >
+                        <ArrowLeft className="w-6 h-6 text-white" />
+                    </motion.button>
+                </button>
                 <span className="text-4xl font-extrabold text-white p-4 text-center block">
                     Create Customer
+
                 </span>
                 <h2 className="text-xl text-white font-semibold mb-6 pt-6">{titles[step - 1]}</h2>
                 <AnimatePresence>

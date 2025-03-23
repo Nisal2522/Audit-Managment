@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import registerPhoto from '../assets/registerphoto.jpeg';
+import { FcGoogle } from 'react-icons/fc';
 
 const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  });
-
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false); // State to handle loading
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -24,9 +20,26 @@ const LoginPage = () => {
       const response = await axios.post('http://localhost:5006/api/auth/login', formData);
       if (response.data.success) {
         const { user, token } = response.data;
-        localStorage.setItem("user", JSON.stringify(user)); // Store user data in localStorage
-        localStorage.setItem("token", token); // Store token in localStorage
-        window.location.href = "/projectCreator"; // Redirect to the dashboard
+        localStorage.setItem('user', JSON.stringify(user)); // Store user data in localStorage
+        localStorage.setItem('token', token); // Store token in localStorage
+
+        // Redirect based on department and position
+        const redirectPaths = {
+          Food: {
+            'Department Head': '/food/Head',
+          },
+          Organic: {
+            Reviewer: '/organic/Reviewer',
+            Certifier: '/organic/Certifier',
+            ProjectCreator: '/organic/ProjectCreator',
+            Planner: '/organic/Planner',
+            Contractor: '/organic/Contractor',
+            Auditor: '/organic/Auditor',
+          },
+        };
+
+        const redirectTo = redirectPaths[user.department]?.[user.position] || '/projectCreator';
+        navigate(redirectTo);
       } else {
         setError(response.data.message);
       }
@@ -39,51 +52,61 @@ const LoginPage = () => {
   };
 
 
-
   return (
-    <div className="register-page flex justify-center items-center h-screen overflow-hidden bg-white">
-      {/* Left side for the image */}
-      <div className="photo-container flex justify-center items-center flex-4 mr-44">
-        <img src={registerPhoto} alt="Register" className="register-photo max-w-[125%] max-h-full rounded-lg object-cover" />
-      </div>
+    <div className="flex justify-center items-center h-screen bg-gray-900 text-white">
 
-      {/* Right side for the login form */}
-      <div className="form-container flex flex-col justify-center items-center flex-1 p-5 bg-white mr-10">
-        <h2 className="text-2xl text-black mb-5 text-center font-semibold">Login</h2>
-        {error && <p className="error-message text-red-500 text-base mb-5 text-center">{error}</p>}
-        <form onSubmit={handleSubmit} className="w-full max-w-[400px]">
+      <div className="w-full max-w-md p-8 bg-gray-800 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-semibold text-center mb-4 font-poppins">
+          Welcome to <span className="text-blue-400">AuditFlow</span>
+        </h2>
+        <p className="text-center text-gray-400 mb-6">Please log in to manage your audits efficiently.</p>
+        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label className="block text-lg mb-2 text-blue-700 font-semibold">Email:</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               onChange={handleChange}
+              placeholder="Enter your email"
               required
-              className="w-[350px] p-3 text-base border border-gray-300 rounded-lg bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
+              className="w-full p-3  h-9 bg-gray-700 border border-gray-600 rounded-full focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
-            <label className="block text-lg mb-2 text-blue-700 font-semibold">Password:</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
+              placeholder="Enter your password"
               required
-              className="w-[350px] p-3 text-base border border-gray-300 rounded-lg bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
+              className="w-full p-3 h-9 bg-gray-700 border border-gray-600 rounded-full  focus:outline-none focus:border-blue-500"
             />
           </div>
-          <div className="text-right mb-4">
-            <a href="/forgot-password" className="text-blue-500 text-sm hover:underline">
-              Forgot Password?
-            </a>
-          </div>
-
-          <button type="submit" disabled={loading} className="w-full p-3 text-lg bg-blue-500 text-white rounded-md cursor-pointer hover:bg-blue-700 transition-all disabled:bg-gray-300 disabled:cursor-not-allowed">
-            {loading ? 'Logging in...' : 'Login'}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full p-3 bg-blue-500 font-poppins h-11 rounded-full  text-white font-semibold hover:bg-blue-600 transition disabled:bg-gray-500"
+          >
+            {loading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
+
+        <div className="my-4 text-center text-gray-500 font-poppins ">or continue with</div>
+        <button className="w-full flex  h-11 items-center justify-center p-3 border border-gray-600 rounded-full hover:bg-gray-700 transition">
+          <FcGoogle className="text-xl mr-2 font-poppins" /> Google
+        </button>
+        <div className="text-right mb-4 font-poppins">
+          <a href="/forgot-password" className="text-blue-500 text-sm hover:underline">
+            Forgot Password?
+          </a>
+        </div>
+
+        <div className="mt-4 flex items-center font-poppins">
+          <input type="checkbox" id="remember" className="mr-2" />
+          <label htmlFor="remember" className="text-gray-400 text-sm">Remember me</label>
+        </div>
       </div>
     </div>
   );

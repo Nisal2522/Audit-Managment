@@ -275,6 +275,7 @@ const CustomerDetails = () => {
                             </div>
                         </div>
                     </div>
+                    <div className="container text-2xl mb-5 font-bold text-[#022847]">Customer Facility Table</div>
                     <UnitTable />
                 </div>
             </div>

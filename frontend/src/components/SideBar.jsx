@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export default function Sidebar() {
     return (
         <div className="fixed top-16  left-0 h-full bg-[#064979] text-white w-64 p-4 z-40">
-            <nav className="space-y-4">
+            <nav className="space-y-5 mt-2 ">
                 <Link to="/" className="flex bg-[#fff] text-black items-center space-x-3 p-2 hover:bg-[#5c97c876] rounded hover:text-white">
                     <Home size={20} />
                     <span>Home</span>

@@ -4,6 +4,7 @@ import CustomerDetails from "./customerDetails";
 import Navbar from "../../../components/NavBar";
 import AvatarGroup from "../../../components/AvatarGroup";
 import Sidebar from "../../../components/SideBar";
+import Clock from "../../../components/Clock.jsx";
 
 const HomePage = () => {
     const status = "Active";
@@ -22,28 +23,34 @@ const HomePage = () => {
                 {/* Content with spacing to prevent overlapping */}
                 <div className="flex-1 ml-64">
                     <div className="container  mt-16">
-                        <div className="container border-2 rounded-lg bg-[#022847] py-8 mt-16">
+                        <div className="container border-2 rounded-lg bg-[#022847] py-6 ">
                             <div className="flex  items-center mb-2">
-                                <h1 className="text-5xl pl-5 font-extrabold text-white mr-4">
+                                <h1 className="text-5xl pl-5 poppins-extrabold font-extrabold text-white mr-4">
                                     Dashboard
                                 </h1>
-                                <div className="pt-3">
+                                <div className="pt-0">
                                     <div className="flex items-center ml-10 border-2 rounded-xl bg-[#ffffff19] border-green-500 px-2 py-2">
                                         <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                                         <p className="text-xs font-semibold text-green-500">{status}</p>
                                     </div>
                                 </div>
+                                <div>
+                                    <Clock />
+                                </div>
                             </div>
 
                             {/* New line for Project Creator */}
-                            <div className="mt-4">
-                                <p className="text-3xl pl-5 text-gray-100">Hello, Nilina.</p>
+                            <div className="mt-1">
+                                <p className="text-3xl pl-5 poppins-regular text-gray-100">Hello, Nilina.</p>
                             </div>
 
                             {/* New line for AvatarGroup */}
-                            <div className="mt-4 pl-5">
+                            <div className="mt-1.
+                            .
+                             pl-5">
                                 <AvatarGroup names={names} />
                             </div>
+
                         </div>
 
 
