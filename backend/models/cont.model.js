@@ -6,7 +6,7 @@ const contractorSchema = new mongoose.Schema({
    
     projectID: {
         type: String,
-        required: true  
+        required: true,  
     },
     projectName: {
         type: String,
@@ -47,8 +47,11 @@ const contractorSchema = new mongoose.Schema({
     totalCost: {
         type: Number,
         required: false  // This field will be calculated
+    },
+    totalCostLKR: {
+        type: Number,
+        required: false  // This field will be calculated
     }
-
 
 });
 
@@ -70,4 +73,4 @@ contractorSchema.pre('save', function(next) {
 });
 
 
-export default mongoose.model('Contractor', contractorSchema);
+export default mongoose.model('Contractors', contractorSchema);

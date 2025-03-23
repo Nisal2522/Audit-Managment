@@ -1,3 +1,5 @@
+//cont.controller.js in controllers folder
+
 import Contractor from  "../models/cont.model.js"
 
 export const createContract = async (req, res) => {
