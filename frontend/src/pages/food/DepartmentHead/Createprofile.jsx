@@ -3,7 +3,7 @@ import Navbar from "../../../Components/NavBar";
 import Sidebar from "./Sidebar";
 import { createEmployee } from "../../../services/employeeservice";
 import bcrypt from "bcryptjs";
-import { FaSun, FaMoon } from "react-icons/fa";
+import { FaSun, FaMoon, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarker,FaKey,FaIdCard,FaUserTie} from "react-icons/fa";
 
 const CreateprofileFood = () => {
   const [formData, setFormData] = useState({
@@ -237,9 +237,11 @@ const CreateprofileFood = () => {
           {darkMode ? <FaSun /> : <FaMoon />}
         </button>
       </div>
+
       <div className="flex flex-grow">
         {/* Sidebar */}
         {!isSidebarVisible && <Sidebar />}
+
         {/* Main Section */}
         <main className="flex-grow flex items-center justify-center p-6">
           {/* Card Container */}
@@ -277,6 +279,7 @@ const CreateprofileFood = () => {
                 <span className="text-white font-poppins">Qualified Programs</span>
               </div>
             </div>
+
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-4 mt-8">
               {currentStep === 1 && (
@@ -284,7 +287,9 @@ const CreateprofileFood = () => {
                   <div className="grid grid-cols-2 gap-4">
                     {/* Full Name */}
                     <div>
-                    <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Full Name</label>
+                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                        <FaUser className="mr-2" /> Full Name
+                      </label>
                       <input
                         type="text"
                         name="name"
@@ -298,7 +303,9 @@ const CreateprofileFood = () => {
                     </div>
                     {/* Email */}
                     <div>
-                      <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Email</label>
+                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                        <FaEnvelope className="mr-2" /> Email
+                      </label>
                       <input
                         type="email"
                         name="email"
@@ -313,8 +320,8 @@ const CreateprofileFood = () => {
                   </div>
                   {/* Password (Automatically generated) */}
                   <div className="mb-4 relative">
-                    <label htmlFor="password" className={`block font-poppins ${darkMode ? "text-white" : "text-white"}`}>
-                      Password
+                    <label htmlFor="password" className={`block font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                      <FaKey className="mr-2" /> Password
                     </label>
                     <input
                       type="text"
@@ -339,7 +346,9 @@ const CreateprofileFood = () => {
                   </div>
                   {/* Employee ID */}
                   <div>
-                    <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Employee ID</label>
+                    <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                      <FaIdCard className="mr-2" /> Employee ID
+                    </label>
                     <input
                       type="text"
                       name="employeeId"
@@ -353,7 +362,9 @@ const CreateprofileFood = () => {
                   </div>
                   {/* Role */}
                   <div>
-                    <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Role</label>
+                    <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                      <FaUserTie className="mr-2" /> Role
+                    </label>
                     <select
                       name="role"
                       value={formData.role}
@@ -395,7 +406,9 @@ const CreateprofileFood = () => {
                   {/* Phone & DOB */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Phone Number</label>
+                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                        <FaPhone className="mr-2" /> Phone Number
+                      </label>
                       <input
                         type="text"
                         name="phone"
@@ -409,7 +422,9 @@ const CreateprofileFood = () => {
                       {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
                     </div>
                     <div>
-                      <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Date of Birth</label>
+                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                        <FaCalendar className="mr-2" /> Date of Birth
+                      </label>
                       <input
                         type="date"
                         name="dob"
@@ -424,7 +439,9 @@ const CreateprofileFood = () => {
                   </div>
                   {/* Address */}
                   <div>
-                    <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Address</label>
+                    <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                      <FaMapMarker className="mr-2" /> Address
+                    </label>
                     <textarea
                       name="address"
                       value={formData.address}
