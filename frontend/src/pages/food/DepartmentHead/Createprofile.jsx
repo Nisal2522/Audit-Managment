@@ -366,6 +366,26 @@ const CreateprofileFood = () => {
                       <option value="Contractor" className="font-poppins">Contractor</option>
                     </select>
                   </div>
+
+
+                  {/* <div>
+                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
+                        <FaUser className="mr-2" /> Data
+                      </label>
+                      <input
+                        type="text"
+                        name="data"
+                        value={formData.data}
+                        onChange={handleChange}
+                        placeholder="Enter your full name"
+                        className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
+                          darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100"
+                        }`}
+                      />
+                      {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                    </div> */}
+
+
                   <button
                     type="button"
                     onClick={() => {

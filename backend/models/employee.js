@@ -23,6 +23,7 @@ const employeeSchema = new mongoose.Schema({
     department: String,   
     password: String,
     createdAt: { type: Date, default: Date.now }, 
+    //data: String,
     
   });
 
