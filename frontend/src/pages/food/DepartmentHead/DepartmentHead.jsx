@@ -82,7 +82,7 @@ const DepartmentheadFood = () => {
           {/* Members Count Section */}
           <div
             className={`flex items-center space-x-3 px-4 py-2 rounded-lg inline-block text-sm font-medium mb-6 ${
-              darkMode ? "bg-teal-300 text-black" : "bg-gray-400 text-gray-700"
+              darkMode ? "bg-teal-300 text-black" : "bg-[#022847] text-white"
             }`}
           >
             {/* Profile Images */}
@@ -130,7 +130,7 @@ const DepartmentheadFood = () => {
                     "Pending Leaves",
                     "Resolved Issues",
                   ].map((title, index) => (
-                    <div key={index} className="p-6 rounded-lg shadow-lg bg-gray-800">
+                    <div key={index} className="p-6 rounded-lg shadow-lg bg-[#022847]">
                       <p className="text-white">{title}</p>
                       <h2 className="text-white text-3xl font-bold">
                         {[25, 50, 8, 20][index]}
@@ -145,7 +145,7 @@ const DepartmentheadFood = () => {
                 <div className="grid grid-cols-2 gap-6 mt-6">
                   {["Audit Completion Rate", "Issue Resolution Rate"].map(
                     (title, index) => (
-                      <div key={index} className="p-6 rounded-lg shadow-lg bg-gray-800">
+                      <div key={index} className="p-6 rounded-lg shadow-lg bg-[#022847]">
                         <h3 className="text-xl text-white font-semibold mb-4">
                           {title}
                         </h3>
