@@ -70,7 +70,7 @@ const LoginPage = () => {
               onChange={handleChange}
               placeholder="Enter your email"
               required
-              className="w-full p-3  h-9 bg-gray-700 border border-gray-600 rounded-full focus:outline-none focus:border-blue-500"
+              className="w-full p-3  h-11 bg-gray-700 border border-gray-600 rounded-full focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -81,7 +81,7 @@ const LoginPage = () => {
               onChange={handleChange}
               placeholder="Enter your password"
               required
-              className="w-full p-3 h-9 bg-gray-700 border border-gray-600 rounded-full  focus:outline-none focus:border-blue-500"
+              className="w-full p-3 h-11 bg-gray-700 border border-gray-600 rounded-full  focus:outline-none focus:border-blue-500"
             />
           </div>
           <button
