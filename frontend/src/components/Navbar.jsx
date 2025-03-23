@@ -20,11 +20,11 @@ import logo from "../assets/logo.png";
                 <button className="text-white hover:text-gray-400">
                     <Grid size={20} />
                 </button>
-                <img
+                {/* <img
                     src="https://via.placeholder.com/32"
                     alt="Profile"
                     className="w-8 h-8 rounded-full cursor-pointer"
-                />
+                /> */}
             </div>
         </nav>
     );

@@ -4,9 +4,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        "arabic": ['"Amiri"', 'serif'], 
-        
-    },
+        sans: ["Poppins", "sans-serif"],
+      },
     colors: {
       'Blue1': '#2e51af',
       'blue' :'#064979'

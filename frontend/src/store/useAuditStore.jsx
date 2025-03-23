@@ -31,13 +31,15 @@ export const useAuditStore = create((set , get) => ({
             set({ isLoading: true });
             try {
               const res = await axiosInstance.get(`/audits/auditdetails/${id}`);
-              console.log("hello");
+              // console.log("hello");
               set({ auditData: res.data });
             } catch (error) {
               toast.error(error.response.data.message);
             } finally {
               set({ isLoading: false });
             }
+
+            
 
 
 

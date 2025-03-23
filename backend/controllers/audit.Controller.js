@@ -73,7 +73,7 @@ export const submitAuditReport = async (req, res) => {
 export const getAuditInfo = async (req, res) => {
             const _id = req.params.id;
     try {
-        const auditDetails = await plannedAudits.findOne({ auditorId:_id}); 
+        const auditDetails = await plannedAudits.find({ auditorId:_id}); 
 
         if (!auditDetails) { 
             return res.status(404).json({ message: 'No audits found for this auditor' });
