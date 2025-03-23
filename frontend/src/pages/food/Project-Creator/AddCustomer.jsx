@@ -19,13 +19,11 @@ const CreateCustomerForm = () => {
         },
         companySize: "",
     });
-
     const [step, setStep] = useState(1);
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(null);
-    const [fieldErrors, setFieldErrors] = useState({}); // Track field-specific errors
-
-    const navigate = useNavigate(); // Hook for navigation
+    const [fieldErrors, setFieldErrors] = useState({});
+    const navigate = useNavigate();
 
     const validateField = (name, value) => {
         const errors = { ...fieldErrors };
@@ -65,6 +63,8 @@ const CreateCustomerForm = () => {
             case "companySize":
                 if (!value.trim()) {
                     errors[name] = "Company size is required.";
+                } else if (isNaN(Number(value))) {
+                    errors[name] = "Company size must be a number.";
                 } else {
                     delete errors[name];
                 }
@@ -131,6 +131,9 @@ const CreateCustomerForm = () => {
             if (!formData.companySize.trim()) {
                 errors.companySize = "Company Size is required.";
                 isValid = false;
+            } else if (isNaN(Number(formData.companySize))) {
+                errors.companySize = "Company size must be a number.";
+                isValid = false;
             }
         }
         setFieldErrors(errors);
@@ -149,12 +152,10 @@ const CreateCustomerForm = () => {
         e.preventDefault();
         setError(null);
         setSuccess(null);
-
         if (!validateStep()) {
             setError("Please fix the errors in the form.");
             return;
         }
-
         try {
             await axios.post("http://localhost:5006/api/customers", formData);
             setSuccess("Customer created successfully!");
@@ -175,18 +176,15 @@ const CreateCustomerForm = () => {
     const prevStep = () => setStep((prevStep) => prevStep - 1);
 
     const titles = ["Basic Information", "Address Details", "Contact Details"];
-
     const containerVariants = {
         hidden: { opacity: 0, x: 50 },
         visible: { opacity: 1, x: 0, transition: { duration: 0.3 } },
         exit: { opacity: 0, x: -50, transition: { duration: 0.3 } },
     };
-
     const buttonHover = {
         hover: { scale: 1.05, boxShadow: "0px 0px 8px rgba(0, 0, 0, 0.2)" },
         tap: { scale: 0.95 },
     };
-
     const messageVariants = {
         hidden: { scale: 0 },
         visible: { scale: 1, transition: { type: "spring", stiffness: 300 } },
@@ -214,7 +212,6 @@ const CreateCustomerForm = () => {
                 </button>
                 <span className="text-4xl font-extrabold text-white p-4 text-center block">
                     Create Customer
-
                 </span>
                 <h2 className="text-xl text-white font-semibold mb-6 pt-6">{titles[step - 1]}</h2>
                 <AnimatePresence>
@@ -424,23 +421,14 @@ const CreateCustomerForm = () => {
                             <>
                                 <motion.button
                                     type="submit"
-                                    className="px-4 py-2 bg-green-800 text-white rounded-lg"
+                                    className="px-4 py-2 bg-green-800 text-white rounded-lg animate-bounce"
                                     whileHover="hover"
                                     whileTap="tap"
                                     variants={buttonHover}
                                 >
                                     Submit
                                 </motion.button>
-                                <motion.button
-                                    type="button"
-                                    onClick={() => navigate("/projectCreator")} // Navigate to /projectCreator
-                                    className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg ml-2"
-                                    whileHover="hover"
-                                    whileTap="tap"
-                                    variants={buttonHover}
-                                >
-                                    Go to Project Creator
-                                </motion.button>
+
                             </>
                         )}
                     </div>

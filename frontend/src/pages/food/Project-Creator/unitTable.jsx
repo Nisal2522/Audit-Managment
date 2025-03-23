@@ -95,6 +95,39 @@ const UnitTable = () => {
         ]);
     };
 
+    // Drag-and-drop functionality
+    const handleDragStart = (e, rowIndex, certification) => {
+        e.dataTransfer.setData("text/plain", JSON.stringify({ rowIndex, certification }));
+    };
+
+    const handleDrop = (e, targetColumn, rowIndex) => {
+        e.preventDefault();
+        const { rowIndex: sourceRowIndex, certification } = JSON.parse(
+            e.dataTransfer.getData("text/plain")
+        );
+        setRows((prevRows) => {
+            const updatedRows = [...prevRows];
+
+            // Remove certification from the "No Processing" column
+            const sourceCertifications = updatedRows[sourceRowIndex].certifications.filter(
+                (c) => c !== certification
+            );
+            updatedRows[sourceRowIndex].certifications = sourceCertifications;
+
+            // Add certification to the target column
+            if (!updatedRows[rowIndex][targetColumn]) {
+                updatedRows[rowIndex][targetColumn] = [];
+            }
+            updatedRows[rowIndex][targetColumn].push(certification);
+
+            return updatedRows;
+        });
+    };
+
+    const handleDragOver = (e) => {
+        e.preventDefault();
+    };
+
     return (
         <div className="rounded-lg overflow-x-auto">
             {/* Table */}
@@ -102,18 +135,59 @@ const UnitTable = () => {
                 {/* Table Header */}
                 <thead>
                     <tr className="bg-[#022847] text-white text-center font-bold">
-                        <th className="px-4 py-2 border ">Company Details</th>
-                        <th className="px-4 py-2 border ">Warehousing</th>
-                        <th className="px-4 py-2 border ">Extrusion</th>
-                        <th className="px-4 py-2 border ">Collecting</th>
-                        <th className="px-4 py-2 border ">Manufacturing</th>
-                        <th className="px-4 py-2 border ">Trading</th>
-                        <th className="px-4 py-2 border ">Mechanical Recycling</th>
-                        <th className="px-4 py-2 border ">Printing</th>
-                        <th className="px-4 py-2 border ">No Processing</th>
+                        <th className="px-4 py-2 border">Company Details</th>
+                        <th
+                            className="px-4 py-2 border"
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "warehousing", 0)}
+                        >
+                            Warehousing
+                        </th>
+                        <th
+                            className="px-4 py-2 border"
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "extrusion", 0)}
+                        >
+                            Extrusion
+                        </th>
+                        <th
+                            className="px-4 py-2 border"
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "collecting", 0)}
+                        >
+                            Collecting
+                        </th>
+                        <th
+                            className="px-4 py-2 border"
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "manufacturing", 0)}
+                        >
+                            Manufacturing
+                        </th>
+                        <th
+                            className="px-4 py-2 border"
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "trading", 0)}
+                        >
+                            Trading
+                        </th>
+                        <th
+                            className="px-4 py-2 border"
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "mechanicalRecycling", 0)}
+                        >
+                            Mechanical Recycling
+                        </th>
+                        <th
+                            className="px-4 py-2 border"
+                            onDragOver={handleDragOver}
+                            onDrop={(e) => handleDrop(e, "printing", 0)}
+                        >
+                            Printing
+                        </th>
+                        <th className="px-4 py-2 border">No Processing</th>
                     </tr>
                 </thead>
-
                 {/* Table Body */}
                 <tbody>
                     {/* Initial Row with Fetched Data */}
@@ -139,7 +213,6 @@ const UnitTable = () => {
                             </td>
                         </tr>
                     )}
-
                     {/* Dynamically Added Rows */}
                     {rows.map((row, index) => (
                         <tr key={index}>
@@ -157,21 +230,73 @@ const UnitTable = () => {
                                     </button>
                                 </p>
                             </td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
+                            <td
+                                className="px-4 py-2 border border-[#022947]"
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, "warehousing", index)}
+                            >
+                                {row.warehousing?.join(" / ") || ""}
+                            </td>
+                            <td
+                                className="px-4 py-2 border border-[#022947]"
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, "extrusion", index)}
+                            >
+                                {row.extrusion?.join(" / ") || ""}
+                            </td>
+                            <td
+                                className="px-4 py-2 border border-[#022947]"
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, "collecting", index)}
+                            >
+                                {row.collecting?.join(" / ") || ""}
+                            </td>
+                            <td
+                                className="px-4 py-2 border border-[#022947]"
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, "manufacturing", index)}
+                            >
+                                {row.manufacturing?.join(" / ") || ""}
+                            </td>
+                            <td
+                                className="px-4 py-2 border border-[#022947]"
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, "trading", index)}
+                            >
+                                {row.trading?.join(" / ") || ""}
+                            </td>
+                            <td
+                                className="px-4 py-2 border border-[#022947]"
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, "mechanicalRecycling", index)}
+                            >
+                                {row.mechanicalRecycling?.join(" / ") || ""}
+                            </td>
+                            <td
+                                className="px-4 py-2 border border-[#022947]"
+                                onDragOver={handleDragOver}
+                                onDrop={(e) => handleDrop(e, "printing", index)}
+                            >
+                                {row.printing?.join(" / ") || ""}
+                            </td>
                             <td className="px-4 py-2 border border-[#022947]">
-                                {row.certifications.join(" / ") || "None"}
+                                {row.certifications.map((certification, idx) => (
+                                    <span
+                                        key={idx}
+                                        draggable
+                                        onDragStart={(e) =>
+                                            handleDragStart(e, index, certification)
+                                        }
+                                        className="inline-block bg-gray-200 px-2 py-1 rounded mr-2 cursor-move"
+                                    >
+                                        {certification}
+                                    </span>
+                                ))}
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-
             {/* Add Row Button Container */}
             <div className="flex justify-center mt-1">
                 <button
@@ -181,7 +306,6 @@ const UnitTable = () => {
                     +
                 </button>
             </div>
-
             {/* Popup for Certification Selection */}
             {
                 isPopupOpen && (
@@ -219,7 +343,7 @@ const UnitTable = () => {
                     </div>
                 )
             }
-        </div >
+        </div>
     );
 };
 

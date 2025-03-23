@@ -172,7 +172,7 @@ const CreateCustomerDashboard = () => {
         <div className="bg-white">
             <div className="container py-8">
                 {/* Page Title */}
-                <h1 className="text-3xl font-bold text-gray-800 mb-6 flex justify-between items-center">
+                <h1 className="text-3xl font-bold text-[#022847] mb-6 flex justify-between items-center">
                     <span>Customer Management</span>
                     {/* Buttons Container */}
                     <div className="flex gap-4">

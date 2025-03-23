@@ -24,20 +24,21 @@ import ProjectCreatorDash from './pages/food/Project-Creator/Dashboard';
 import MoreInfo from './pages/food/Project-Creator/moreCustomerDetails';
 import AddCustomer from './pages/food/Project-Creator/AddCustomer';
 import ProjectCreatorProfile from './pages/food/Project-Creator/ProjectCreatorProfile';
+import Notifications from './components/Notifications';
 
 
 function App() {
   return (
     <BrowserRouter>
       <div className="App min-h-screen ">
-        {/* Tailwind-styled blue-screen header */}
+        {/* Tailwind-styled blue-screen header
         {(location.pathname === '/' || location.pathname === '/login') && (
           <div className=" text-white w-full h-16 fixed top-0 z-50 flex items-center justify-center text-2xl font-bold shadow-lg">
             Audit Planning System
           </div>
-        )}
+        )} */}
 
-        <div className="pt-5 min-h-screen px-10">
+        <div className=" min-h-screen ">
           <Routes>
             <Route path="/" element={<RegisterPage />} />
             <Route path="/login" element={<Login />} />
@@ -45,8 +46,11 @@ function App() {
             <Route path="/projectCreator/:id" element={<MoreInfo />} />
 
 
+
             <Route path="/projectCreator/addCustomer" element={<AddCustomer />} />
             <Route path="/projectCreator/profile" element={<ProjectCreatorProfile />} />
+            <Route path="/projectCreator/notifications" element={<Notifications />} />
+            {/* <Route path="/projectCreator/chatSystem" element={< />} /> */}
 
             <Route path="/admin-dashboard" element={<AdminDashboard />} />
             <Route path="/food/admin" element={<AdminFood />} />

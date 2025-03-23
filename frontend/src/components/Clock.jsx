@@ -21,7 +21,7 @@ const Clock = () => {
 
     return (
         <div className="flex flex-col ml-96 pl-28 w-full text-white ">
-            <p className="text-4xl  self-end font-bold">{time}</p>
+            <p className="text-4xl  self-end ">{time}</p>
             <p className="text-lg self-end">{date}</p>
         </div>
     );

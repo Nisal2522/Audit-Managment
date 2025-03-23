@@ -112,7 +112,7 @@ const CustomerDetails = () => {
             <div className="ml-64 mt-16">
                 {/* Fixed Sidebar */}
                 <Sidebar />
-                <div className="min-h-screen">
+                <div className="min-h-screen mx-10">
                     <div className="container py-12">
                         {/* Card Container */}
                         <div className="bg-[#022847] shadow-lg rounded-lg p-8 space-y-8 w-full">
@@ -174,7 +174,7 @@ const CustomerDetails = () => {
                                                 className="w-full p-2 border rounded text-black"
                                             />
                                         ) : (
-                                            <span className="text-white text-lg">{customer._id}</span>
+                                            <span className="text-gray-400 text-sm">{customer._id}</span>
                                         )}
                                     </div>
                                     <div>
@@ -189,7 +189,7 @@ const CustomerDetails = () => {
                                                 className="w-full p-2 border rounded text-black"
                                             />
                                         ) : (
-                                            <span className="text-white text-lg">{customer.department}</span>
+                                            <span className="text-gray-400 text-sm">{customer.department}</span>
                                         )}
                                     </div>
                                     <div>
@@ -204,7 +204,7 @@ const CustomerDetails = () => {
                                                 className="w-full p-2 border rounded text-black"
                                             />
                                         ) : (
-                                            <span className="text-white text-lg">{customer.companySize}</span>
+                                            <span className="text-gray-400 text-sm">{customer.companySize}</span>
                                         )}
                                     </div>
                                 </div>
@@ -223,7 +223,7 @@ const CustomerDetails = () => {
                                                 className="w-full p-2 border rounded text-black"
                                             />
                                         ) : (
-                                            <span className="text-white text-lg">{customer.address?.mainAddress}</span>
+                                            <span className="text-gray-400 text-sm">{customer.address?.mainAddress}</span>
                                         )}
                                     </div>
                                     <div>
@@ -238,7 +238,7 @@ const CustomerDetails = () => {
                                                 className="w-full p-2 border rounded text-black"
                                             />
                                         ) : (
-                                            <span className="text-white text-lg">{customer.address?.invoiceAddress}</span>
+                                            <span className="text-gray-400 text-sm">{customer.address?.invoiceAddress}</span>
                                         )}
                                     </div>
                                     <div>
@@ -253,7 +253,7 @@ const CustomerDetails = () => {
                                                 className="w-full p-2 border rounded text-black"
                                             />
                                         ) : (
-                                            <span className="text-white text-lg">{customer.email?.mainEmail}</span>
+                                            <span className="text-gray-400 text-sm">{customer.email?.mainEmail}</span>
                                         )}
                                     </div>
                                     <div>
@@ -268,7 +268,7 @@ const CustomerDetails = () => {
                                                 className="w-full p-2 border rounded text-black"
                                             />
                                         ) : (
-                                            <span className="text-white text-lg">{customer.email?.invoiceEmail}</span>
+                                            <span className="text-gray-400 text-sm">{customer.email?.invoiceEmail}</span>
                                         )}
                                     </div>
                                 </div>
