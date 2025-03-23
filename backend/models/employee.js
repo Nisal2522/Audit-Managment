@@ -21,8 +21,8 @@ const employeeSchema = new mongoose.Schema({
     qualifiedPrograms: [qualifiedProgramSchema], // Array of programs
     status: { type: String, enum: ['active', 'inactive'], default: 'active' }, 
     department: String,   
-   password: String,
-   createdAt: { type: Date, default: Date.now }, 
+    password: String,
+    createdAt: { type: Date, default: Date.now }, 
     
   });
 

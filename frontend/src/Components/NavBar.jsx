@@ -1,7 +1,24 @@
-import { Menu, Search, Grid } from "lucide-react";
+import { Menu, Clock } from "lucide-react"; // Import Clock icon
 import logo from "../../src/assets/logon.png";
+import { useEffect, useState } from "react"; // Import useEffect and useState for the clock
 
 export default function NavBar({ toggleSidebar }) {
+  // State to store the current time
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update the clock every second
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+
+    // Cleanup interval on component unmount
+    return () => clearInterval(intervalId);
+  }, []);
+
+  // Format the time as HH:MM:SS
+  const formattedTime = currentTime.toLocaleTimeString();
+
   return (
     <nav className="flex items-center justify-between text-white p-4" style={{ backgroundColor: "#064979" }}>
       {/* Left Section - Logo & Title */}
@@ -13,19 +30,10 @@ export default function NavBar({ toggleSidebar }) {
         <span className="text-xl font-semibold text-blue-400">AuditFlow</span>
       </div>
 
-      {/* Right Section - Icons & Profile */}
-      <div className="flex items-center gap-4">
-        <button className="text-white hover:text-gray-400">
-          <Search size={20} />
-        </button>
-        <button className="text-white hover:text-gray-400">
-          <Grid size={20} />
-        </button>
-        <img
-          src="https://via.placeholder.com/32"
-          alt="Profile"
-          className="w-8 h-8 rounded-full cursor-pointer"
-        />
+      {/* Right Section - Real-Time Clock with Icon */}
+      <div className="flex items-center gap-2">
+        <Clock size={20} className="text-white" /> {/* Clock icon */}
+        <span className="text-xl font-semibold">{formattedTime}</span> {/* Real-time clock */}
       </div>
     </nav>
   );
