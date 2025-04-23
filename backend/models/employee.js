@@ -18,12 +18,11 @@ const employeeSchema = new mongoose.Schema({
     role: String,
     dob: String,
     address: String,
-    qualifiedPrograms: [qualifiedProgramSchema], // Array of programs
+    qualifiedPrograms: [qualifiedProgramSchema], // Array
     status: { type: String, enum: ['active', 'inactive'], default: 'active' }, 
     department: String,   
-    password: String,
-    createdAt: { type: Date, default: Date.now }, 
-    //data: String,
+   password: String,
+   createdAt: { type: Date, default: Date.now }, 
     
   });
 
