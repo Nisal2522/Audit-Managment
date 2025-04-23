@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Navbar from '../../../Components/NavBar';
-import Sidebar from "./Sidebar";
+import Navbar from "../../../components/NavBar";
+import Sidebar from "../../../components/Sidebar";
 import { motion } from "framer-motion";
 import {  FaSun, FaMoon } from "react-icons/fa";
 
