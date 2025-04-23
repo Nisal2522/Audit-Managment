@@ -1,4 +1,4 @@
-import { Menu, Search, Grid, ChevronDown, LogOut, User, Settings } from "lucide-react";
+import { Menu, ChevronDown, LogOut, User } from "lucide-react";
 import logo from "../../src/assets/logon.png";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +34,7 @@ export default function NavBar({ toggleSidebar }) {
   };
 
   return (
-    <nav className="flex items-center justify-between text-white p-4" style={{ backgroundColor: "#022847" }}>
+    <nav className="flex items-center justify-between text-white p-4" style={{ backgroundColor: "#064979" }}>
       <div className="flex items-center gap-3">
         <button 
           className="text-white hover:text-gray-400 transition-colors"
@@ -58,18 +58,7 @@ export default function NavBar({ toggleSidebar }) {
       </div>
 
       <div className="flex items-center gap-4">
-        <button 
-          className="text-white hover:text-gray-400 transition-colors p-1 rounded-full"
-          aria-label="Search"
-        >
-          <Search size={20} />
-        </button>
-        <button 
-          className="text-white hover:text-gray-400 transition-colors p-1 rounded-full"
-          aria-label="Apps"
-        >
-          <Grid size={20} />
-        </button>
+        
 
         {/* Profile Dropdown */}
         <div className="relative">
