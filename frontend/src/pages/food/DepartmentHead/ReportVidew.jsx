@@ -1,7 +1,7 @@
 // src/components/food/departmenthead.jsx
 import React, { useState } from 'react';
-import Sidebar from './Sidebar';
-import Navbar from '../../../Components/NavBar';
+import Navbar from "../../../components/NavBar";
+import Sidebar from "../../../components/Sidebar";
 import { FaSun, FaMoon } from "react-icons/fa";
 
 const Reportviewfoodhead = () => {
