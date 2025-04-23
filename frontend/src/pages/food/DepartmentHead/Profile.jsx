@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Navbar from '../../../Components/NavBar';
-import Sidebar from "./Sidebar";
+import Navbar from '../../../components/NavBar';
+import Sidebar from "../../../components/Sidebar";
 import moment from "moment"; // Import moment for date formatting
 import {  FaSun, FaMoon } from "react-icons/fa";
 
