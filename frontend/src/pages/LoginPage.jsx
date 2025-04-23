@@ -19,8 +19,16 @@ const LoginPage = () => {
     try {
       const response = await axios.post('http://localhost:5005/api/auth/login', formData);
       if (response.data.success) {
+
         const { user, token } = response.data;
-        localStorage.setItem('user', JSON.stringify(user)); // Store user data in localStorage
+
+
+        localStorage.setItem('user', JSON.stringify({
+          ...user,
+          status: user.status || 'active' // Default to Active if status is missing
+        }));
+
+
         localStorage.setItem('token', token); // Store token in localStorage
 
         // Redirect based on department and position
@@ -35,6 +43,9 @@ const LoginPage = () => {
             Planner: '/organic/Planner',
             Contractor: '/organic/Contractor',
             Auditor: '/organic/Auditor',
+          },
+          Admin:{
+            Admin:'/Admin',
           },
         };
 
@@ -70,7 +81,7 @@ const LoginPage = () => {
               onChange={handleChange}
               placeholder="Enter your email"
               required
-              className="w-full p-3  h-11 bg-gray-700 border border-gray-600 rounded-full focus:outline-none focus:border-blue-500"
+              className="w-full p-3  h-9 bg-gray-700 border border-gray-600 rounded-full focus:outline-none focus:border-blue-500"
             />
           </div>
           <div className="mb-4">
@@ -81,7 +92,7 @@ const LoginPage = () => {
               onChange={handleChange}
               placeholder="Enter your password"
               required
-              className="w-full p-3 h-11 bg-gray-700 border border-gray-600 rounded-full  focus:outline-none focus:border-blue-500"
+              className="w-full p-3 h-9 bg-gray-700 border border-gray-600 rounded-full  focus:outline-none focus:border-blue-500"
             />
           </div>
           <button
