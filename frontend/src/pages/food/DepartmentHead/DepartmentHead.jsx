@@ -8,8 +8,8 @@ import {
   PointElement,
 } from "chart.js";
 import { FiShare2, FiMoreHorizontal, FiSun, FiMoon } from "react-icons/fi";
-import Sidebar from "../../../Components/Sidebar";
-import Navbar from '../../../Components/NavBar';
+import Sidebar from "../../../components/Sidebar";
+import Navbar from '../../../components/NavBar';
 import {  FaSun, FaMoon } from "react-icons/fa";
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement);
