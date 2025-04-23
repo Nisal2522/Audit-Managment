@@ -9,6 +9,7 @@ import ProfileHeadFood from './pages/food/DepartmentHead/Profile';
 import AnnouncementsFoodHead from './pages/food/DepartmentHead/Announcement';
 import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import Systemadmin from './pages/Admin/Admin';
+import Systemadmincreateaccount from './pages/Admin/AdminCreateAccount';
 
 function App() {
 
@@ -29,6 +30,7 @@ function App() {
           <Route path="/food/Head/Announcement" element={<AnnouncementsFoodHead/>}/>
           <Route path="/food/Head/Reportview" element={<Reportviewfoodhead/>}/>
           <Route path="/Admin" element={<Systemadmin />} />
+          <Route path="/Admin/create-account" element={<Systemadmincreateaccount />} />
            
         </Routes>
 
