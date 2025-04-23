@@ -1,9 +1,14 @@
+//frontend
 import React, { useState, useEffect } from "react";
-import Navbar from "../../../Components/NavBar";
-import Sidebar from "./Sidebar";
-import { createEmployee } from "../../../services/employeeservice";
+import Navbar from "../../../components/NavBar";
+import Sidebar from "../../../components/Sidebar";
+import { createEmployee, getEmployees } from "../../../services/employeeservice";
 import bcrypt from "bcryptjs";
-import { FaSun, FaMoon, FaUser, FaEnvelope, FaPhone, FaCalendar, FaMapMarker, FaKey, FaIdCard, FaUserTie } from "react-icons/fa";
+import { FaSun, FaMoon } from "react-icons/fa";
+import { Bar } from "react-chartjs-2";
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const CreateprofileFood = () => {
   const [formData, setFormData] = useState({
@@ -14,14 +19,21 @@ const CreateprofileFood = () => {
     phone: "",
     address: "",
     dob: "",
-    employeeId: "",
+    employeeId: " ",
     profilePicture: null,
     department: "Food",
   });
-  const [darkMode, setDarkMode] = useState(localStorage.getItem("theme") === "dark");
+
+  const [darkMode, setDarkMode] = useState(
+    localStorage.getItem("theme") === "dark"
+  );
+
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-  const [errors, setErrors] = useState({ name: "", phone: "", email: "" }); // Added email error
-  const [currentStep, setCurrentStep] = useState(1);
+  const [errors, setErrors] = useState({ name: "", phone: "" });
+  const [activeTab, setActiveTab] = useState('create');
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [employeeStats, setEmployeeStats] = useState(null);
+
   const [qualifiedPrograms, setQualifiedPrograms] = useState({
     GOTS: { selected: false, startDate: "", expireDate: "" },
     GRS: { selected: false, startDate: "", expireDate: "" },
@@ -33,17 +45,16 @@ const CreateprofileFood = () => {
     PPRS: { selected: false, startDate: "", expireDate: "" },
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
-
+  // Function to generate random Employee ID
   const generateEmployeeId = () => {
-    const prefix = "AFD";
+    const prefix = "AFD"; // Food department prefix
     const randomNum = Math.floor(Math.random() * 10000) + 1000;
     return `${prefix}${randomNum}`;
   };
 
+  // Function to generate random Password
   const generatePassword = (name) => {
-    const namePart = name.replace(/\s+/g, "").slice(2, 6).toLowerCase();
+    const namePart = name.replace(/\s+/g, '').slice(2, 6).toLowerCase();
     const randomNum = Math.floor(Math.random() * 9000) + 1000;
     const specialChars = "!@#$%^&*";
     const randomSpecialChar = specialChars[Math.floor(Math.random() * specialChars.length)];
@@ -55,6 +66,7 @@ const CreateprofileFood = () => {
     setFormData((prev) => ({ ...prev, password: newPassword }));
   };
 
+  // Handle Date Change for Qualified Programs
   const handleDateChange = (e, program, field) => {
     const { value } = e.target;
     setQualifiedPrograms((prev) => ({
@@ -71,6 +83,7 @@ const CreateprofileFood = () => {
     }));
   };
 
+  // Handle Program Selection
   const handleProgramSelection = (program) => {
     setQualifiedPrograms((prev) => ({
       ...prev,
@@ -81,6 +94,7 @@ const CreateprofileFood = () => {
     }));
   };
 
+  // Apply Dark Mode
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -97,52 +111,82 @@ const CreateprofileFood = () => {
     setFormData((prev) => ({ ...prev, employeeId, password }));
   }, []);
 
+  // Fetch employee statistics when tab changes to statistics
+  useEffect(() => {
+    if (activeTab === 'statistics') {
+      fetchEmployeeStats();
+    }
+  }, [activeTab]);
+
+  const fetchEmployeeStats = async () => {
+    try {
+      const employees = await getEmployees();
+      console.log('Fetched employees:', employees); // Debug log
+      
+      // Ensure employees is an array before reducing
+      if (!Array.isArray(employees)) {
+        console.error('Employees data is not an array:', employees);
+        setEmployeeStats({});
+        return;
+      }
+  
+      // Count employees by role with null/undefined checks
+      const roleCounts = employees.reduce((acc, employee) => {
+        if (employee && employee.role) {
+          acc[employee.role] = (acc[employee.role] || 0) + 1;
+        }
+        return acc;
+      }, {});
+      
+      console.log('Role counts:', roleCounts); // Debug log
+      setEmployeeStats(roleCounts);
+    } catch (error) {
+      console.error("Error fetching employee stats:", error);
+      setEmployeeStats({}); // Set empty object on error
+    }
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-
+  
+    // Name validation
     if (name === "name") {
       const namePattern = /^[A-Za-z\s]*$/;
       if (!namePattern.test(value)) {
-        setErrors((prev) => ({ ...prev, name: "Name must not contain numbers or special characters." }));
+        setErrors((prev) => ({ ...prev, name: "Name must not contain numbers" }));
       } else {
         setErrors((prev) => ({ ...prev, name: "" }));
       }
     }
-
+  
+    // Phone validation
     if (name === "phone") {
       const phonePattern = /^\d{10}$/;
       if (!phonePattern.test(value)) {
-        setErrors((prev) => ({ ...prev, phone: "Phone number must be exactly 10 digits." }));
+        setErrors((prev) => ({ ...prev, phone: "Phone number must be 10 digits" }));
       } else {
         setErrors((prev) => ({ ...prev, phone: "" }));
       }
     }
-
-    if (name === "email") {
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(value)) {
-        setErrors((prev) => ({ ...prev, email: "Please enter a valid email address." }));
-      } else {
-        setErrors((prev) => ({ ...prev, email: "" }));
-      }
-    }
-
+  
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleToggleDarkMode = () => {
+    setDarkMode(!darkMode);
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     const isFormComplete = Object.values(formData).every((value) => value !== "");
-    const hasErrors = Object.values(errors).some((error) => error !== "");
 
+    const hasErrors = Object.values(errors).some((error) => error !== "");
     if (hasErrors) {
-      setModalMessage("Please correct the errors before submitting.");
-      setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000);
+      alert("Please correct the errors before submitting.");
       return;
     }
-
+  
     const formattedPrograms = Object.entries(qualifiedPrograms)
       .filter(([_, program]) => program.selected)
       .map(([name, program]) => ({
@@ -150,29 +194,23 @@ const CreateprofileFood = () => {
         startDate: program.startDate || "",
         expireDate: program.expireDate || "",
       }));
-
+  
     if (formattedPrograms.length === 0) {
-      setModalMessage("Please select at least one Qualified Program before submitting.");
-      setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000);
+      alert("Please select at least one Qualified Program before submitting.");
       return;
     }
-
+  
     const isDateProvided = formattedPrograms.every((program) => program.startDate);
     if (!isDateProvided) {
-      setModalMessage("Please provide a Start Date for the selected program(s) before submitting.");
-      setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000);
+      alert("Please provide a Start Date for the selected program(s) before submitting.");
       return;
     }
-
+  
     if (!isFormComplete) {
-      setModalMessage("Please fill in all fields before submitting.");
-      setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000);
+      alert("Please fill in all fields before submitting.");
       return;
     }
-
+  
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(formData.password, salt);
@@ -183,11 +221,12 @@ const CreateprofileFood = () => {
         qualifiedPrograms: formattedPrograms,
         employeeId: formData.employeeId,
       });
-
-      setModalMessage("Employee created successfully!");
-      setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000);
-
+  
+      setIsPopupVisible(true);
+      setTimeout(() => {
+        setIsPopupVisible(false);
+      }, 4000);
+  
       setFormData({
         name: "",
         email: "",
@@ -198,6 +237,7 @@ const CreateprofileFood = () => {
         dob: "",
         employeeId: "",
       });
+  
       setQualifiedPrograms({
         GOTS: { selected: false, startDate: "", expireDate: "" },
         GRS: { selected: false, startDate: "", expireDate: "" },
@@ -208,319 +248,342 @@ const CreateprofileFood = () => {
         "BCI Cotton": { selected: false, startDate: "", expireDate: "" },
         PPRS: { selected: false, startDate: "", expireDate: "" },
       });
-      setCurrentStep(1);
+  
     } catch (error) {
-      setModalMessage("Error creating account. Please try again.");
-      setIsModalOpen(true);
-      setTimeout(() => setIsModalOpen(false), 3000);
+      alert("Error creating account. Please try again.");
     }
   };
 
-  return (
-    <div className={`min-h-screen ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-black"} flex flex-col`}>
-      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
-      <div className="absolute top-[19%] right-8 transform -translate-y-1/2">
-        <button
-          onClick={() => setDarkMode(!darkMode)}
-          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
-        >
-          {darkMode ? <FaSun /> : <FaMoon />}
-        </button>
-      </div>
+  // Prepare data for the chart
+  const getChartData = () => {
+    if (!employeeStats) return null;
+    
+    const roles = Object.keys(employeeStats);
+    const counts = Object.values(employeeStats);
+    
+    return {
+      labels: roles,
+      datasets: [
+        {
+          label: 'Number of Employees',
+          data: counts,
+          backgroundColor: darkMode ? '#3b82f6' : '#064979',
+          borderColor: darkMode ? '#1e40af' : '#04355a',
+          borderWidth: 2,
+          font: {
+            family: "'Poppins', sans-serif", // Poppins font family
+            size: 24, // Title font size
+            
+          },
+          
+        },
+      ],
+    };
+  };
 
+  const chartOptions = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+        labels: {
+          color: darkMode ? '#e5e7eb' : '#374151',
+        },
+      },
+      title: {
+        display: true,
+        text: 'Employees by Role',
+        color: darkMode ? '#e5e7eb' : '#374151',
+        font: {
+          family: "'Poppins', sans-serif", // Poppins font family
+          size: 24, // Title font size
+          
+        },
+      },
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          color: darkMode ? '#e5e7eb' : '#374151',
+          callback: function(value) {
+            if (value % 1 === 0) {
+              return value;
+            }
+          },
+          stepSize: 1
+        },
+        
+        grid: {
+          color: darkMode ? '#4b5563' : '#e5e7eb',
+        },
+      },
+      x: {
+        ticks: {
+          color: darkMode ? '#e5e7eb' : '#374151',
+        },
+        grid: {
+          color: darkMode ? '#4b5563' : '#e5e7eb',
+        },
+        
+      },
+    },
+  };
+
+  return (
+    <div className={`min-h-screen flex flex-col ${darkMode ? "bg-gray-900" : "bg-gray-100"}`}>
+      <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
+      
       <div className="flex flex-grow">
         {!isSidebarVisible && <Sidebar />}
-
-        <main className="flex-grow flex items-center justify-center p-6">
-          <div className={`shadow-lg rounded-xl p-8 w-full max-w-3xl transition duration-300 ${darkMode ? "bg-gray-900 text-white" : "bg-[#022847] text-black"}`}>
-            <div className="flex justify-between items-center mb-6">
-              <div className="flex items-center space-x-2">
-                <div
-                  className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                    currentStep >= 1 ? "bg-blue-500" : "bg-gray-300 dark:bg-gray-600"
-                  }`}
-                >
-                  <span className="text-white">1</span>
-                </div>
-                <span className="text-white font-poppins">Personal Info</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div
-                  className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                    currentStep >= 2 ? "bg-blue-500" : "bg-gray-300 dark:bg-gray-600"
-                  }`}
-                >
-                  <span className="text-white">2</span>
-                </div>
-                <span className="text-white font-poppins">Contact Info</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <div
-                  className={`h-8 w-8 rounded-full flex items-center justify-center ${
-                    currentStep >= 3 ? "bg-blue-500" : "bg-gray-300 dark:bg-gray-600"
-                  }`}
-                >
-                  <span className="text-white">3</span>
-                </div>
-                <span className="text-white font-poppins">Qualified Programs</span>
-              </div>
+        <main className="flex-grow p-6">
+         <div className="max-w-6xl mx-auto">
+                   <button 
+                         onClick={handleToggleDarkMode}
+                         className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out ml-[1130px]  "
+                         >
+                         {darkMode ? (
+                           <FaSun className="w-5 h-5 text-white" />
+                         ) : (
+                           <FaMoon className="w-5 h-5 text-white" />
+                         )}
+                       </button>
+            
+            {/* Header Card */}
+            <div className={`${darkMode ? "bg-[#064979]" : "bg-[#064979]"} text-white rounded-lg shadow-lg p-4 mb-8 w-[1100px] -mt-10 `}>
+              <h1 className="text-2xl font-bold font-poppins">Employee Management</h1>
+              <p className={`${darkMode ? "text-gray-300" : "text-blue-100"} font-poppins`}>Create and manage employee accounts</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4 mt-8">
-              {currentStep === 1 && (
-                <>
+            {/* Tabs */}
+            <div className={`flex border-b ${darkMode ? "border-gray-700" : "border-gray-200"} mb-6`}>
+              <button
+                className={`py-2 px-4 font-medium font-poppins ${activeTab === 'create' ? 
+                  `${darkMode ? "text-blue-400 border-b-2 border-white" : "text-[#064979] border-b-2 border-[#064979]"}` : 
+                  `${darkMode ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-[#064979]"}`}`}
+                onClick={() => setActiveTab('create')}
+              >
+                Create Account
+              </button>
+              <button
+                className={`py-2 px-4 font-medium font-poppins ${activeTab === 'statistics' ? 
+                  `${darkMode ? "text-blue-400 border-b-2 border-white" : "text-[#064979] border-b-2 border-[#064979]"}` : 
+                  `${darkMode ? "text-gray-400 hover:text-white" : "text-gray-500 hover:text-[#064979]"}`}`}
+                onClick={() => setActiveTab('statistics')}
+              >
+                Statistics
+              </button>
+            </div>
+
+            {activeTab === 'create' ? (
+              <div className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-md p-6`}>
+                <div className={`${darkMode ? "bg-[#064979]" : "bg-[#064979]"} text-white rounded-lg shadow-lg p-4 mb-6`}>
+                  <h2 className="text-lg font-semibold text-white border-b pb-2 mb-2 font-poppins">Create Acoount</h2>
+                </div>
+                
+                <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
+                    {/* Full Name */}
                     <div>
-                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                        <FaUser className="mr-2" /> Full Name
+                      <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                        Full Name
                       </label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleChange}
-                        placeholder="Enter your full name"
-                        className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                          darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100"
+                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                          darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                         }`}
                       />
-                      {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+                      {errors.name && <p className="text-red-500 text-sm font-poppins">{errors.name}</p>}
                     </div>
+
+                    {/* Email */}
                     <div>
-                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                        <FaEnvelope className="mr-2" /> Email
+                      <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                        Email
                       </label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        placeholder="Enter your email address"
-                        className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                          darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                          darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                         }`}
                         required
                       />
-                      {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                     </div>
                   </div>
+
+                  {/* Password */}
                   <div className="mb-4 relative">
-                    <label htmlFor="password" className={`block font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                      <FaKey className="mr-2" /> Password
+                    <label className={`block text-sm font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                      Password
                     </label>
                     <input
                       type="text"
-                      id="password"
                       name="password"
                       value={formData.password}
                       readOnly
-                      placeholder="Auto-generated password"
-                      className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                        darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                       }`}
                     />
                   </div>
+
+                  {/* Regenerate Password Button */}
                   <div className="mb-4 flex justify-end">
                     <button
                       type="button"
                       onClick={handleRegeneratePassword}
-                      className="p-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 font-poppins"
+                      className={`p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-[#064979] text-sm font-poppins ${
+                        darkMode ? "bg-[#064979] hover:bg-blue-700 text-white" : "bg-[#064979] hover:bg-[#04355a] text-white"
+                      }`}
                     >
                       Regenerate Password
                     </button>
                   </div>
+
+                  {/* Employee ID */}
                   <div>
-                    <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                      <FaIdCard className="mr-2" /> Employee ID
+                    <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                      Employee ID
                     </label>
                     <input
                       type="text"
                       name="employeeId"
                       value={formData.employeeId}
                       onChange={handleChange}
-                      placeholder="Auto-generated employee ID"
-                      className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                        darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                       }`}
                       readOnly
                     />
                   </div>
+
+                  {/* Role */}
                   <div>
-                    <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                      <FaUserTie className="mr-2" /> Role
+                    <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                      Role
                     </label>
                     <select
                       name="role"
                       value={formData.role}
                       onChange={handleChange}
-                      className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                        darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                       }`}
                       required
                     >
-                      <option value="" className="font-poppins">Select Role</option>
-                      <option value="Auditor" className="font-poppins">Auditor</option>
-                      <option value="Planner" className="font-poppins">Planner</option>
-                      <option value="Reviewer" className="font-poppins">Reviewer</option>
-                      <option value="Project creator" className="font-poppins">Project Creator</option>
-                      <option value="Contractor" className="font-poppins">Contractor</option>
+                      <option value="">Select Role</option>
+                      <option value="Auditor">Auditor</option>
+                      <option value="Planner">Planner</option>
+                      <option value="Reviewer">Reviewer</option>
+                      <option value="Project creator">Project Creator</option>
+                      <option value="Contractor">Contractor</option>
                     </select>
                   </div>
 
-
-                  {/* <div>
-                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                        <FaUser className="mr-2" /> Data
-                      </label>
-                      <input
-                        type="text"
-                        name="data"
-                        value={formData.data}
-                        onChange={handleChange}
-                        placeholder="Enter your full name"
-                        className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                          darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100"
-                        }`}
-                      />
-                      {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
-                    </div> */}
-
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const namePattern = /^[A-Za-z\s]*$/;
-                      if (!namePattern.test(formData.name)) {
-                        setModalMessage("Full Name must not contain numbers or special characters. Please re-enter.");
-                        setIsModalOpen(true);
-                        setTimeout(() => setIsModalOpen(false), 3000);
-                        return;
-                      }
-                      setCurrentStep(2);
-                    }}
-                    className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-300"
-                  >
-                    Next
-                  </button>
-                </>
-              )}
-              {currentStep === 2 && (
-                <>
+                  {/* Phone & DOB */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                        <FaPhone className="mr-2" /> Phone Number
+                      <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                        Phone Number
                       </label>
                       <input
                         type="text"
                         name="phone"
                         value={formData.phone}
                         onChange={handleChange}
-                        maxLength={10}
-                        placeholder="Enter your phone number"
-                        className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                          darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100"
+                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                          darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                         }`}
                       />
-                      {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+                      {errors.phone && <p className="text-red-500 text-sm font-poppins">{errors.phone}</p>}
                     </div>
+
                     <div>
-                      <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                        <FaCalendar className="mr-2" /> Date of Birth
+                      <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                        Date of Birth
                       </label>
                       <input
                         type="date"
                         name="dob"
                         value={formData.dob}
                         onChange={handleChange}
-                        placeholder="Select your date of birth"
-                        className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                          darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                        className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                          darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                         }`}
                         required
                       />
                     </div>
                   </div>
+
+                  {/* Address */}
                   <div>
-                    <label className={`font-poppins flex items-center ${darkMode ? "text-white" : "text-white"}`}>
-                      <FaMapMarker className="mr-2" /> Address
+                    <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                      Address
                     </label>
                     <textarea
                       name="address"
                       value={formData.address}
                       onChange={handleChange}
-                      placeholder="Enter your address"
-                      className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                        darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                      className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                        darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                       }`}
                       rows="2"
                       required
                     ></textarea>
                   </div>
-                  <div className="flex justify-between">
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep(1)}
-                      className="py-2 px-4 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300"
-                    >
-                      Back
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const phonePattern = /^\d{10}$/;
-                        if (!phonePattern.test(formData.phone)) {
-                          setModalMessage("Phone number must be exactly 10 digits. Please re-enter.");
-                          setIsModalOpen(true);
-                          setTimeout(() => setIsModalOpen(false), 3000);
-                          return;
-                        }
-                        setCurrentStep(3);
-                      }}
-                      className="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition duration-300"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </>
-              )}
-              {currentStep === 3 && (
-                <>
+
+                  {/* Qualified Programs Section */}
                   <div className="mt-6">
-                    <label className={`text-lg font-poppins ${darkMode ? "text-white" : "text-white"}`}>Qualified Programs</label>
+                    <label className={`text-lg font-semibold font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                      Qualified Programs
+                    </label>
                     <div className="grid grid-cols-2 gap-4 mt-2">
                       {Object.entries(qualifiedPrograms).map(([program, data]) => (
-                        <div key={program} className="flex flex-col space-y-2 text-white font-poppins">
-                          <div className="flex items-center text-white font-poppins">
+                        <div key={program} className="flex flex-col space-y-2">
+                          <div className="flex items-center">
                             <input
                               type="checkbox"
                               checked={data.selected}
                               onChange={() => handleProgramSelection(program)}
                               className="mr-2"
                             />
-                            <span className={`${darkMode ? "text-white" : "text-white"}`}>{program}</span>
+                            <span className={`font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                              {program}
+                            </span>
                           </div>
                           {data.selected && (
                             <div className="flex flex-col space-y-2">
-                              <label className={`font-poppins ${darkMode ? "text-white" : "text-white"}`}>Start Date</label>
+                              <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                Start Date
+                              </label>
                               <input
                                 type="date"
                                 value={data.startDate}
                                 onChange={(e) => handleDateChange(e, program, "startDate")}
-                                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                                  darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                                className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                                  darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                                 }`}
-                                placeholder="Select start date"
+                                placeholder="Start Date"
                               />
-                              <label className={`font-poppins ${darkMode ? "text-white" : "text-white"} font-normal`}>Expire Date</label>
+                            
+                              <label className={`font-medium font-poppins ${darkMode ? "text-gray-300" : "text-gray-700"}`}>
+                                Expire Date
+                              </label>
                               <input
                                 type="date"
                                 value={data.expireDate}
                                 onChange={(e) => handleDateChange(e, program, "expireDate")}
-                                className={`w-full p-2 border rounded-md focus:ring-2 focus:ring-blue-500 ${
-                                  darkMode ? "border-gray-600 bg-gray-800 text-white" : "border-gray-300 bg-gray-100 text-black"
+                                className={`w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#064979] focus:border-transparent shadow-sm ${
+                                  darkMode ? "border-gray-600 bg-gray-700 text-white" : "border-gray-300 bg-gray-100"
                                 }`}
-                                placeholder="Auto-generated expire date"
+                                placeholder="Expire Date"
                                 readOnly
                               />
                             </div>
@@ -529,36 +592,97 @@ const CreateprofileFood = () => {
                       ))}
                     </div>
                   </div>
-                  <div className="flex justify-between">
-                    <button
-                      type="button"
-                      onClick={() => setCurrentStep(2)}
-                      className="py-2 px-4 bg-gray-300 dark:bg-gray-600 text-black dark:text-white rounded-md hover:bg-gray-400 dark:hover:bg-gray-500 transition duration-300"
-                    >
-                      Back
-                    </button>
-                    <button
-                      type="submit"
-                      className="py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 transition duration-300"
-                    >
-                      Submit
-                    </button>
+
+                  {/* Submit Button */}
+                  <button
+                    type="submit"
+                    className={`w-full py-2 rounded-md transition duration-300 font-medium font-poppins ${
+                      darkMode ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-[#064979] hover:bg-[#04355a] text-white"
+                    }`}
+                  >
+                    Create Account
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <div className={`${darkMode ? "bg-gray-800" : "bg-white"} rounded-lg shadow-md p-6`}>
+              <div className={`${darkMode ? "bg-[#064979]" : "bg-[#064979]"} text-white rounded-lg shadow-lg p-4 mb-6`}>
+                <h2 className="text-lg font-semibold text-white border-b pb-2 mb-2 font-poppins">Statistics</h2>
+              </div>
+              
+              <div className={`${darkMode ? "text-gray-300" : "text-gray-700"} font-poppins`}>
+                {employeeStats ? (
+                  <div className="flex flex-col lg:flex-row gap-6"> {/* Changed to flex layout */}
+                    {/* Bar Chart - now takes half width */}
+                    <div className="flex-1 h-100 min-w-0"> {/* Added min-w-0 to prevent overflow */}
+                      <Bar 
+                        data={getChartData()} 
+                        options={chartOptions} 
+                      />
+                    </div>
+                    
+                    {/* Stylish Compact Role Stats Card - now takes half width */}
+
+                    <div className={`w-[300px] rounded-xl  shadow-lg overflow-hidden ${darkMode ? "bg-gray-800" : "bg-white"} border ${darkMode ? "border-gray-700" : "border-gray-200"}`}>
+                      {/* Card Header */}
+
+                      <div className={`p-4 w-[300px] ${darkMode ? "bg-[#064979]" : "bg-[#064979]"} border-b ${darkMode ? "border-gray-600" : "border-gray-200"}`}>
+                        <h3 className={`text-lg  font-semibold font-poppins uppercase tracking-wider ${darkMode ? "text-white" : "text-white"}`}>
+                          Employee Distribution
+                        </h3>
+                      </div>
+            
+                      {/* Card Content */}
+
+                      <div className="p-2 space-y-4 w-[280px] ">
+                        {Object.entries(employeeStats).map(([role, count]) => (
+                          <div key={role} className="flex items-center justify-between mt-4 ">
+                            <div className="flex items-center">
+                              <div className={`w-4 h-2 rounded-full mr-3 ${darkMode ? "bg-blue-400" : "bg-blue-500"}`}></div>
+                              <span className={`text-sm font-semibold font-poppins ${darkMode ? "text-gray-300" : "text-gray-600"}`}>{role}</span>
+                            </div>
+                            <span className={`text-sm font-medium px-3 py-1 rounded-full ${darkMode ? "bg-blue-900 text-blue-100" : "bg-blue-100 text-blue-800"}`}>
+                              {count}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+            
+
+                      {/* Card Footer - Total */}
+
+                      <div className={`px-4 py-3 w-[300px] mt-14 text-center ${darkMode ? "bg-gray-700" : "bg-gray-50"} border-t ${darkMode ? "border-gray-600" : "border-gray-200"}`}>
+                        <div className="inline-flex items-center">
+                          <span className={`text-lg font-semibold mr-3 ${darkMode ? "text-gray-300" : "text-gray-600"}`}>Total Employees:</span>
+                          <span className={`text-sm font-bold px-3 py-1 rounded-full ${darkMode ? "bg-green-900 text-green-100" : "bg-green-100 text-green-800"}`}>
+                            {Object.values(employeeStats).reduce((a, b) => a + b, 0)}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </>
-              )}
-            </form>
+                ) : (
+                  <div className="text-center py-8">
+                    Loading employee statistics...
+                  </div>
+                )}
+              </div>
+            </div>
+                  
+
+                 
+            )}
           </div>
+
+          {isPopupVisible && (
+            <div className={`fixed top-4 left-1/2 transform -translate-x-1/2 text-xl font-semibold font-poppins px-5 py-2 rounded-md shadow-md transition-opacity duration-300 ${
+              darkMode ? "bg-gray-700 text-white" : "bg-white text-[#064979]"
+            }`}>
+              Employee created successfully!
+            </div>
+          )}
         </main>
       </div>
-
-      {isModalOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg w-96">
-            <h2 className="text-xl font-bold mb-4 dark:text-white">Message</h2>
-            <p className="text-gray-700 dark:text-gray-300">{modalMessage}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
