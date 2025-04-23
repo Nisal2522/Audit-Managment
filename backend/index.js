@@ -6,6 +6,12 @@ import employeeRouter from './routes/auth.js'; // Employee routes
 import path from 'path';
 import connectToDatabase from './db/db.js';
 import employeeRoutes from './routes/empolyeeroutes.js';
+import announcementRoutes  from './routes/announcementroutes.js';
+import adminRoutes from './routes/adminroutes.js';
+import leaveRequestRoutes from './routes/leaveRequestRoutes.js';
+
+
+
 
 dotenv.config();  // Load environment variables
 
@@ -24,6 +30,14 @@ app.use('/api/auth', authRouter);
 app.use('/api/employees', employeeRouter); // This registers the employee routes
 
 app.use('/api', employeeRoutes);
+
+app.use('/api/announcements',announcementRoutes);
+
+app.use('/api/admin', adminRoutes);
+
+app.use('/api/leave-requests', leaveRequestRoutes);
+
+
 
 // Serve static files from the 'uploads' folder
 const __dirname = path.resolve(); // Get the current directory name
