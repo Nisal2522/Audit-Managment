@@ -5,7 +5,7 @@ import moment from 'moment-timezone'; // Import moment-timezone
 
 
 const registerUser = async (req, res) => {
-  const { firstname, lastname, department, position, email, password,phone,employeeid } = req.body;
+  const { firstname, lastname, department, position, email, password,phone,employeeid,status } = req.body;
 
   try {
     // Check if the user already exists
@@ -31,6 +31,7 @@ const registerUser = async (req, res) => {
       phone,
       employeeid,
       createdDate,
+      status:'Active',
     
     });
     await newUser.save();

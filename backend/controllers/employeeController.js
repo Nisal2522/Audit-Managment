@@ -2,6 +2,7 @@
 
 import Employee from '../models/employee.js';
 
+
 export const createEmployee = async (req, res) => {
   try {
     const { name, email, phone, role, dob, address, employeeId, department, password, qualifiedPrograms  } = req.body;
