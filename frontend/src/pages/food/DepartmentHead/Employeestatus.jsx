@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import Navbar from '../../../Components/NavBar';
-import Sidebar from "./Sidebar";
+import Navbar from "../../../components/NavBar";
+import Sidebar from "../../../components/Sidebar";
 import axios from "axios";
 import { FaEdit, FaTrash, FaBell, FaTimes, FaDownload, FaSun, FaMoon, FaUser, FaIdCard, FaPhone, FaMapMarkerAlt, FaEnvelope, FaUserTie, FaCalendarAlt } from "react-icons/fa";
 import jsPDF from "jspdf";
