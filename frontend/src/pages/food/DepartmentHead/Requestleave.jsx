@@ -1,176 +1,345 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "../../../components/NavBar";
 import Sidebar from "../../../components/Sidebar";
-import { motion } from "framer-motion";
-import {  FaSun, FaMoon } from "react-icons/fa";
+import { FaSun, FaMoon, FaTrash, FaCheck, FaTimes, FaEye, FaUserCircle } from "react-icons/fa";
+import axios from "axios";
 
 const RequestLeaveFood = () => {
-  const [leaveRequests, setLeaveRequests] = useState([
-    { id: 1, employeeName: "John Doe", leaveType: "Sick Leave", startDate: "2025-03-20", endDate: "2025-03-22", status: "Pending", reason: "Fever and flu symptoms. Advised by a doctor to rest." },
-    { id: 2, employeeName: "Jane Smith", leaveType: "Vacation Leave", startDate: "2025-04-10", endDate: "2025-04-15", status: "Approved", reason: "Family vacation planned for a long time." },
-    { id: 3, employeeName: "Emily Davis", leaveType: "Personal Leave", startDate: "2025-02-10", endDate: "2025-02-12", status: "Rejected", reason: "Unapproved absence." },
-    { id: 4, employeeName: "Michael Johnson", leaveType: "Sick Leave", startDate: "2025-03-01", endDate: "2025-03-03", status: "Pending", reason: "Cold and cough symptoms." },
-    { id: 5, employeeName: "Lucas Brown", leaveType: "Sick Leave", startDate: "2025-03-05", endDate: "2025-03-07", status: "Pending", reason: "Stomach flu, resting at home." },
-    { id: 6, employeeName: "Olivia White", leaveType: "Maternity Leave", startDate: "2025-05-01", endDate: "2025-05-30", status: "Approved", reason: "Maternity leave after childbirth." },
-    { id: 7, employeeName: "James Wilson", leaveType: "Vacation Leave", startDate: "2025-06-15", endDate: "2025-06-20", status: "Approved", reason: "Vacation planned months ago." },
-    { id: 8, employeeName: "Sophia Martinez", leaveType: "Sick Leave", startDate: "2025-03-25", endDate: "2025-03-27", status: "Rejected", reason: "Cold symptoms, did not follow procedure." },
-    { id: 9, employeeName: "Benjamin Clark", leaveType: "Personal Leave", startDate: "2025-07-10", endDate: "2025-07-12", status: "Pending", reason: "Family emergency." },
-    { id: 10, employeeName: "Isabella Lewis", leaveType: "Sick Leave", startDate: "2025-02-15", endDate: "2025-02-17", status: "Approved", reason: "Migraine and severe headache." },
-    { id: 11, employeeName: "Elijah Young", leaveType: "Vacation Leave", startDate: "2025-08-01", endDate: "2025-08-07", status: "Approved", reason: "Annual family vacation." },
-    { id: 12, employeeName: "Amelia Walker", leaveType: "Personal Leave", startDate: "2025-03-18", endDate: "2025-03-19", status: "Rejected", reason: "Unapproved absence, did not notify." },
-    { id: 13, employeeName: "William Hall", leaveType: "Sick Leave", startDate: "2025-04-01", endDate: "2025-04-03", status: "Pending", reason: "Recovering from surgery." },
-  ]);
-
-  const [selectedRequest, setSelectedRequest] = useState(null);
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  const [pendingRequests, setPendingRequests] = useState([]);
+  const [processedRequests, setProcessedRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState('');
+
+  // Set base URL for API requests
+  const API_BASE_URL = "http://localhost:5005/api/leave-requests";
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
     localStorage.setItem("darkMode", darkMode);
+    document.body.style.fontFamily = "'Poppins', sans-serif";
   }, [darkMode]);
 
-  const handleRowClick = (request) => setSelectedRequest(request);
-  const closeCard = () => setSelectedRequest(null);
-  const toggleDarkMode = () => setDarkMode(!darkMode);
+  useEffect(() => {
+    const fetchLeaveRequests = async () => {
+      try {
+        const response = await axios.get(API_BASE_URL);
+        if (response.data && Array.isArray(response.data)) {
+          const pending = response.data.filter(request => request.status === 'pending');
+          const processed = response.data.filter(request => request.status !== 'pending');
+          setPendingRequests(pending);
+          setProcessedRequests(processed);
+        } else {
+          setPendingRequests([]);
+          setProcessedRequests([]);
+        }
+      } catch (err) {
+        console.error("API Error:", err);
+        setError(err.response?.data?.message || "Failed to fetch leave requests");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const updateStatus = (id, newStatus) => {
-    setLeaveRequests((prev) =>
-      prev.map((req) => (req.id === id ? { ...req, status: newStatus } : req))
-    );
-    if (selectedRequest?.id === id) {
-      setSelectedRequest({ ...selectedRequest, status: newStatus });
+    fetchLeaveRequests();
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`${API_BASE_URL}/${id}`);
+      setPendingRequests(pendingRequests.filter(request => request._id !== id));
+      setProcessedRequests(processedRequests.filter(request => request._id !== id));
+      setSuccess('Leave request deleted successfully');
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      console.error("Delete Error:", err);
+      setError("Failed to delete leave request");
     }
-    setSelectedRequest(null);
   };
 
-  const pendingRequests = leaveRequests.filter(req => req.status === "Pending");
-  const previousRequests = leaveRequests.filter(req => req.status !== "Pending");
+  const handleStatusUpdate = async (id, status) => {
+    try {
+      const response = await axios.patch(`${API_BASE_URL}/${id}/status`, { status });
+      
+      // Find the request in pendingRequests
+      const updatedRequest = pendingRequests.find(request => request._id === id);
+      
+      if (updatedRequest) {
+        // Remove from pending and add to processed
+        setPendingRequests(pendingRequests.filter(request => request._id !== id));
+        setProcessedRequests([...processedRequests, { ...updatedRequest, status }]);
+        
+        setSuccess(`Leave request ${status} successfully`);
+        setTimeout(() => setSuccess(''), 3000);
+      }
+    } catch (err) {
+      console.error("Status Update Error:", err);
+      setError("Failed to update leave request status");
+    }
+  };
 
-  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
+  if (loading) {
+    return (
+      <div className={`min-h-screen flex flex-col ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
+        <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
+        <div className="flex flex-grow justify-center items-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[#064979]"></div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className={`min-h-screen flex flex-col ${darkMode ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
+    <div className={`min-h-screen flex flex-col ${darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"}`}>
+      <style>
+        {`@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');`}
+      </style>
+      
       <Navbar toggleSidebar={() => setIsSidebarVisible(!isSidebarVisible)} />
       <div className="flex flex-grow">
-      {!isSidebarVisible && <Sidebar />}
-        <main className="flex-grow p-8 shadow-lg rounded-lg">
-          <div className="flex justify-between items-center mb-6">
-            <label className={`text-2xl font-bold py-2 px-4 rounded-lg inline-block ${darkMode ? 'bg-teal-600 text-white' : 'bg-slate-400 text-black'} shadow-lg`}>
-              Request Leave
-            </label>
+        {!isSidebarVisible && <Sidebar />}
+        <main className="flex-grow p-4 md:p-8 transition-all duration-300">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+              <label
+                className="text-2xl font-bold py-2 px-4 rounded-lg inline-block shadow-lg font-poppins text-white bg-[#064979]"
+              >
+                Leave Requests Management
+              </label>
+              <p className={`font-medium mt-2 ml-2 ${darkMode ? 'text-white' : 'text-black'}`}>
+                {pendingRequests.length} pending {pendingRequests.length === 1 ? 'request' : 'requests'}
+              </p>
+            </div>
             <button
-                          onClick={() => setDarkMode(!darkMode)}
-                          className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out"
-                        >
-                           {darkMode ? <FaSun /> : <FaMoon />}
-                        </button>
+              onClick={() => setDarkMode(!darkMode)}
+              className="px-4 py-2 text-xl font-semibold rounded-lg transition-all bg-gradient-to-r from-blue-400 via-blue-500 to-indigo-600 text-white hover:scale-105 transform duration-200 ease-in-out -mt-12"
+            >
+              {darkMode ? <FaSun /> : <FaMoon />}
+            </button>
           </div>
 
-          {/* Pending Requests */}
-          <section className="mb-8">
-            <h3 className="text-2xl font-bold mb-4">Pending Requests</h3>
-            <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
-              <table className="min-w-full border border-gray-200 dark:border-gray-600">
-                <thead>
-                  <tr className="bg-blue-500 text-white text-left">
-                    <th className="py-3 px-6">Employee</th>
-                    <th className="py-3 px-6">Leave Type</th>
-                    <th className="py-3 px-6">Start Date</th>
-                    <th className="py-3 px-6">End Date</th>
-                  </tr>
-                </thead>
-                <tbody className={darkMode ? "bg-gray-500" : "bg-white"}>
-                  {pendingRequests.map((request) => (
-                    <tr key={request.id} className="border-b hover:bg-gray-600 dark:hover:bg-gray-700 cursor-pointer transition" onClick={() => handleRowClick(request)}>
-                      <td className="py-3 px-6">{request.employeeName}</td>
-                      <td className="py-3 px-6">{request.leaveType}</td>
-                      <td className="py-3 px-6">{request.startDate}</td>
-                      <td className="py-3 px-6">{request.endDate}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          {/* Status Messages */}
+          {error && (
+            <div className="mb-6 p-4 bg-red-100 border-l-4 border-red-500 text-red-700 dark:bg-red-900 dark:text-red-100 rounded-lg shadow-sm">
+              <p className="font-medium">{error}</p>
             </div>
-          </section>
-
-          {/* Previous Requests */}
-          <section className="mb-8">
-            <h3 className="text-2xl font-bold mb-4">Previous Requests</h3>
-            <div className="overflow-x-auto bg-white dark:bg-gray-800 shadow-md rounded-lg">
-              <table className="min-w-full border border-gray-200 dark:border-gray-600">
-                <thead>
-                  <tr className="bg-blue-500 text-white text-left">
-                    <th className="py-3 px-6">Employee</th>
-                    <th className="py-3 px-6">Leave Type</th>
-                    <th className="py-3 px-6">Start Date</th>
-                    <th className="py-3 px-6">End Date</th>
-                    <th className="py-3 px-6">Status</th>
-                  </tr>
-                </thead>
-                <tbody className={darkMode ? "bg-gray-500" : "bg-white"}>
-                  {previousRequests.map((request) => (
-                    <tr key={request.id} className="border-b hover:bg-gray-600 dark:hover:bg-gray-700 cursor-pointer transition" onClick={() => handleRowClick(request)}>
-                      <td className="py-3 px-6">{request.employeeName}</td>
-                      <td className="py-3 px-6">{request.leaveType}</td>
-                      <td className="py-3 px-6">{request.startDate}</td>
-                      <td className="py-3 px-6">{request.endDate}</td>
-                      <td className={`py-3 px-6 font-bold ${request.status === "Approved" ? "text-green-500" : request.status === "Rejected" ? "text-red-500" : "text-yellow-500"}`}>
-                        {request.status}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+          )}
+          
+          {success && (
+            <div className="mb-6 p-4 bg-green-100 border-l-4 border-green-500 text-green-700 dark:bg-green-900 dark:text-green-100 rounded-lg shadow-sm">
+              <p className="font-medium">{success}</p>
             </div>
-          </section>
-
-         {/* Selected Request Details */}
-                    {selectedRequest && (
-                      <motion.div
-                        className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                      >
-                        <div className="bg-white dark:bg-gray-800 text-black dark:text-white w-1/3 p-6 rounded-lg shadow-lg">
-                          <h2 className="text-2xl font-bold mb-4">{selectedRequest.employeeName}'s Leave Request</h2>
-                          <p><strong>👤 Employee:</strong> {selectedRequest.employeeName}</p> 
-                          <p><strong>📃 Type:</strong> {selectedRequest.leaveType}</p>
-                          <p><strong>📅 Start Date:</strong> {selectedRequest.startDate}</p>
-                          <p><strong>📅 End Date:</strong> {selectedRequest.endDate}</p>
-                          <p className="border-l-4 pl-2"><strong>✍️ Reason:</strong> {selectedRequest.reason}</p>
-
-                          {/* Approval / Rejection / Close Buttons */}
-                          {selectedRequest.status === "Pending" ? (
-                            <div className="mt-4 flex space-x-4">
-                              <button
-                                onClick={() => updateStatus(selectedRequest.id, "Approved")}
-                                className="px-4 py-2 bg-green-500 text-white rounded-lg shadow-md hover:bg-green-600"
-                              >
-                                Approve
-                              </button>
-                              <button
-                                onClick={() => updateStatus(selectedRequest.id, "Rejected")}
-                                className="px-4 py-2 bg-red-500 text-white rounded-lg shadow-md hover:bg-red-600"
-                              >
-                                Reject
-                              </button>
-                            </div>
-                          ) : null}
-
-                          {/* Close Button */}
-                          <div className="mt-4 flex justify-end">
-                            <button
-                              onClick={closeCard}
-                              className="px-4 py-2 bg-gray-500 text-white rounded-lg shadow-md hover:bg-gray-600"
-                            >
-                              Close
-                        </button>
-                    </div>
-                </div>
-        </motion.div>
           )}
 
+          {/* Pending Leave Requests Table */}
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700 mb-8">
+            <div className="p-4 bg-[#064979] text-white">
+              <h2 className="text-lg font-semibold">Pending Requests</h2>
+            </div>
+            {pendingRequests.length === 0 ? (
+              <div className="p-8 text-center">
+                <div className="text-gray-400 dark:text-gray-500 mb-4">
+                  <FaUserCircle className="w-16 h-16 mx-auto" />
+                </div>
+                <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">No pending requests</h3>
+                <p className="text-gray-500 dark:text-gray-400 mt-1">All requests have been processed</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 font-poppins">
+                  <thead className="bg-gray-500 dark:bg-black font-semibold">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Employee</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Leave Type</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Dates</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Reason</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Document</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {pendingRequests.map((request) => (
+                      <tr key={request._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 bg-[#064979] rounded-full flex items-center justify-center text-white font-bold shadow-sm">
+                              {request.employeeId.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900 dark:text-white">{request.employeeId}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`
+                            px-3 py-1 inline-flex items-center text-xs font-bold rounded-full 
+                            uppercase tracking-wider shadow-md
+                            ${
+                              request.leaveCategory === 'vacation' 
+                                ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white' 
+                                : request.leaveCategory === 'sick' 
+                                ? 'bg-gradient-to-r from-purple-400 to-purple-600 text-white' 
+                                : 'bg-gradient-to-r from-indigo-400 to-indigo-600 text-white'
+                            }`
+                          }>
+                            <span className="inline-block w-2 h-2 mr-2 rounded-full bg-white/80"></span>
+                            {request.leaveCategory}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{formatDate(request.startDate)}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">to {formatDate(request.endDate)}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{request.reason}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {request.documentUrl ? (
+                            <a 
+                              href={request.documentUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-[#064979] dark:text-blue-400 hover:underline flex items-center font-medium"
+                            >
+                              <FaEye className="mr-2" />
+                              <span>View</span>
+                            </a>
+                          ) : (
+                            <span className="text-gray-500 dark:text-gray-400 italic">None</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={() => handleStatusUpdate(request._id, 'approved')}
+                              className="flex items-center justify-center px-3 py-1 rounded-lg bg-green-100 text-green-800 hover:bg-green-200 dark:bg-green-900 dark:text-green-200 dark:hover:bg-green-800 transition-colors shadow-sm"
+                              title="Approve"
+                            >
+                              <FaCheck className="mr-1" />
+                              <span className="text-xs font-medium">Approve</span>
+                            </button>
+                            <button
+                              onClick={() => handleStatusUpdate(request._id, 'rejected')}
+                              className="flex items-center justify-center px-3 py-1 rounded-lg bg-red-100 text-red-800 hover:bg-red-200 dark:bg-red-900 dark:text-red-200 dark:hover:bg-red-800 transition-colors shadow-sm"
+                              title="Reject"
+                            >
+                              <FaTimes className="mr-1" />
+                              <span className="text-xs font-medium">Reject</span>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Processed Leave Requests Table */}
+          {processedRequests.length > 0 && (
+            <div className="bg-[#064979] dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+              <div className="p-4 bg-[#064979] dark:bg-gray-700">
+                <h2 className="text-lg font-semibold text-white">Processed Requests</h2>
+              </div>
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 font-poppins">
+                  <thead className="bg-gray-500 dark:bg-black font-semibold">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Employee</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Leave Type</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Dates</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Reason</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Document</th>
+                      <th className="px-6 py-3 text-left text-sm font-semibold uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    {processedRequests.map((request) => (
+                      <tr key={request._id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 bg-[#064979] rounded-full flex items-center justify-center text-white font-bold shadow-sm">
+                              {request.employeeId.charAt(0).toUpperCase()}
+                            </div>
+                            <div className="ml-4">
+                              <div className="text-sm font-medium text-gray-900 dark:text-white">{request.employeeId}</div>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`
+                            px-3 py-1 inline-flex items-center text-xs font-bold rounded-full 
+                            uppercase tracking-wider shadow-md
+                            ${
+                              request.leaveCategory === 'vacation' 
+                                ? 'bg-gradient-to-r from-blue-400 to-blue-600 text-white' 
+                                : request.leaveCategory === 'sick' 
+                                ? 'bg-gradient-to-r from-purple-400 to-purple-600 text-white' 
+                                : 'bg-gradient-to-r from-indigo-400 to-indigo-600 text-white'
+                            }`
+                          }>
+                            <span className="inline-block w-2 h-2 mr-2 rounded-full bg-white/80"></span>
+                            {request.leaveCategory}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm font-medium text-gray-900 dark:text-white">{formatDate(request.startDate)}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">to {formatDate(request.endDate)}</div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div className="text-sm text-gray-900 dark:text-white max-w-xs truncate">{request.reason}</div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                            request.status === 'approved' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' :
+                            'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                          }`}>
+                            {request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          {request.documentUrl ? (
+                            <a 
+                              href={request.documentUrl} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-[#064979] dark:text-blue-400 hover:underline flex items-center font-medium"
+                            >
+                              <FaEye className="mr-2" />
+                              <span>View</span>
+                            </a>
+                          ) : (
+                            <span className="text-gray-500 dark:text-gray-400 italic">None</span>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <button
+                            onClick={() => handleDelete(request._id)}
+                            className="flex items-center justify-center px-3 py-1 rounded-lg bg-gray-100 text-gray-800 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 transition-colors shadow-sm"
+                            title="Delete"
+                          >
+                            <FaTrash className="mr-1" />
+                            <span className="text-xs font-medium">Delete</span>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

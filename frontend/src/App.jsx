@@ -29,7 +29,7 @@ function App() {
           <Route path="/food/Head/Createaccount" element={<CreateprofileFood/>}/>
           <Route path="/food/Head/Employeestatus" element={<EmployeeStatusFood/>}/>
           <Route path="/food/Head/Requestleave" element={<Requestleavefood/>}/>
-          <Route path="/food/Head/ProfileHeadFood" element={<ProfileHeadFood/>}/>
+          <Route path="/food/Head/Profile" element={<ProfileHeadFood/>}/>
           <Route path="/food/Head/Announcement" element={<AnnouncementsFoodHead/>}/>
           <Route path="/food/Head/Reportview" element={<Reportviewfoodhead/>}/>
           <Route path="/Admin" element={<Systemadmin />} />
