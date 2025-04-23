@@ -11,6 +11,7 @@ import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import Systemadmin from './pages/Admin/Admin';
 import Systemadmincreateaccount from './pages/Admin/AdminCreateAccount';
 import Systemadminprofile from './pages/Admin/Adminprofile';
+import Manageaccountsadmin from './pages/Admin/Manageaccounts';
 
 function App() {
 
@@ -33,7 +34,8 @@ function App() {
           <Route path="/Admin" element={<Systemadmin />} />
           <Route path="/Admin/create-account" element={<Systemadmincreateaccount />} />
           <Route path="/Admin/profile" element={<Systemadminprofile />} />
-           
+          <Route path="/Admin/manage-accounts" element={<Manageaccountsadmin />} />
+          
         </Routes>
 
       </div>
