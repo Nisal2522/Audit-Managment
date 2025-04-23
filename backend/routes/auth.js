@@ -9,6 +9,12 @@ import multer from 'multer';
 import path from 'path';
 import cloudinary from 'cloudinary';
 
+
+
+
+
+
+
 const router = express.Router();
 
 
@@ -21,10 +27,17 @@ cloudinary.v2.config({
 
 
 
+
+
 // Registration route
 router.post('/register', registerUser);
 
 router.post("/create", createEmployee);
+
+
+
+
+
 
 
 // Login route
@@ -46,7 +59,7 @@ router.post('/login', async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { userId: user._id, email: user.email, department: user.department, position: user.position },
+      { userId: user._id, email: user.email, department: user.department, position: user.position , employeeid: user.employeeid, status:user.status,  },
       process.env.JWT_KEY, // Secret key from environment
       { expiresIn: '1h' }
     );
@@ -64,6 +77,8 @@ router.post('/login', async (req, res) => {
         position: user.position,
         email: user.email,
         phone: user.phone,
+        employeeid: user.employeeid,
+        status: user.status,
       },
     });
   } catch (error) {
@@ -71,6 +86,7 @@ router.post('/login', async (req, res) => {
     res.status(500).json({ success: false, message: 'Something went wrong during login.' });
   }
 });
+
 
 
 
