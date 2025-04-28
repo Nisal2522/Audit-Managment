@@ -55,4 +55,18 @@ export const deleteAnnouncement = async (req, res) => {
     console.error('Error deleting announcement:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+
+  
+};
+
+export const getAnnouncementsonlyfour = async (req, res) => {
+  try {
+    const announcements = await Announcement.find()
+      .sort({ createdAt: -1 }) // Newest first
+      .limit(3); // Only get 4 most recent
+    res.status(200).json(announcements);
+  } catch (err) {
+    console.error('Error fetching announcements:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
