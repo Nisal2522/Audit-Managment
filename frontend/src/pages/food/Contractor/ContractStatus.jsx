@@ -143,7 +143,7 @@ const ContractStatus = () => {
                   Man Cost
                 </th>
                 <th className="px-6 py-3 border-b text-left text-yellow-500 text-center">
-                  Total Cost (£)
+                  Total Cost ($)
                 </th>
                 <th className="px-6 py-3 border-b text-left text-yellow-500 text-center">
                   Total Cost (LKR)

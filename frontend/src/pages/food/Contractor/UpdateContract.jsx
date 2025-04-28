@@ -333,7 +333,7 @@ const UpdateContract = () => {
         {/* Calculated Fields */}
         <div className="bg-gray-100 p-3 rounded-lg mt-4">
           <p className="font-semibold">Audit Duration: {contractData.auditDuration} days</p>
-          <p className="font-semibold">Total Cost (£): {contractData.totalCost}</p>
+          <p className="font-semibold">Total Cost ($): {contractData.totalCost}</p>
           <p className="font-semibold">Total Cost (LKR): {contractData.totalCostLKR}</p>
         </div>
         <div className="sticky bottom-0 bg-gray-700 flex pt-2 pb-0 justify-center">

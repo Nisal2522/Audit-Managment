@@ -1,4 +1,3 @@
-
 import axios from "axios";
 import NavBar from '../../../components/NavBar';
 import SideBar from '../../../components/SideBar';
@@ -311,7 +310,7 @@ const ContractCreation = () => {
               {/* Calculated Fields */}
               <div className="bg-gray-100 p-3 rounded-lg mt-4">
                 <p className="font-semibold">Audit Duration: {calculatedData.auditDuration} days</p>
-                <p className="font-semibold">Total Cost (£): {calculatedData.totalCost}</p>
+                <p className="font-semibold">Total Cost ($): {calculatedData.totalCost}</p>
                 <p className="font-semibold">Total Cost (LKR): {calculatedData.totalCostLKR}</p>
               </div>
 
