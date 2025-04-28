@@ -51,7 +51,9 @@ const contractorSchema = new mongoose.Schema({
     totalCostLKR: {
         type: Number,
         required: false  // This field will be calculated
-    }
+    },
+
+   
 
 });
 

@@ -15,6 +15,7 @@ const ContractCreation = () => {
      };
 
   const [formData, setFormData] = useState({
+    phoneNumber: "",
     projectID: "",
     projectName: "",
     clientID: "",
@@ -24,6 +25,7 @@ const ContractCreation = () => {
     auditEndDate: "",
     offerDays: "",
     manDayCost: "",
+    
   });
 
   const [calculatedData, setCalculatedData] = useState({
@@ -142,6 +144,7 @@ const ContractCreation = () => {
 
       alert("Contract created successfully!");
       setFormData({
+        phoneNumber: "",
         projectID: "",
         projectName: "",
         clientID: "",
@@ -151,6 +154,8 @@ const ContractCreation = () => {
         auditEndDate: "",
         offerDays: "",
         manDayCost: "",
+       
+
       });
       setCalculatedData({
         auditDuration: 0,
@@ -186,6 +191,19 @@ const ContractCreation = () => {
             <form onSubmit={handleSubmit} className="space-y-4 h-[500px] overflow-y-auto relative pr-4">
               {/* Form Fields */}
               <div>
+                {/* new */}
+
+              <div>
+                <label className="block mb-1 font-semibold text-white">Phone Number</label>
+                <input
+                  type="String"
+                  name="phoneNumber"
+                  value={formData.new}
+                  onChange={handleChange}
+                  required
+                  className="w-full p-2 border rounded-lg"
+                />
+              </div>
                 <label className="block mb-1 font-semibold text-white">Project ID</label>
                 <input
                   type="text"
@@ -284,6 +302,11 @@ const ContractCreation = () => {
                   className="w-full p-2 border rounded-lg"
                 />
               </div>
+
+
+              
+
+
 
               {/* Calculated Fields */}
               <div className="bg-gray-100 p-3 rounded-lg mt-4">

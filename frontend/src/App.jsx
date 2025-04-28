@@ -8,7 +8,7 @@ import IncomeStatus from './pages/food/Contractor/IncomeStatus';
 import TotIncome from './pages/food/Contractor/TotIncome';
 import TotIncomeLKR from './pages/food/Contractor/TotIncomeLKR';
 
-// import Login from './pages/LoginPage';
+import Login from './pages/LoginPage';
 // import AdminDashboard from './pages/AdminDashboard';
 // import RegisterPage from './pages/RegisterPage';
 // import AdminFood from './pages/food/Admin';
@@ -37,7 +37,7 @@ function App() {
 
 
         <Routes>
-          
+        <Route path="/login" element={<Login />} />
           <Route path="/" element={<ContDashboard />} />
           <Route path="/ContractorFE" element={<ContractorFE />} />
           <Route path="/ContractCreation" element={<ContractCreation />} />
@@ -46,8 +46,8 @@ function App() {
           <Route path="/IncomeStatus" element={<IncomeStatus />} />
           <Route path="/TotIncome" element={<TotIncome />} />
           <Route path="/TotIncomeLKR" element={<TotIncomeLKR />} />
-          {/* <Route path="/" element={<RegisterPage />} />
           <Route path="/login" element={<Login />} />
+           {/* <Route path="/" element={<RegisterPage />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/food/admin" element={<AdminFood />} />
           <Route path="/food/reviewer" element={<ReviewerFood />} />
