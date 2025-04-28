@@ -9,37 +9,102 @@ import ProfileHeadFood from './pages/food/DepartmentHead/Profile';
 import AnnouncementsFoodHead from './pages/food/DepartmentHead/Announcement';
 import Reportviewfoodhead from './pages/food/DepartmentHead/ReportVidew';
 import Systemadmin from './pages/Admin/Admin';
-import Systemadmincreateaccount from './pages/Admin/AdminCreateAccount';
 import Systemadminprofile from './pages/Admin/Adminprofile';
-import Manageaccountsadmin from './pages/Admin/Manageaccounts';
+import Systemadmincreateaccount from './pages/Admin/AdminCreateAccount';
 import Resetpasswordadmin from './pages/Admin/resetpassword';
+import Manageaccountsadmin from './pages/Admin/Manageaccounts';
+import ProtectedRoute from './Components/ProtectedRoute'; 
 
 function App() {
-
-
   return (
     <BrowserRouter>
-    <div className="App">
-    
-
+      <div className="App">
         <Routes>
+          {/* Public Routes */}
+          
           <Route path="/" element={<Login />} />
-          <Route path="/registerpage" element={<RegisterPage/>} />
-          <Route path="/food/Head" element={<DepartmentheadFood/>}/>
-          <Route path="/food/Head/Createaccount" element={<CreateprofileFood/>}/>
-          <Route path="/food/Head/Employeestatus" element={<EmployeeStatusFood/>}/>
-          <Route path="/food/Head/Requestleave" element={<Requestleavefood/>}/>
-          <Route path="/food/Head/Profile" element={<ProfileHeadFood/>}/>
-          <Route path="/food/Head/Announcement" element={<AnnouncementsFoodHead/>}/>
-          <Route path="/food/Head/Reportview" element={<Reportviewfoodhead/>}/>
-          <Route path="/Admin" element={<Systemadmin />} />
-          <Route path="/Admin/create-account" element={<Systemadmincreateaccount />} />
-          <Route path="/Admin/profile" element={<Systemadminprofile />} />
-          <Route path="/Admin/manage-accounts" element={<Manageaccountsadmin />} />
-          <Route path="/Admin/Reset-Password" element={<Resetpasswordadmin />} />
 
+          {/* Protected Routes */}
+          <Route path="/register" element={
+            <ProtectedRoute>
+              <RegisterPage />
+            </ProtectedRoute>
+          } />
+
+
+          <Route path="/food/Head" element={
+            <ProtectedRoute>
+              <DepartmentheadFood />
+            </ProtectedRoute>
+          } />
+
+         
+          <Route path="/food/Head/Createaccount" element={
+            <ProtectedRoute>
+              <CreateprofileFood />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/food/Head/Employeestatus" element={
+            <ProtectedRoute>
+              <EmployeeStatusFood />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/food/Head/Requestleave" element={
+            <ProtectedRoute>
+              <Requestleavefood />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/food/Head/Profile" element={
+            <ProtectedRoute>
+              <ProfileHeadFood />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/food/Head/Announcement" element={
+            <ProtectedRoute>
+              <AnnouncementsFoodHead />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/food/Head/Reportview" element={
+            <ProtectedRoute>
+              <Reportviewfoodhead />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/Admin" element={
+            <ProtectedRoute>
+              <Systemadmin />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/Admin/profile" element={
+            <ProtectedRoute>
+              <Systemadminprofile />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/Admin/create-account" element={
+            <ProtectedRoute>
+              <Systemadmincreateaccount />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/Admin/Reset-Password" element={
+            <ProtectedRoute>
+              <Resetpasswordadmin />
+            </ProtectedRoute>
+          } />
+
+          <Route path="/Admin/manage-accounts" element={
+            <ProtectedRoute>
+              <Manageaccountsadmin />
+            </ProtectedRoute>
+          } />
         </Routes>
-
       </div>
     </BrowserRouter>
   );

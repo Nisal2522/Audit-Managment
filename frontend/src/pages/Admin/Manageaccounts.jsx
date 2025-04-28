@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from "../../Components/NavBar";
-import Sidebar from '../../Components/Sidebar';
+import Navbar from "../../components/NavBar";
+import Sidebar from '../../components/Sidebar';
 import axios from 'axios';
 import { FaEdit, FaTrash, FaSun, FaMoon, FaArrowLeft } from "react-icons/fa";
 

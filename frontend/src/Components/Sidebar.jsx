@@ -1,4 +1,7 @@
 import React ,{useState } from 'react';
+
+//Enter New
+import { useNavigate } from 'react-router-dom';
 import {
   FaHome,
   FaUserPlus,
@@ -15,6 +18,17 @@ const Sidebar = () => {
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  //Enter New
+  const handleLogout = () => {
+    
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    
+   
+    navigate('/');
+  };
 
 
   // Get user data from localStorage
@@ -133,7 +147,7 @@ const Sidebar = () => {
           <>
             <li>
               <a
-                href="/food/head"
+                href="/food/Head"
                 className="flex items-center px-4 py-2 rounded text-white font-poppins hover:bg-white hover:text-black hover:font-bold transition duration-300"
               >
                 <FaHome className="mr-2" />
@@ -199,14 +213,14 @@ const Sidebar = () => {
 
         {/* COMMON LOGOUT OPTION FOR BOTH */}
         <li>
-          <a
-            href="/"
-            className="flex items-center px-4 py-2 rounded text-white font-poppins hover:bg-white hover:text-black hover:font-bold transition duration-300"
+          <button
+            onClick={handleLogout}
+            className="flex items-center px-4 py-2 rounded text-white font-poppins hover:bg-white hover:text-black hover:font-bold transition duration-300 w-full text-left"
           >
             <FaSignOutAlt className="mr-2" />
             Logout
-          </a>
-        </li>
+          </button>
+        </li>
       </ul>
     </aside>
   );

@@ -3,8 +3,8 @@ import logo from '../../assets/logon.png';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
-import Navbar from "../../Components/NavBar";
-import Sidebar from '../../Components/Sidebar';
+import Navbar from "../../components/NavBar";
+import Sidebar from '../../components/Sidebar';
 
 const Systemadmincreateaccount = () => {
   const [currentStep, setCurrentStep] = useState(1);
