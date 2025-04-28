@@ -95,14 +95,22 @@ const LoginPage = () => {
               className="w-full p-3 h-9 bg-gray-700 border border-gray-600 rounded-full  focus:outline-none focus:border-blue-500"
             />
           </div>
+
+          <div className="mt-4 flex items-center font-poppins">
+          <input type="checkbox" id="remember" className="mr-2" />
+          <label htmlFor="remember" className="text-gray-400 text-sm">Remember me</label>
+        </div>
+
           <button
             type="submit"
             disabled={loading}
-            className="w-full p-3 bg-blue-500 font-poppins h-11 rounded-full  text-white font-semibold hover:bg-blue-600 transition disabled:bg-gray-500"
+            className="w-full p-3 bg-blue-500 mt-4 font-poppins h-11 rounded-full  text-white font-semibold hover:bg-blue-600 transition disabled:bg-gray-500"
           >
             {loading ? 'Logging in...' : 'Log In'}
           </button>
         </form>
+
+        
         
         <div className="my-4 text-center text-gray-500 font-poppins ">or continue with</div>
         <button className="w-full flex  h-11 items-center justify-center p-3 border border-gray-600 rounded-full hover:bg-gray-700 transition">
@@ -114,10 +122,8 @@ const LoginPage = () => {
             </a>
           </div>
         
-        <div className="mt-4 flex items-center font-poppins">
-          <input type="checkbox" id="remember" className="mr-2" />
-          <label htmlFor="remember" className="text-gray-400 text-sm">Remember me</label>
-        </div>
+        
+        
       </div>
     </div>
   );
