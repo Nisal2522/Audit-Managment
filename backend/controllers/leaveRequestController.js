@@ -107,3 +107,28 @@ export const deleteLeaveRequest = async (req, res) => {
       });
     }
   };
+
+  export const getLeaveRequestStats = async (req, res) => {
+    try {
+      const totalRequests = await LeaveRequest.countDocuments();
+      const pendingRequests = await LeaveRequest.countDocuments({ status: 'pending' });
+      const approvedRequests = await LeaveRequest.countDocuments({ status: 'approved' });
+      const rejectedRequests = await LeaveRequest.countDocuments({ status: 'rejected' });
+  
+      return res.status(200).json({
+        success: true,
+        data: {
+          total: totalRequests,
+          pending: pendingRequests,
+          approved: approvedRequests,
+          rejected: rejectedRequests
+        }
+      });
+    } catch (error) {
+      console.error('Error:', error);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to fetch leave request statistics'
+      });
+    }
+  };
