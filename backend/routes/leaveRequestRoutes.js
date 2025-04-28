@@ -1,5 +1,5 @@
 import express from 'express';
-import {  deleteLeaveRequest , updateLeaveRequestStatus , getAllLeaveRequests } from '../controllers/leaveRequestController.js';
+import {  deleteLeaveRequest , updateLeaveRequestStatus , getAllLeaveRequests,getLeaveRequestStats } from '../controllers/leaveRequestController.js';
 
 const router = express.Router();
 
@@ -13,5 +13,7 @@ router.patch('/:id/status', updateLeaveRequestStatus);
 
 // Delete leave request
 router.delete('/:id', deleteLeaveRequest);
+
+router.get('/stats', getLeaveRequestStats)
 
 export default router;

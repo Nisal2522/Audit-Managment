@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { FiShare2, FiMoreHorizontal } from "react-icons/fi";
-import { FaSun, FaMoon, FaSearch, FaPaperclip, FaMicrophone, FaEllipsisV } from "react-icons/fa";
+import { FaSun, FaMoon, FaSearch, FaPaperclip, FaMicrophone, FaEllipsisV , FaHourglassHalf  , FaBan   } from "react-icons/fa";
 import { IoMdCheckmarkCircle } from "react-icons/io";
 import Sidebar from "../../../components/Sidebar";
 import Navbar from "../../../components/NavBar";
@@ -9,7 +10,7 @@ import axios from "axios";
 
 const DepartmentheadFood = () => {
   const [activeTab, setActiveTab] = useState("overview");
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,7 @@ const DepartmentheadFood = () => {
   const messageInputRef = useRef(null);
   const searchInputRef = useRef(null);
   const [departmentHeads, setDepartmentHeads] = useState([]);
+  const [announcements, setAnnouncements] = useState([]);
   
   const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5005";
 
@@ -30,6 +32,55 @@ const DepartmentheadFood = () => {
   const status = userData.status || 'Active';
   const department = userData.department || 'Food';
   const employeeId = userData.employeeid || '';
+
+
+  const [leaveStats, setLeaveStats] = useState({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    rejected: 0
+  });
+
+  
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchAnnouncements = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/announcements/latest`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        setAnnouncements(response.data);
+      } catch (error) {
+        console.error('Error fetching announcements:', error);
+      }
+    };
+  
+    fetchAnnouncements();
+  }, []);
+  
+
+  // Add this useEffect to fetch the stats
+useEffect(() => {
+  const fetchLeaveStats = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/leave-requests/stats`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      setLeaveStats(response.data.data);
+    } catch (error) {
+      console.error('Error fetching leave stats:', error);
+    }
+  };
+
+  fetchLeaveStats();
+}, []);
+
 
   // Fetch employees data
   useEffect(() => {
@@ -484,9 +535,144 @@ const DepartmentheadFood = () => {
       case "overview":
         return (
           <div className="p-4">
-            <h2 className="text-xl font-semibold mb-4">Department Overview</h2>
-            <p>Summary of key metrics and updates will appear here.</p>
+            <h2 className="text-xl font-semibold font-poppins  mb-8 ">Request Leave Summary</h2>
+           
+  
+  {/* Leave Request Statistics Cards */}
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 font-poppins ">
+
+    {/* Total Requests Card */}
+    <div className={`p-5 rounded-xl shadow-lg transition-all hover:scale-[1.02] cursor-pointer ${darkMode ? "bg-[#064979] border border-[#064979]" : "bg-white border border-[#e6f2ff]"}`}
+        onClick={() => navigate('/food/Head/Requestleave')}>
+        <div className="flex items-center justify-between">
+              <div>
+                <p className={`text-sm font-medium ${darkMode ? "text-[#a8d0ff]" : "text-[#064979]"}`}>Total Requests</p>
+                <p className={`text-3xl font-bold mt-1 ${darkMode ? "text-white" : "text-gray-900"}`}>
+                  {leaveStats.total}
+                </p>
+              </div>
+              <div className={`p-3 rounded-full bg-[#e6f2ff] dark:bg-[#064979]`}>
+                <FiShare2 className="text-xl text-[#064979] dark:text-[#a8d0ff]" />
+              </div>
+            </div>
+            <div className="mt-3 h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full">
+              <div 
+                className="h-1 bg-black dark:bg-[#4da8da] rounded-full" 
+                style={{ width: `${Math.min(100, (leaveStats.total / (leaveStats.total + 1)) * 100)}%` }}
+              ></div>
+            </div>
+      </div>
+
+    {/* Pending Requests Card */}
+    <div className={`p-5 rounded-xl shadow-lg transition-all hover:scale-[1.02] ${darkMode ? "bg-[#064979] border border-[#064979]" : "bg-white border border-[#e6f2ff]"}`}>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className={`text-sm font-medium ${darkMode ? "text-[#a8d0ff]" : "text-[#064979]"}`}>Pending</p>
+          <p className="text-3xl font-bold mt-1 text-[#f59e0b] dark:text-[#fbbf24]">{leaveStats.pending}</p>
+        </div>
+        <div className={`p-3 rounded-full bg-[#fef3c7] dark:bg-[#78350f]`}>
+          <FaHourglassHalf className="text-xl text-[#d97706] dark:text-[#fbbf24]" />
+        </div>
+      </div>
+      <div className="mt-3 h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full">
+        <div 
+          className="h-1 bg-[#f59e0b] dark:bg-[#fbbf24] rounded-full" 
+          style={{ width: `${Math.min(100, (leaveStats.pending / (leaveStats.total + 1)) * 100)}%` }}
+        ></div>
+      </div>
+    </div>
+
+    {/* Approved Requests Card */}
+    <div className={`p-5 rounded-xl shadow-lg transition-all hover:scale-[1.02] ${darkMode ? "bg-[#064979] border border-[#064979]" : "bg-white border border-[#e6f2ff]"}`}>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className={`text-sm font-medium ${darkMode ? "text-[#a8d0ff]" : "text-[#064979]"}`}>Approved</p>
+          <p className="text-3xl font-bold mt-1 text-[#10b981] dark:text-[#34d399]">{leaveStats.approved}</p>
+        </div>
+        <div className={`p-3 rounded-full bg-[#d1fae5] dark:bg-[#064d3b]`}>
+          <IoMdCheckmarkCircle className="text-xl text-[#10b981] dark:text-[#34d399]" />
+        </div>
+      </div>
+      <div className="mt-3 h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full">
+        <div 
+          className="h-1 bg-[#10b981] dark:bg-[#34d399] rounded-full" 
+          style={{ width: `${Math.min(100, (leaveStats.approved / (leaveStats.total + 1)) * 100)}%` }}
+        ></div>
+      </div>
+    </div>
+
+    {/* Rejected Requests Card */}
+    <div className={`p-5 rounded-xl shadow-lg transition-all hover:scale-[1.02] ${darkMode ? "bg-[#064979] border border-[#064979]" : "bg-white border border-[#e6f2ff]"}`}>
+      <div className="flex items-center justify-between">
+        <div>
+          <p className={`text-sm font-medium ${darkMode ? "text-[#a8d0ff]" : "text-[#064979]"}`}>Rejected</p>
+          <p className="text-3xl font-bold mt-1 text-[#ef4444] dark:text-[#f87171]">{leaveStats.rejected}</p>
+        </div>
+        <div className={`p-3 rounded-full bg-[#fee2e2] dark:bg-[#7f1d1d]`}>
+          <FaBan className="text-xl text-[#ef4444] dark:text-[#f87171]" />
+        </div>
+      </div>
+      <div className="mt-3 h-1 w-full bg-gray-200 dark:bg-gray-700 rounded-full">
+        <div 
+          className="h-1 bg-[#ef4444] dark:bg-[#f87171] rounded-full" 
+          style={{ width: `${Math.min(100, (leaveStats.rejected / (leaveStats.total + 1)) * 100)}%` }}
+        ></div>
+      </div>
+    </div>
+  </div>
+  
+  {/*recenr announcement section*/}
+  {/* Recent Announcements Section */}
+<div className="p-4">
+  <h2 className="text-xl font-semibold font-poppins text-left mb-4">Recent Announcements</h2>
+  {announcements.length > 0 ? (
+    <div className="space-y-4">
+      {announcements.map((announcement) => {
+        // Format the sentTo information based on the type
+        let sentToText = '';
+        if (announcement.sentTo.type === 'Team Announcement') {
+          sentToText = `${announcement.sentTo.position} in ${announcement.sentTo.department}`;
+        } else if (announcement.sentTo.type === 'Individual Announcement' || 
+                   announcement.sentTo.type === 'multipleemployees Announcement') {
+          sentToText = announcement.sentTo.employee_details
+            .map(e => `${e.name} (${e.employeeId})`)
+            .join(', ');
+        }
+
+        return (
+          <div 
+            key={announcement._id}
+            className={`p-4 rounded-lg border ${darkMode ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"} shadow-sm`}
+          >
+            <div className="flex justify-between items-start">
+            <h3 className={`font-semibold text-lg ${darkMode ? 'text-blue-400' : 'text-[#064979]'} font-poppins`}>{announcement.subject}</h3>
+              <span className={`text-xs ${darkMode ? "text-gray-400" : "text-gray-500"}`}>
+                {new Date(announcement.date).toLocaleDateString()}
+              </span>
+            </div>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-3 font-poppins`}>{announcement.message}</p>
+            <div className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} font-poppins`}>
+                          <span className="font-semibold">Sent to:</span> {announcement.sentTo.type === 'Team Announcement' 
+                            ? `${announcement.sentTo.position} in ${announcement.sentTo.department}`
+                            : announcement.sentTo.employee_details.map(e => `${e.name} (${e.employeeId})`).join(', ')}
+                        </div>
+                        <div className={`flex justify-between items-center text-sm ${darkMode ? 'text-gray-400' : 'text-gray-600'} mt-1 font-poppins`}>
+                          <div>
+                            <span className="font-semibold">From:</span> {announcement.sender.position} ({announcement.sender.department})
+                          </div>
+                          </div>
           </div>
+        );
+      })}
+    </div>
+  ) : (
+    <div className={`p-4 rounded-lg ${darkMode ? "bg-gray-800 text-gray-400" : "bg-gray-100 text-gray-600"}`}>
+      No recent announcements found
+    </div>
+  )}
+</div>
+</div>
+          
         );
       case "chat":
         return <ChatLayout />;
