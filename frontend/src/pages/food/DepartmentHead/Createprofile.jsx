@@ -178,9 +178,9 @@ const CreateprofileFood = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+    
     const isFormComplete = Object.values(formData).every((value) => value !== "");
-
+  
     const hasErrors = Object.values(errors).some((error) => error !== "");
     if (hasErrors) {
       alert("Please correct the errors before submitting.");
@@ -214,10 +214,12 @@ const CreateprofileFood = () => {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(formData.password, salt);
-
+  
+      // Send both plain text and hashed passwords to backend
       await createEmployee({
         ...formData,
-        password: hashedPassword,
+        password: formData.password, // Plain text password for email
+        hashedPassword: hashedPassword, // Hashed password for database
         qualifiedPrograms: formattedPrograms,
         employeeId: formData.employeeId,
       });
@@ -254,6 +256,7 @@ const CreateprofileFood = () => {
     }
   };
 
+  
   // Prepare data for the chart
   const getChartData = () => {
     if (!employeeStats) return null;
