@@ -3,13 +3,13 @@ import nodemailer from 'nodemailer';
 import User from '../models/User.js';
 
 const registerUser = async (req, res) => {
-  const { firstname, lastname, department, position, email, password } = req.body;
+  const { firstname, lastname, department, position, email, password, employeeId } = req.body;
 
   try {
     // Check if the user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ $or: [{ email }, { employeeId }] });
     if (existingUser) {
-      return res.json({ success: false, message: 'Email already registered.' });
+      return res.json({ success: false, message: 'Email or Employee ID already registered.' });
     }
 
     // Hash the password before saving it to the database
@@ -23,6 +23,7 @@ const registerUser = async (req, res) => {
       position,
       email,
       password: hashedPassword,
+      employeeId,
     });
     await newUser.save();
 
@@ -46,12 +47,13 @@ const registerUser = async (req, res) => {
             <h1 style="color: #2e51af; font-size: 36px; margin: 10px 0; font-weight: bold;">Audit Planning System</h1>
           </div>
           <p style="font-size: 18px; color: #333;">Hello <strong>${firstname} ${lastname}</strong>,</p>
-          <p style="font-size: 16px; color: #444;">We’re thrilled to welcome you to the <strong>Audit Planning System</strong>! Your registration is now complete.</p>
+          <p style="font-size: 16px; color: #444;">We're thrilled to welcome you to the <strong>Audit Planning System</strong>! Your registration is now complete.</p>
           <div style="margin: 20px 0; padding: 15px; background-color: #e9f2fc; border-radius: 6px;">
             <p style="color: #2e51af; font-weight: bold; font-size: 20px; margin-bottom: 10px;">Your Registration Details:</p>
             <p style="font-size: 16px; margin: 5px 0;"><strong>Department:</strong> ${department}</p>
             <p style="font-size: 16px; margin: 5px 0;"><strong>Position:</strong> ${position}</p>
             <p style="font-size: 16px; margin: 5px 0;"><strong>Email:</strong> ${email}</p>
+            <p style="font-size: 16px; margin: 5px 0;"><strong>Employee ID:</strong> ${employeeId}</p>
           </div>
           <p style="text-align: center; margin: 30px 0;">
             <a href="https://auditplanning.com/login" 

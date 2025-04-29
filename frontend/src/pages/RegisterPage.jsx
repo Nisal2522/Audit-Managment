@@ -11,6 +11,7 @@ const RegisterPage = () => {
     position: '',
     email: '',
     password: '',
+    employeeId: '',
   });
 
   const [error, setError] = useState('');
@@ -78,41 +79,39 @@ const RegisterPage = () => {
           </div>
 
           <div className="mb-3">
+            <label className="block text-sm mb-1 text-blue-700 font-medium text-left">Employee ID:</label>
+            <input
+              type="text"
+              name="employeeId"
+              value={formData.employeeId}
+              onChange={handleChange}
+              required
+              className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
+            />
+          </div>
+
+          <div className="mb-3">
             <label className="block text-sm mb-1 text-blue-700 font-medium text-left">Department:</label>
-            <select
+            <input
+              type="text"
               name="department"
               value={formData.department}
               onChange={handleChange}
               required
               className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
-            >
-              <option value="">Select Department</option>
-              <option value="Textile">Textile</option>
-              <option value="Organic">Organic</option>
-              <option value="Food">Food</option>
-              <option value="Forest">Forest</option>
-            </select>
+            />
           </div>
 
           <div className="mb-3">
             <label className="block text-sm mb-1 text-blue-700 font-medium text-left">Position:</label>
-            <select
+            <input
+              type="text"
               name="position"
               value={formData.position}
               onChange={handleChange}
               required
               className="w-full p-2 text-sm border border-gray-300 rounded-md bg-gray-100 focus:border-blue-500 focus:outline-none transition-all"
-            >
-              <option value="">Select Position</option>
-              <option value="Project Creator">Project Creator</option>
-              <option value="Planner">Planner</option>
-              <option value="Contractor">Contractor</option>
-              <option value="Auditor">Auditor</option>
-              <option value="Certifier">Certifier</option>
-              <option value="Reviewer">Reviewer</option>
-              <option value="Admin">Admin</option>
-              <option value="Department Head">Department Head</option>
-            </select>
+            />
           </div>
 
           <div className="mb-3">
