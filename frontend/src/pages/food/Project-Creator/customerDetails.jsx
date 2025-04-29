@@ -261,9 +261,6 @@ const CreateCustomerDashboard = () => {
                                         Customer No
                                     </th>
                                     <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
-                                        ID
-                                    </th>
-                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         Company Name
                                     </th>
                                     <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
@@ -298,9 +295,6 @@ const CreateCustomerDashboard = () => {
                                             >
                                                 <td className="border-b border-gray-200 px-4 py-3 text-sm text-white">
                                                     {customer.cuNo}
-                                                </td>
-                                                <td className="border-b border-gray-200 px-4 py-3 text-sm text-white">
-                                                    {customer._id}
                                                 </td>
                                                 <td className="border-b border-gray-200 px-4 py-3 text-sm text-white">
                                                     {customer.name}

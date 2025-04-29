@@ -277,6 +277,26 @@ const CustomerDetails = () => {
                                     </div>
                                 </div>
                             </div>
+
+                            {/* Employee Information Section */}
+                            <div className="mt-8 pt-8 border-t border-gray-700">
+                                <h3 className="text-xl font-semibold text-white mb-4">Employee Information</h3>
+                                <div>
+                                    <span className="font-medium text-white text-lg">Employee ID: </span>{" "}
+                                    {isEditing ? (
+                                        <input
+                                            type="text"
+                                            value={editedCustomer.employeeId}
+                                            onChange={(e) =>
+                                                handleInputChange("employeeId", e.target.value)
+                                            }
+                                            className="w-full p-2 border rounded text-black"
+                                        />
+                                    ) : (
+                                        <span className="text-gray-400 text-sm">{customer.employeeId}</span>
+                                    )}
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className="container text-2xl mb-5 font-bold text-[#022847]">Customer Facility Table</div>
