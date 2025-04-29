@@ -1,17 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 
 const UnitTable = () => {
-    const { id } = useParams();
-    const [customer, setCustomer] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [rows, setRows] = useState([]);
-    const [isPopupOpen, setIsPopupOpen] = useState(false); // State to control popup visibility
-    const [selectedCertifications, setSelectedCertifications] = useState([]); // Selected certifications
-    const [currentRowIndex, setCurrentRowIndex] = useState(null); // Index of the row being edited
+    const [isFormOpen, setIsFormOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        unitName: "",
+        location: "",
+        certifications: [],
+        warehousing: [],
+        extrusion: [],
+        collecting: [],
+        manufacturing: [],
+        trading: [],
+        mechanicalRecycling: [],
+        printing: []
+    });
+    const [tableData, setTableData] = useState([]);
 
-    // Certifications list (can be fetched from an API or hardcoded)
     const availableCertifications = [
         "GRS NL",
         "RCS NL",
@@ -19,330 +23,208 @@ const UnitTable = () => {
         "OEKO-TEX",
         "ISO 9001",
         "ISO 14001",
-        "B Corp",
+        "B Corp"
     ];
 
-    // Fetch company details from the database on component mount
-    useEffect(() => {
-        const fetchCustomerData = async () => {
-            try {
-                const response = await fetch(`http://localhost:5006/api/customers/${id}`);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch customer data.");
-                }
-                const data = await response.json();
-                setCustomer(data.data); // Assuming the API returns an object with `id` and `name`
-            } catch (err) {
-                setError("There was an error fetching the customer data.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchCustomerData();
-    }, [id]);
+    const processes = [
+        "warehousing",
+        "extrusion",
+        "collecting",
+        "manufacturing",
+        "trading",
+        "mechanicalRecycling",
+        "printing"
+    ];
 
-    // Render loading state
-    if (loading) {
-        return <div className="text-center py-10">Loading...</div>;
-    }
-
-    // Render error state
-    if (error) {
-        return <div className="text-center text-red-600 py-10">{error}</div>;
-    }
-
-    // Function to open the popup and set the current row index
-    const openPopup = (index) => {
-        setIsPopupOpen(true);
-        setCurrentRowIndex(index);
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
     };
 
-    // Function to close the popup
-    const closePopup = () => {
-        setIsPopupOpen(false);
-        setCurrentRowIndex(null);
+    const handleCertificationChange = (process, certification) => {
+        setFormData(prev => ({
+            ...prev,
+            [process]: prev[process].includes(certification)
+                ? prev[process].filter(c => c !== certification)
+                : [...prev[process], certification]
+        }));
     };
 
-    // Function to handle certification selection
-    const handleCertificationSelection = (certification) => {
-        if (selectedCertifications.includes(certification)) {
-            setSelectedCertifications(selectedCertifications.filter((c) => c !== certification));
-        } else {
-            setSelectedCertifications([...selectedCertifications, certification]);
-        }
-    };
-
-    // Function to save selected certifications to the corresponding row
-    const saveCertifications = () => {
-        setRows((prevRows) => {
-            const updatedRows = [...prevRows];
-            updatedRows[currentRowIndex].certifications = selectedCertifications;
-            return updatedRows;
-        });
-        setSelectedCertifications([]); // Reset selected certifications
-        closePopup(); // Close the popup
-    };
-
-    // Function to add a new row
-    const handleAddRow = () => {
-        setRows((prevRows) => [
-            ...prevRows,
-            {
-                id: `New-${prevRows.length + 1}`,
-                name: "New Company",
-                certifications: [],
-            },
-        ]);
-    };
-
-    // Drag-and-drop functionality
-    const handleDragStart = (e, rowIndex, certification) => {
-        e.dataTransfer.setData("text/plain", JSON.stringify({ rowIndex, certification }));
-    };
-
-    const handleDrop = (e, targetColumn, rowIndex) => {
+    const handleSubmit = (e) => {
         e.preventDefault();
-        const { rowIndex: sourceRowIndex, certification } = JSON.parse(
-            e.dataTransfer.getData("text/plain")
-        );
-        setRows((prevRows) => {
-            const updatedRows = [...prevRows];
-
-            // Remove certification from the "No Processing" column
-            const sourceCertifications = updatedRows[sourceRowIndex].certifications.filter(
-                (c) => c !== certification
-            );
-            updatedRows[sourceRowIndex].certifications = sourceCertifications;
-
-            // Add certification to the target column
-            if (!updatedRows[rowIndex][targetColumn]) {
-                updatedRows[rowIndex][targetColumn] = [];
-            }
-            updatedRows[rowIndex][targetColumn].push(certification);
-
-            return updatedRows;
+        setTableData(prev => [...prev, formData]);
+        setIsFormOpen(false);
+        setFormData({
+            unitName: "",
+            location: "",
+            certifications: [],
+            warehousing: [],
+            extrusion: [],
+            collecting: [],
+            manufacturing: [],
+            trading: [],
+            mechanicalRecycling: [],
+            printing: []
         });
-    };
-
-    const handleDragOver = (e) => {
-        e.preventDefault();
     };
 
     return (
-        <div className="rounded-lg overflow-x-auto">
-            {/* Table */}
-            <table className="min-w-full bg-gray-100 border-collapse">
-                {/* Table Header */}
+        <div className="rounded-lg overflow-x-auto shadow-lg bg-white p-6">
+            <table className="min-w-full bg-white border-collapse">
                 <thead>
                     <tr className="bg-[#022847] text-white text-center font-bold">
-                        <th className="px-4 py-2 border">Company Details</th>
-                        <th
-                            className="px-4 py-2 border"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, "warehousing", 0)}
-                        >
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300">Unit Details</th>
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
                             Warehousing
                         </th>
-                        <th
-                            className="px-4 py-2 border"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, "extrusion", 0)}
-                        >
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
                             Extrusion
                         </th>
-                        <th
-                            className="px-4 py-2 border"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, "collecting", 0)}
-                        >
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
                             Collecting
                         </th>
-                        <th
-                            className="px-4 py-2 border"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, "manufacturing", 0)}
-                        >
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
                             Manufacturing
                         </th>
-                        <th
-                            className="px-4 py-2 border"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, "trading", 0)}
-                        >
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
                             Trading
                         </th>
-                        <th
-                            className="px-4 py-2 border"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, "mechanicalRecycling", 0)}
-                        >
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
                             Mechanical Recycling
                         </th>
-                        <th
-                            className="px-4 py-2 border"
-                            onDragOver={handleDragOver}
-                            onDrop={(e) => handleDrop(e, "printing", 0)}
-                        >
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
                             Printing
                         </th>
-                        <th className="px-4 py-2 border">No Processing</th>
+                        <th className="px-6 py-4 border-b-2 border-[#022847]">No Processing</th>
                     </tr>
                 </thead>
-                {/* Table Body */}
                 <tbody>
-                    {/* Initial Row with Fetched Data */}
-                    {customer && (
-                        <tr>
-                            <td className="px-4 py-2 border border-[#022947] align-top">
-                                <p>
-                                    {customer.name} (Hardcoded Risk Level)<br /><br />
-                                    ID: {customer._id}<br /><br />
-                                    Certifications:<br /> GRS NL / RCS NL<br />
-                                    Main
-                                </p>
+                    {tableData.map((row, index) => (
+                        <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                            <td className="px-6 py-4 border-b border-gray-200 border-r border-gray-300 align-top">
+                                <div className="space-y-2">
+                                    <p className="font-semibold text-gray-800">{row.unitName}</p>
+                                    <p className="text-sm text-gray-600">Location: {row.location}</p>
+                                </div>
                             </td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]"></td>
-                            <td className="px-4 py-2 border border-[#022947]">
-                                RCS NL / RCS
-                            </td>
-                        </tr>
-                    )}
-                    {/* Dynamically Added Rows */}
-                    {rows.map((row, index) => (
-                        <tr key={index}>
-                            <td className="px-4 py-2 border border-gray-300 align-top">
-                                <p>
-                                    {row.name} (Hardcoded Risk Level)<br /><br />
-                                    ID: {row.id}<br /><br />
-                                    Certifications:<br /> {row.certifications.join(" / ") || "None"}<br />
-                                    Main
-                                    <button
-                                        onClick={() => openPopup(index)}
-                                        className="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                                    >
-                                        Edit Certifications
-                                    </button>
-                                </p>
-                            </td>
-                            <td
-                                className="px-4 py-2 border border-[#022947]"
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, "warehousing", index)}
-                            >
-                                {row.warehousing?.join(" / ") || ""}
-                            </td>
-                            <td
-                                className="px-4 py-2 border border-[#022947]"
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, "extrusion", index)}
-                            >
-                                {row.extrusion?.join(" / ") || ""}
-                            </td>
-                            <td
-                                className="px-4 py-2 border border-[#022947]"
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, "collecting", index)}
-                            >
-                                {row.collecting?.join(" / ") || ""}
-                            </td>
-                            <td
-                                className="px-4 py-2 border border-[#022947]"
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, "manufacturing", index)}
-                            >
-                                {row.manufacturing?.join(" / ") || ""}
-                            </td>
-                            <td
-                                className="px-4 py-2 border border-[#022947]"
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, "trading", index)}
-                            >
-                                {row.trading?.join(" / ") || ""}
-                            </td>
-                            <td
-                                className="px-4 py-2 border border-[#022947]"
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, "mechanicalRecycling", index)}
-                            >
-                                {row.mechanicalRecycling?.join(" / ") || ""}
-                            </td>
-                            <td
-                                className="px-4 py-2 border border-[#022947]"
-                                onDragOver={handleDragOver}
-                                onDrop={(e) => handleDrop(e, "printing", index)}
-                            >
-                                {row.printing?.join(" / ") || ""}
-                            </td>
-                            <td className="px-4 py-2 border border-[#022947]">
-                                {row.certifications.map((certification, idx) => (
-                                    <span
-                                        key={idx}
-                                        draggable
-                                        onDragStart={(e) =>
-                                            handleDragStart(e, index, certification)
-                                        }
-                                        className="inline-block bg-gray-200 px-2 py-1 rounded mr-2 cursor-move"
-                                    >
-                                        {certification}
-                                    </span>
-                                ))}
+                            {processes.map(process => (
+                                <td key={process} className="px-6 py-4 border-b border-gray-200 border-r border-gray-300">
+                                    <div className="flex flex-wrap gap-2">
+                                        {row[process]?.map((certification, idx) => (
+                                            <span
+                                                key={idx}
+                                                className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                                            >
+                                                {certification}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </td>
+                            ))}
+                            <td className="px-6 py-4 border-b border-gray-200">
+                                <div className="flex flex-wrap gap-2">
+                                    {row.certifications.map((certification, idx) => (
+                                        <span
+                                            key={idx}
+                                            className="inline-block bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
+                                        >
+                                            {certification}
+                                        </span>
+                                    ))}
+                                </div>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            {/* Add Row Button Container */}
-            <div className="flex justify-center mt-1">
-                <button
-                    onClick={handleAddRow}
-                    className="px-4 py-2 bg-[#022947] text-white font-semibold rounded-lg hover:bg-green-700 text-2xl"
+            <div className="flex justify-center mt-6">
+                <button 
+                    onClick={() => setIsFormOpen(true)}
+                    className="px-6 py-3 bg-[#022947] text-white font-semibold rounded-lg hover:bg-[#033a6b] transition-colors duration-200 text-xl shadow-md hover:shadow-lg"
                 >
                     +
                 </button>
             </div>
-            {/* Popup for Certification Selection */}
-            {
-                isPopupOpen && (
-                    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                        <div className="bg-white p-6 rounded-lg shadow-lg w-96">
-                            <h2 className="text-xl font-bold mb-4">Select Certifications</h2>
-                            <div className="space-y-2 max-h-60 overflow-y-auto">
-                                {availableCertifications.map((certification, index) => (
-                                    <label key={index} className="flex items-center space-x-2">
-                                        <input
-                                            type="checkbox"
-                                            checked={selectedCertifications.includes(certification)}
-                                            onChange={() => handleCertificationSelection(certification)}
-                                            className="form-checkbox h-5 w-5 text-blue-500"
-                                        />
-                                        <span>{certification}</span>
+
+            {/* Form Popup */}
+            {isFormOpen && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div className="bg-white p-8 rounded-xl shadow-2xl w-[800px] max-h-[90vh] overflow-y-auto">
+                        <h2 className="text-2xl font-bold mb-6 text-gray-800">Add New Unit</h2>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Unit Name
                                     </label>
+                                    <input
+                                        type="text"
+                                        name="unitName"
+                                        value={formData.unitName}
+                                        onChange={handleInputChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        required
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                                        Location
+                                    </label>
+                                    <input
+                                        type="text"
+                                        name="location"
+                                        value={formData.location}
+                                        onChange={handleInputChange}
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="space-y-4">
+                                <h3 className="text-lg font-semibold text-gray-800">Select Certifications for Each Process</h3>
+                                {processes.map(process => (
+                                    <div key={process} className="border rounded-lg p-4">
+                                        <h4 className="text-md font-medium text-gray-700 mb-3 capitalize">{process}</h4>
+                                        <div className="grid grid-cols-2 gap-3">
+                                            {availableCertifications.map((certification) => (
+                                                <label key={certification} className="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-lg cursor-pointer">
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={formData[process].includes(certification)}
+                                                        onChange={() => handleCertificationChange(process, certification)}
+                                                        className="h-5 w-5 text-blue-500 rounded focus:ring-blue-500"
+                                                    />
+                                                    <span className="text-gray-700">{certification}</span>
+                                                </label>
+                                            ))}
+                                        </div>
+                                    </div>
                                 ))}
                             </div>
-                            <div className="flex justify-end mt-4 space-x-2">
+
+                            <div className="flex justify-end space-x-3 mt-6">
                                 <button
-                                    onClick={closePopup}
-                                    className="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400"
+                                    type="button"
+                                    onClick={() => setIsFormOpen(false)}
+                                    className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors duration-200 font-medium"
                                 >
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={saveCertifications}
-                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                                    type="submit"
+                                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium"
                                 >
-                                    Save
+                                    Add Unit
                                 </button>
                             </div>
-                        </div>
+                        </form>
                     </div>
-                )
-            }
+                </div>
+            )}
         </div>
     );
 };
