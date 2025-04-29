@@ -137,6 +137,7 @@ const CreateCustomerDashboard = () => {
 
             // Define table columns
             const tableColumns = [
+                "Customer No",
                 "ID",
                 "Company Name",
                 "Department",
@@ -148,6 +149,7 @@ const CreateCustomerDashboard = () => {
             // Populate table rows with customer data
             customers.forEach((customer) => {
                 const customerData = [
+                    customer.cuNo || "",
                     customer._id,
                     customer.name,
                     customer.department || "",
@@ -256,6 +258,9 @@ const CreateCustomerDashboard = () => {
                             <thead>
                                 <tr className="bg-[#02090d59] text-blue-700">
                                     <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
+                                        Customer No
+                                    </th>
+                                    <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
                                         ID
                                     </th>
                                     <th className="border-b border-gray-300 px-4 py-2 text-left text-base font-semibold text-white">
@@ -291,6 +296,9 @@ const CreateCustomerDashboard = () => {
                                                 to={`/projectCreator/${customer._id}`}
                                                 className="contents"
                                             >
+                                                <td className="border-b border-gray-200 px-4 py-3 text-sm text-white">
+                                                    {customer.cuNo}
+                                                </td>
                                                 <td className="border-b border-gray-200 px-4 py-3 text-sm text-white">
                                                     {customer._id}
                                                 </td>

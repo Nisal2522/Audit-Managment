@@ -163,6 +163,10 @@ const CustomerDetails = () => {
                                 {/* Left Column */}
                                 <div className="space-y-5">
                                     <div>
+                                        <span className="font-medium text-white text-lg">Customer Number: </span>{" "}
+                                        <span className="text-gray-400 text-sm">{customer.cuNo}</span>
+                                    </div>
+                                    <div>
                                         <span className="font-medium text-white text-lg">ID: </span>{" "}
                                         {isEditing ? (
                                             <input

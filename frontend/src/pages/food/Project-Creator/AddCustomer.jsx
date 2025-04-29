@@ -253,6 +253,18 @@ const CreateCustomerForm = () => {
                                 <>
                                     <div className="mb-4">
                                         <label className="block text-base font-medium text-white mb-2">
+                                            Customer Number
+                                        </label>
+                                        <input
+                                            type="text"
+                                            value="Auto-generated"
+                                            disabled
+                                            className="w-full border border-gray-300 rounded-lg p-2 bg-gray-100 text-gray-500"
+                                        />
+                                        <p className="text-gray-400 text-sm mt-1">Customer number will be auto-generated in format: AMS_XXXX</p>
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-base font-medium text-white mb-2">
                                             Name
                                         </label>
                                         <input
