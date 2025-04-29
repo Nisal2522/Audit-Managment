@@ -19,12 +19,16 @@ export const createCustomer = async (req, res) => {
     !customer.department ||
     !customer.address ||
     !customer.email ||
-    !customer.companySize
+    !customer.companySize ||
+    !customer.manualDate
   ) {
     return res
       .status(400)
       .json({ success: false, message: "Customer data is required" });
   }
+
+  // Convert manualDate string to Date object
+  customer.manualDate = new Date(customer.manualDate);
 
   const newCustomer = new Customer(customer);
   try {

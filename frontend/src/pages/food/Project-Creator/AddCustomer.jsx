@@ -18,6 +18,7 @@ const CreateCustomerForm = () => {
             invoiceEmail: "",
         },
         companySize: "",
+        manualDate: new Date().toISOString().split('T')[0], // Set default to today
     });
     const [step, setStep] = useState(1);
     const [error, setError] = useState(null);
@@ -171,6 +172,7 @@ const CreateCustomerForm = () => {
                 address: { mainAddress: "", invoiceAddress: "" },
                 email: { mainEmail: "", invoiceEmail: "" },
                 companySize: "",
+                manualDate: new Date().toISOString().split('T')[0],
             });
             setStep(1);
             setFieldErrors({});
@@ -279,6 +281,19 @@ const CreateCustomerForm = () => {
                                             disabled
                                             className="w-full border border-gray-300 rounded-lg p-2 bg-gray-100 text-gray-500"
                                             readOnly
+                                        />
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-base font-medium text-white mb-2">
+                                            Creation Date
+                                        </label>
+                                        <input
+                                            type="date"
+                                            name="manualDate"
+                                            value={formData.manualDate}
+                                            onChange={handleInputChange}
+                                            className="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500"
+                                            required
                                         />
                                     </div>
                                     <div className="mb-4">

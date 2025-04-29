@@ -296,6 +296,23 @@ const CustomerDetails = () => {
                                         <span className="text-gray-400 text-sm">{customer.employeeId}</span>
                                     )}
                                 </div>
+                                <div className="mt-4">
+                                    <span className="font-medium text-white text-lg">Date Created: </span>{" "}
+                                    {isEditing ? (
+                                        <input
+                                            type="date"
+                                            value={editedCustomer.manualDate ? new Date(editedCustomer.manualDate).toISOString().split('T')[0] : ''}
+                                            onChange={(e) =>
+                                                handleInputChange("manualDate", e.target.value)
+                                            }
+                                            className="w-full p-2 border rounded text-black"
+                                        />
+                                    ) : (
+                                        <span className="text-gray-400 text-sm">
+                                            {customer.manualDate ? new Date(customer.manualDate).toLocaleDateString() : ''}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -41,6 +41,10 @@ const customerSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    manualDate: {
+      type: Date,
+      required: true,
+    },
   },
   {
     timestamps: true,
