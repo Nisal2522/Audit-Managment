@@ -211,69 +211,124 @@ const CustomerDetails = () => {
                                             <span className="text-gray-400 text-sm">{customer.companySize}</span>
                                         )}
                                     </div>
+
+                                    {/* Programs Box */}
+                                    <div className="border border-gray-700 rounded-lg p-6 mt-8">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h3 className="text-xl font-bold text-white">Programs:</h3>
+                                            <div className="flex items-center gap-3 text-sm">
+                                                <span className="flex items-center gap-1 text-green-400"><span className="w-2 h-2 rounded-full bg-green-500 inline-block"></span>Active</span>
+                                                <span className="flex items-center gap-1 text-gray-400"><span className="w-2 h-2 rounded-full bg-gray-400 inline-block"></span>Inactive</span>
+                                            </div>
+                                        </div>
+                                        <div className="space-y-4">
+                                            {customer.programs && customer.programs.length > 0 ? (
+                                                customer.programs.map((program, index) => {
+                                                    const isActive = new Date(program.endDate) > new Date();
+                                                    return (
+                                                        <div key={index} className="p-4 rounded-lg border border-gray-600">
+                                                            <div className="flex items-center gap-2 mb-2">
+                                                                <span className={`w-2 h-2 rounded-full ${isActive ? 'bg-green-500' : 'bg-gray-400'} inline-block`}></span>
+                                                                <span className="text-white font-semibold text-lg">{program.name}</span>
+                                                            </div>
+                                                            <div className="flex gap-6 ml-4 mt-1">
+                                                                <div className="flex items-center gap-2 text-sm text-blue-200">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                    </svg>
+                                                                    <span className="font-medium">Start:</span> <span>{new Date(program.startDate).toLocaleDateString()}</span>
+                                                                </div>
+                                                                <div className="flex items-center gap-2 text-sm text-blue-200">
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                                                    </svg>
+                                                                    <span className="font-medium">End:</span> <span>{new Date(program.endDate).toLocaleDateString()}</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                })
+                                            ) : (
+                                                <div className="text-gray-400 text-center py-4">No programs added yet</div>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
 
                                 {/* Right Column */}
                                 <div className="space-y-4">
-                                    <div>
-                                        <span className="font-medium text-white text-lg">Main Address:</span>{" "}
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={editedCustomer.address?.mainAddress}
-                                                onChange={(e) =>
-                                                    handleInputChange("address", e.target.value, "mainAddress")
-                                                }
-                                                className="w-full p-2 border rounded text-black"
-                                            />
-                                        ) : (
-                                            <span className="text-gray-400 text-sm">{customer.address?.mainAddress}</span>
-                                        )}
+                                    {/* Address Box */}
+                                    <div className="border border-gray-700 rounded-lg p-4">
+                                        <h3 className="text-lg font-semibold text-white mb-3">Address</h3>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <span className="font-medium text-white text-lg">Main Address:</span>{" "}
+                                                {isEditing ? (
+                                                    <input
+                                                        type="text"
+                                                        value={editedCustomer.address?.mainAddress}
+                                                        onChange={(e) =>
+                                                            handleInputChange("address", e.target.value, "mainAddress")
+                                                        }
+                                                        className="w-full p-2 border rounded text-black mt-1"
+                                                    />
+                                                ) : (
+                                                    <p className="text-gray-400 text-sm mt-1">{customer.address?.mainAddress}</p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <span className="font-medium text-white text-lg">Invoice Address:</span>{" "}
+                                                {isEditing ? (
+                                                    <input
+                                                        type="text"
+                                                        value={editedCustomer.address?.invoiceAddress}
+                                                        onChange={(e) =>
+                                                            handleInputChange("address", e.target.value, "invoiceAddress")
+                                                        }
+                                                        className="w-full p-2 border rounded text-black mt-1"
+                                                    />
+                                                ) : (
+                                                    <p className="text-gray-400 text-sm mt-1">{customer.address?.invoiceAddress}</p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div>
-                                        <span className="font-medium text-white text-lg">Invoice Address:</span>{" "}
-                                        {isEditing ? (
-                                            <input
-                                                type="text"
-                                                value={editedCustomer.address?.invoiceAddress}
-                                                onChange={(e) =>
-                                                    handleInputChange("address", e.target.value, "invoiceAddress")
-                                                }
-                                                className="w-full p-2 border rounded text-black"
-                                            />
-                                        ) : (
-                                            <span className="text-gray-400 text-sm">{customer.address?.invoiceAddress}</span>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <span className="font-medium text-white text-lg">Main Email:</span>{" "}
-                                        {isEditing ? (
-                                            <input
-                                                type="email"
-                                                value={editedCustomer.email?.mainEmail}
-                                                onChange={(e) =>
-                                                    handleInputChange("email", e.target.value, "mainEmail")
-                                                }
-                                                className="w-full p-2 border rounded text-black"
-                                            />
-                                        ) : (
-                                            <span className="text-gray-400 text-sm">{customer.email?.mainEmail}</span>
-                                        )}
-                                    </div>
-                                    <div>
-                                        <span className="font-medium text-white text-lg">Invoice Email:</span>{" "}
-                                        {isEditing ? (
-                                            <input
-                                                type="email"
-                                                value={editedCustomer.email?.invoiceEmail}
-                                                onChange={(e) =>
-                                                    handleInputChange("email", e.target.value, "invoiceEmail")
-                                                }
-                                                className="w-full p-2 border rounded text-black"
-                                            />
-                                        ) : (
-                                            <span className="text-gray-400 text-sm">{customer.email?.invoiceEmail}</span>
-                                        )}
+
+                                    {/* Email Box */}
+                                    <div className="border border-gray-700 rounded-lg p-4">
+                                        <h3 className="text-lg font-semibold text-white mb-3">Email</h3>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <span className="font-medium text-white text-lg">Main Email:</span>{" "}
+                                                {isEditing ? (
+                                                    <input
+                                                        type="email"
+                                                        value={editedCustomer.email?.mainEmail}
+                                                        onChange={(e) =>
+                                                            handleInputChange("email", e.target.value, "mainEmail")
+                                                        }
+                                                        className="w-full p-2 border rounded text-black mt-1"
+                                                    />
+                                                ) : (
+                                                    <p className="text-gray-400 text-sm mt-1">{customer.email?.mainEmail}</p>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <span className="font-medium text-white text-lg">Invoice Email:</span>{" "}
+                                                {isEditing ? (
+                                                    <input
+                                                        type="email"
+                                                        value={editedCustomer.email?.invoiceEmail}
+                                                        onChange={(e) =>
+                                                            handleInputChange("email", e.target.value, "invoiceEmail")
+                                                        }
+                                                        className="w-full p-2 border rounded text-black mt-1"
+                                                    />
+                                                ) : (
+                                                    <p className="text-gray-400 text-sm mt-1">{customer.email?.invoiceEmail}</p>
+                                                )}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
