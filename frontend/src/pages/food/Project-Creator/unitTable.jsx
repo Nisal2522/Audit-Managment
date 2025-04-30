@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const UnitTable = () => {
+    const { id: customerId } = useParams();
     const [isFormOpen, setIsFormOpen] = useState(false);
     const [formData, setFormData] = useState({
+        customerId: customerId,
         unitName: "",
         location: "",
         certifications: [],
@@ -15,6 +19,8 @@ const UnitTable = () => {
         printing: []
     });
     const [tableData, setTableData] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const availableCertifications = [
         "GRS NL",
@@ -36,6 +42,25 @@ const UnitTable = () => {
         "printing"
     ];
 
+    // Fetch units for the customer
+    useEffect(() => {
+        const fetchUnits = async () => {
+            try {
+                const response = await axios.get(`http://localhost:5006/api/units/customer/${customerId}`);
+                if (response.data.success) {
+                    setTableData(response.data.data);
+                }
+            } catch (error) {
+                setError("Failed to fetch units");
+                console.error("Error fetching units:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchUnits();
+    }, [customerId]);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -53,23 +78,47 @@ const UnitTable = () => {
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setTableData(prev => [...prev, formData]);
-        setIsFormOpen(false);
-        setFormData({
-            unitName: "",
-            location: "",
-            certifications: [],
-            warehousing: [],
-            extrusion: [],
-            collecting: [],
-            manufacturing: [],
-            trading: [],
-            mechanicalRecycling: [],
-            printing: []
-        });
+        try {
+            const response = await axios.post("http://localhost:5006/api/units", formData);
+            if (response.data.success) {
+                setTableData(prev => [...prev, response.data.data]);
+                setIsFormOpen(false);
+                setFormData({
+                    customerId: customerId,
+                    unitName: "",
+                    location: "",
+                    certifications: [],
+                    warehousing: [],
+                    extrusion: [],
+                    collecting: [],
+                    manufacturing: [],
+                    trading: [],
+                    mechanicalRecycling: [],
+                    printing: []
+                });
+            }
+        } catch (error) {
+            console.error("Error creating unit:", error);
+            setError("Failed to create unit");
+        }
     };
+
+    const handleDelete = async (unitId) => {
+        try {
+            const response = await axios.delete(`http://localhost:5006/api/units/${unitId}`);
+            if (response.data.success) {
+                setTableData(prev => prev.filter(unit => unit._id !== unitId));
+            }
+        } catch (error) {
+            console.error("Error deleting unit:", error);
+            setError("Failed to delete unit");
+        }
+    };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error: {error}</div>;
 
     return (
         <div className="rounded-lg overflow-x-auto shadow-lg bg-white p-6">
@@ -99,11 +148,12 @@ const UnitTable = () => {
                             Printing
                         </th>
                         <th className="px-6 py-4 border-b-2 border-[#022847]">No Processing</th>
+                        <th className="px-6 py-4 border-b-2 border-[#022847]">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {tableData.map((row, index) => (
-                        <tr key={index} className="hover:bg-gray-50 transition-colors duration-200">
+                    {tableData.map((row) => (
+                        <tr key={row._id} className="hover:bg-gray-50 transition-colors duration-200">
                             <td className="px-6 py-4 border-b border-gray-200 border-r border-gray-300 align-top">
                                 <div className="space-y-2">
                                     <p className="font-semibold text-gray-800">{row.unitName}</p>
@@ -136,6 +186,14 @@ const UnitTable = () => {
                                     ))}
                                 </div>
                             </td>
+                            <td className="px-6 py-4 border-b border-gray-200">
+                                <button
+                                    onClick={() => handleDelete(row._id)}
+                                    className="text-red-600 hover:text-red-800"
+                                >
+                                    Delete
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
@@ -153,7 +211,17 @@ const UnitTable = () => {
             {isFormOpen && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div className="bg-white p-8 rounded-xl shadow-2xl w-[800px] max-h-[90vh] overflow-y-auto">
-                        <h2 className="text-2xl font-bold mb-6 text-gray-800">Add New Unit</h2>
+                        <div className="flex justify-between items-center mb-6">
+                            <h2 className="text-2xl font-bold text-gray-800">Add New Unit</h2>
+                            <button
+                                onClick={() => setIsFormOpen(false)}
+                                className="text-gray-500 hover:text-gray-700 transition-colors duration-200"
+                            >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
                         <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
