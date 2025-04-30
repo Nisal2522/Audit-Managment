@@ -60,8 +60,21 @@ router.get('/user/:id', async (req, res) => {
   }
 });
 
-
-
+// Add this: Update user by ID
+router.put('/user/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const update = req.body;
+    const updatedUser = await User.findByIdAndUpdate(id, update, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+    res.status(200).json({ success: true, user: updatedUser });
+  } catch (error) {
+    console.error('Error updating user:', error);
+    res.status(500).json({ success: false, message: 'Something went wrong while updating user.' });
+  }
+});
 
 export default router;
 
