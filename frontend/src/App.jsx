@@ -25,6 +25,7 @@ import MoreInfo from './pages/food/Project-Creator/moreCustomerDetails';
 import AddCustomer from './pages/food/Project-Creator/AddCustomer';
 import ProjectCreatorProfile from './pages/food/Project-Creator/ProjectCreatorProfile';
 import Notifications from './components/Notifications';
+import LeaveRequest from './pages/food/Project-Creator/LeaveRequest';
 
 
 function App() {
@@ -50,6 +51,7 @@ function App() {
             <Route path="/projectCreator/addCustomer" element={<AddCustomer />} />
             <Route path="/projectCreator/profile" element={<ProjectCreatorProfile />} />
             <Route path="/projectCreator/notifications" element={<Notifications />} />
+            <Route path="/projectCreator/request-leave" element={<LeaveRequest />} />
             {/* <Route path="/projectCreator/chatSystem" element={< />} /> */}
 
             <Route path="/admin-dashboard" element={<AdminDashboard />} />

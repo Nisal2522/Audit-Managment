@@ -1,4 +1,4 @@
-import { LayoutDashboard, User, Settings, HelpCircleIcon, Bell, MessageCircleMore } from "lucide-react";
+import { LayoutDashboard, User, Settings, HelpCircleIcon, Bell, MessageCircleMore, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Notifications from "./Notifications"; // Import your Notifications component
@@ -104,6 +104,19 @@ export default function Sidebar() {
                     >
                         <HelpCircleIcon size={22} className="flex-shrink-0" />
                         <span className="font-medium">Help</span>
+                    </Link>
+
+                    <Link 
+                        to="/projectCreator/request-leave" 
+                        className={`flex items-center space-x-4 p-3 rounded-lg transition-all duration-300 ${
+                            activeItem === 'requestLeave' 
+                            ? 'bg-white text-[#064979] shadow-md' 
+                            : 'bg-white/10 text-white hover:bg-white/20'
+                        }`}
+                        onClick={() => handleItemClick('requestLeave')}
+                    >
+                        <Calendar size={22} className="flex-shrink-0" />
+                        <span className="font-medium">Request Leave</span>
                     </Link>
                 </nav>
             </div>

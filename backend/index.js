@@ -6,6 +6,7 @@ import authRouter from './routes/auth.js';
 import customerRouter from './routes/customer.route.js';
 import customerUnitsRouter from './routes/customerUnits.route.js';
 import connectToDatabase from './db/db.js';
+import leaveRequestRoutes from './routes/leaveRequestRoutes.js';
 
 dotenv.config();  // Load environment variables
 
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use('/api/auth', authRouter);
 app.use('/api/customers', customerRouter);
 app.use('/api/units', customerUnitsRouter);
-
+app.use('/api/leave-requests', leaveRequestRoutes);
 // Start the server
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
