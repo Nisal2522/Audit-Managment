@@ -19,6 +19,12 @@ const CreateCustomerForm = () => {
         },
         companySize: "",
         manualDate: new Date().toISOString().split('T')[0], // Set default to today
+        programs: [], // Array of program objects
+    });
+    const [selectedProgram, setSelectedProgram] = useState({
+        name: "",
+        startDate: "",
+        endDate: ""
     });
     const [step, setStep] = useState(1);
     const [error, setError] = useState(null);
@@ -89,10 +95,59 @@ const CreateCustomerForm = () => {
                     [subField]: value,
                 },
             }));
+        } else if (name === "programs") {
+            // Handle multiple select for programs
+            const selectedOptions = Array.from(e.target.selectedOptions, option => option.value);
+            setFormData((prevState) => ({ ...prevState, [name]: selectedOptions }));
         } else {
             setFormData((prevState) => ({ ...prevState, [name]: value }));
         }
         validateField(name, value); // Validate the field as the user types
+    };
+
+    const handleProgramChange = (e) => {
+        const { name, value } = e.target;
+        if (name === "startDate") {
+            // Calculate end date (365 days from start date)
+            const startDate = new Date(value);
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 365);
+            
+            // Format end date as YYYY-MM-DD
+            const formattedEndDate = endDate.toISOString().split('T')[0];
+            
+            setSelectedProgram(prev => ({
+                ...prev,
+                startDate: value,
+                endDate: formattedEndDate
+            }));
+        } else {
+            setSelectedProgram(prev => ({
+                ...prev,
+                [name]: value
+            }));
+        }
+    };
+
+    const addProgram = () => {
+        if (selectedProgram.name && selectedProgram.startDate && selectedProgram.endDate) {
+            setFormData(prev => ({
+                ...prev,
+                programs: [...prev.programs, selectedProgram]
+            }));
+            setSelectedProgram({
+                name: "",
+                startDate: "",
+                endDate: ""
+            });
+        }
+    };
+
+    const removeProgram = (index) => {
+        setFormData(prev => ({
+            ...prev,
+            programs: prev.programs.filter((_, i) => i !== index)
+        }));
     };
 
     const validateStep = () => {
@@ -173,6 +228,7 @@ const CreateCustomerForm = () => {
                 email: { mainEmail: "", invoiceEmail: "" },
                 companySize: "",
                 manualDate: new Date().toISOString().split('T')[0],
+                programs: [],
             });
             setStep(1);
             setFieldErrors({});
@@ -432,6 +488,94 @@ const CreateCustomerForm = () => {
                                                 {fieldErrors.companySize}
                                             </p>
                                         )}
+                                    </div>
+                                    <div className="mb-4">
+                                        <label className="block text-sm font-medium text-white mb-2">
+                                            Programs
+                                        </label>
+                                        <div className="space-y-4 bg-[#1d4769] p-4 rounded-lg">
+                                            {/* Program Selection */}
+                                            <div className="w-full mb-4">
+                                                <select
+                                                    name="name"
+                                                    value={selectedProgram.name}
+                                                    onChange={handleProgramChange}
+                                                    className="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                                >
+                                                    <option value="">Select Program</option>
+                                                    <option value="GRS NL">GRS NL</option>
+                                                    <option value="RCS NL">RCS NL</option>
+                                                    <option value="GOTS">GOTS</option>
+                                                    <option value="OEKO-TEX">OEKO-TEX</option>
+                                                    <option value="ISO 9001">ISO 9001</option>
+                                                    <option value="ISO 14001">ISO 14001</option>
+                                                    <option value="B Corp">B Corp</option>
+                                                </select>
+                                            </div>
+
+                                            {/* Date Selection */}
+                                            <div className="space-y-4">
+                                                <div>
+                                                    <label className="block text-xs text-white mb-1">Start Date</label>
+                                                    <input
+                                                        type="date"
+                                                        name="startDate"
+                                                        value={selectedProgram.startDate}
+                                                        onChange={handleProgramChange}
+                                                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label className="block text-xs text-white mb-1">End Date</label>
+                                                    <input
+                                                        type="date"
+                                                        name="endDate"
+                                                        value={selectedProgram.endDate}
+                                                        onChange={handleProgramChange}
+                                                        className="w-full border border-gray-300 rounded-lg p-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                                                        readOnly
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <button
+                                                        type="button"
+                                                        onClick={addProgram}
+                                                        className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+                                                    >
+                                                        Add Program
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            
+                                            {/* Display added programs */}
+                                            <div className="mt-4">
+                                                <h3 className="text-white text-sm font-medium mb-2">Added Programs:</h3>
+                                                <div className="space-y-2">
+                                                    {formData.programs.map((program, index) => (
+                                                        <div key={index} className="flex items-center justify-between bg-white p-3 rounded-lg shadow">
+                                                            <div className="flex-1">
+                                                                <span className="font-medium text-gray-800">{program.name}</span>
+                                                            </div>
+                                                            <div className="flex items-center gap-4">
+                                                                <div className="text-sm text-gray-600">
+                                                                    <span className="font-medium">Start:</span> {new Date(program.startDate).toLocaleDateString()}
+                                                                </div>
+                                                                <div className="text-sm text-gray-600">
+                                                                    <span className="font-medium">End:</span> {new Date(program.endDate).toLocaleDateString()}
+                                                                </div>
+                                                                <button
+                                                                    type="button"
+                                                                    onClick={() => removeProgram(index)}
+                                                                    className="text-red-600 hover:text-red-800 transition-colors"
+                                                                >
+                                                                    Remove
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </>
                             )}
