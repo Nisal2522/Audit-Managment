@@ -125,26 +125,26 @@ const UnitTable = () => {
             <table className="min-w-full bg-white border-collapse">
                 <thead>
                     <tr className="bg-[#022847] text-white text-center font-bold">
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300">Unit Details</th>
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r ">Unit Details</th>
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r  hover:bg-[#033a6b] transition-colors duration-200">
                             Warehousing
                         </th>
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r  hover:bg-[#033a6b] transition-colors duration-200">
                             Extrusion
                         </th>
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r  hover:bg-[#033a6b] transition-colors duration-200">
                             Collecting
                         </th>
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r  hover:bg-[#033a6b] transition-colors duration-200">
                             Manufacturing
                         </th>
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r  hover:bg-[#033a6b] transition-colors duration-200">
                             Trading
                         </th>
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r hover:bg-[#033a6b] transition-colors duration-200">
                             Mechanical Recycling
                         </th>
-                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r border-gray-300 hover:bg-[#033a6b] transition-colors duration-200">
+                        <th className="px-6 py-4 border-b-2 border-[#022847] border-r hover:bg-[#033a6b] transition-colors duration-200">
                             Printing
                         </th>
                         <th className="px-6 py-4 border-b-2 border-[#022847]">No Processing</th>
@@ -154,14 +154,14 @@ const UnitTable = () => {
                 <tbody>
                     {tableData.map((row) => (
                         <tr key={row._id} className="hover:bg-gray-50 transition-colors duration-200">
-                            <td className="px-6 py-4 border-b border-gray-200 border-r border-gray-300 align-top">
+                            <td className="px-6 py-4 border-b border-gray-200 border-r  align-top">
                                 <div className="space-y-2">
                                     <p className="font-semibold text-gray-800">{row.unitName}</p>
                                     <p className="text-sm text-gray-600">Location: {row.location}</p>
                                 </div>
                             </td>
                             {processes.map(process => (
-                                <td key={process} className="px-6 py-4 border-b border-gray-200 border-r border-gray-300">
+                                <td key={process} className="px-6 py-4 border-b border-gray-200 border-r ">
                                     <div className="flex flex-wrap gap-2">
                                         {row[process]?.map((certification, idx) => (
                                             <span
@@ -199,7 +199,7 @@ const UnitTable = () => {
                 </tbody>
             </table>
             <div className="flex justify-center mt-6">
-                <button 
+                <button
                     onClick={() => setIsFormOpen(true)}
                     className="px-6 py-3 bg-[#022947] text-white font-semibold rounded-lg hover:bg-[#033a6b] transition-colors duration-200 text-xl shadow-md hover:shadow-lg"
                 >
