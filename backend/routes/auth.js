@@ -79,6 +79,7 @@ router.post('/login', async (req, res) => {
         phone: user.phone,
         employeeid: user.employeeid,
         status: user.status,
+        profilePic:  user.profilePic,
       },
     });
   } catch (error) {
