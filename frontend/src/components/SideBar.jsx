@@ -35,13 +35,13 @@ const SideBar = ({ toggleSidebar }) => {
         </li>
 
         <li className="mb-4">
-          <a href="/ContractCreation" className="flex items-center p-2 hover:bg-gray-700 rounded">
+          <a href="/PendingContracts" className="flex items-center p-2 hover:bg-gray-700 rounded">
             <FiClipboard className="mr-2" /> Contract Creation
           </a>
         </li>
 
         <li className="mb-4">
-          <a href="ContractStatus" className="flex items-center p-2 hover:bg-gray-700 rounded">
+          <a href="/ContractStatus" className="flex items-center p-2 hover:bg-gray-700 rounded">
             <FiFileText className="mr-2" /> Contract Status
           </a>
         </li>

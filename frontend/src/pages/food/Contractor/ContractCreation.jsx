@@ -2,29 +2,34 @@ import axios from "axios";
 import NavBar from '../../../components/NavBar';
 import SideBar from '../../../components/SideBar';
 import React, { useState, useEffect } from "react";
-
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getUSDToLKRRate } from '../../../utils/currencyConverter';
 
 const ContractCreation = () => {
-
-   const [isSidebarVisible, setIsSidebarVisible] = useState(false);
-   
-     // Toggle Sidebar
-     const toggleSidebar = () => {
-       setIsSidebarVisible((prev) => !prev);
-     };
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isSidebarVisible, setIsSidebarVisible] = useState(false);
+  
+  // Toggle Sidebar
+  const toggleSidebar = () => {
+    setIsSidebarVisible((prev) => !prev);
+  };
 
   const [formData, setFormData] = useState({
-    phoneNumber: "",
-    projectID: "",
+    customId: "",
     projectName: "",
-    clientID: "",
-    clientName: "",
+    unit: "",
+    location: "",
+    program: "",
+    auditType: "",
+    auditorId: "",
+    auditorName: "",
     contractDate: "",
     auditStartDate: "",
     auditEndDate: "",
     offerDays: "",
     manDayCost: "",
-    
+    status: ""
   });
 
   const [calculatedData, setCalculatedData] = useState({
@@ -32,6 +37,51 @@ const ContractCreation = () => {
     totalCost: 0,
     totalCostLKR: 0, // Add totalCostLKR for the LKR conversion
   });
+
+  const [exchangeRate, setExchangeRate] = useState(300); // Default fallback rate
+
+  // Initialize form with data from PendingContracts if available
+  useEffect(() => {
+    if (location.state) {
+      console.log("Received data in ContractCreation:", location.state);
+      const customId = location.state.customId || generateCustomId();
+      
+      const formDataUpdate = {
+        customId: customId,
+        projectName: location.state.projectName,
+        unit: location.state.unit,
+        location: location.state.location,
+        program: location.state.program,
+        auditType: location.state.auditType,
+        auditorId: location.state.auditorId,
+        auditorName: location.state.auditorName,
+        auditStartDate: formatDate(location.state.startDate),
+        auditEndDate: formatDate(location.state.endDate),
+        contractDate: formatDate(new Date()),
+        status: "Pending"
+      };
+
+      console.log("Setting form data in ContractCreation:", formDataUpdate);
+      setFormData(prev => ({
+        ...prev,
+        ...formDataUpdate
+      }));
+    }
+  }, [location.state]);
+
+  // Function to generate a custom ID
+  const generateCustomId = () => {
+    const prefix = "PR";
+    const randomNum = Math.floor(1000 + Math.random() * 9000); // Generates a 4-digit number
+    return `${prefix}${randomNum}`;
+  };
+
+  // Function to format date to YYYY-MM-DD
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    return date.toISOString().split('T')[0];
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -44,24 +94,33 @@ const ContractCreation = () => {
   
 
   useEffect(() => {
+    // Fetch current exchange rate when component mounts
+    const fetchExchangeRate = async () => {
+      const rate = await getUSDToLKRRate();
+      setExchangeRate(rate);
+    };
+    fetchExchangeRate();
+  }, []);
+
+  useEffect(() => {
     calculateValues(formData);
-  }, [formData]);
-  
+  }, [formData, exchangeRate]); // Add exchangeRate as dependency
 
   const calculateValues = (data) => {
     const start = new Date(data.auditStartDate);
     const end = new Date(data.auditEndDate);
     const duration = (end - start) / (1000 * 60 * 60 * 24) + 1;
-    const totalCost = data.offerDays * data.manDayCost;
+    
+    // Total cost should be the man day cost (per day rate)
+    const totalCost = Number(data.manDayCost) || 0;
 
-    // Set calculated values
-    const conversionRate = 300; // Example: 1 GBP = 300 LKR
-    const totalCostLKR = totalCost * conversionRate; // Convert to LKR
+    // Use current exchange rate for LKR conversion
+    const totalCostLKR = totalCost * exchangeRate;
 
     setCalculatedData({
       auditDuration: duration > 0 ? duration : 0,
-      totalCost: totalCost || 0,
-      totalCostLKR: totalCostLKR || 0, // Store the converted LKR value
+      totalCost: totalCost,
+      totalCostLKR: totalCostLKR || 0,
     });
   };
 
@@ -69,61 +128,39 @@ const ContractCreation = () => {
   
   const validateForm = () => {
     // Check for empty fields
-    for (let key in formData) {
-      if (formData[key] === "") {
-        alert(`${key} cannot be empty`);
+    const requiredFields = [
+      'customId', 'projectName', 'unit', 'location', 'program',
+      'auditType', 'auditorId', 'auditorName', 'contractDate',
+      'auditStartDate', 'auditEndDate', 'offerDays', 'manDayCost'
+    ];
+
+    for (const field of requiredFields) {
+      if (!formData[field] || formData[field] === "") {
+        console.error(`Validation failed: ${field} is empty`);
+        alert(`${field} cannot be empty`);
         return false;
       }
     }
 
-    // Date Validation
-    const start = new Date(formData.auditStartDate);
-    const end = new Date(formData.auditEndDate);
-    if (start > end) {
-      alert("Audit Start Date cannot be after Audit End Date");
-      return false;
-    }
-
-   
     // Offer Days positive whole number check
     if (!Number.isInteger(Number(formData.offerDays)) || Number(formData.offerDays) <= 0) {
       alert("Offer Days must be a positive whole number");
       return false;
     }
 
-     // Man Day Cost positive number check
+    // Man Day Cost positive number check
     if (parseInt(formData.manDayCost) <= 0) {
       alert("Man Day Cost must be a positive number");
       return false;
     }
 
-    // Contract date should not be a future date
-    const today = new Date();
-    const contractDate = new Date(formData.contractDate);
-    if (contractDate > today) {
-      alert("Contract Date cannot be in the future");
+    // Check if Offer Days is greater than Audit Duration
+    if (Number(formData.offerDays) <= calculatedData.auditDuration) {
+      alert("Offer Days must be greater than Audit Duration");
       return false;
     }
 
-    // ID Validation
-    const idPattern = /^[A-Z]{2}\d{4,}$/; 
-    if (!idPattern.test(formData.projectID)) {
-    alert("Project ID format invalid. Example: PR1234");
-    return;
-    }
-
-    if (!idPattern.test(formData.clientID)) {
-      alert("Client ID format invalid. Example: CL4567");
-      return;
-    }
-
-    // Name Validation
-    const namePattern = /^[A-Za-z\s]+$/;
-    if (!namePattern.test(formData.clientName) || !namePattern.test(formData.projectName)) {
-      alert("Client Name and Project Name should only contain letters and spaces.");
-      return;
-    }
-
+    console.log("Form validation passed");
     return true; 
   };
 
@@ -132,38 +169,49 @@ const ContractCreation = () => {
     if (!validateForm()) return;
 
     try {
+      console.log("Current form data:", formData);
+
+      // Create the payload
       const payload = {
-        ...formData,
-        auditDuration: calculatedData.auditDuration,
+        customId: formData.customId,
+        projectName: formData.projectName,
+        unit: formData.unit,
+        location: formData.location,
+        program: formData.program,
+        auditType: formData.auditType,
+        auditorId: formData.auditorId,
+        auditorName: formData.auditorName,
+        contractDate: new Date(formData.contractDate),
+        auditStartDate: new Date(formData.auditStartDate),
+        auditEndDate: new Date(formData.auditEndDate),
+        offerDays: Number(formData.offerDays),
+        manDayCost: Number(formData.manDayCost),
+        status: "Pending",
+        exchangeRate: exchangeRate, // Save the current exchange rate
         totalCost: calculatedData.totalCost,
-        totalCostLKR: calculatedData.totalCostLKR,
+        totalCostLKR: calculatedData.totalCostLKR
       };
 
-      await axios.post("http://localhost:5005/api/contractor/createContract", payload);
+      console.log("Sending payload to server:", payload);
+
+      // Create the contract
+      const response = await axios.post("http://localhost:5005/api/contractor/createcontract", payload);
+      console.log("Server response:", response.data);
+
+      if (!response.data) {
+        throw new Error("No data received from server");
+      }
+
+      // Verify the saved data
+      console.log("Saved contract data:", response.data);
 
       alert("Contract created successfully!");
-      setFormData({
-        phoneNumber: "",
-        projectID: "",
-        projectName: "",
-        clientID: "",
-        clientName: "",
-        contractDate: "",
-        auditStartDate: "",
-        auditEndDate: "",
-        offerDays: "",
-        manDayCost: "",
-       
-
-      });
-      setCalculatedData({
-        auditDuration: 0,
-        totalCost: 0,
-        totalCostLKR: 0,
-      });
+      navigate('/ContractStatus');
+      
     } catch (err) {
-      console.error(err);
-      alert("Error creating contract");
+      console.error("Error creating contract:", err);
+      console.error("Error details:", err.response?.data || err.message);
+      alert("Error creating contract: " + (err.response?.data?.error || err.message));
     }
   };
 
@@ -180,151 +228,203 @@ const ContractCreation = () => {
       <div className="flex-1 bg-gray-800 min-h-screen text-black relative">
         {/* NavBar stays fixed at top */}
         <NavBar toggleSidebar={toggleSidebar} />
-        <div
-        className={`transition-all duration-300 p-6 ${isSidebarVisible ? 'ml-64' : 'ml-0'}`}
-        >
-          <div className="max-w-xl mx-auto mt-10 p-6 shadow-lg rounded-2xl bg-gray-700">
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500
-             bg-clip-text text-transparent mb-4 text-center">Create New Contract</h2>
+        <div className={`transition-all duration-300 p-8 ${isSidebarVisible ? 'ml-64' : 'ml-0'}`}>
+          <h2 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent mb-8 text-center">
+            Create New Contract
+          </h2>
 
-            <form onSubmit={handleSubmit} className="space-y-4 h-[500px] overflow-y-auto relative pr-4">
-              {/* Form Fields */}
-              <div>
-                {/* new */}
-
-              <div>
-                <label className="block mb-1 font-semibold text-white">Phone Number</label>
-                <input
-                  type="String"
-                  name="phoneNumber"
-                  value={formData.new}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-                <label className="block mb-1 font-semibold text-white">Project ID</label>
-                <input
-                  type="text"
-                  name="projectID"
-                  value={formData.projectID}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Project Name</label>
-                <input
-                  type="text"
-                  name="projectName"
-                  value={formData.projectName}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Client ID</label>
-                <input
-                  type="text"
-                  name="clientID"
-                  value={formData.clientID}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Client Name</label>
-                <input
-                  type="text"
-                  name="clientName"
-                  value={formData.clientName}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Contract Date</label>
-                <input
-                  type="date"
-                  name="contractDate"
-                  value={formData.contractDate}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Audit Start Date</label>
-                <input
-                  type="date"
-                  name="auditStartDate"
-                  value={formData.auditStartDate}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Audit End Date</label>
-                <input
-                  type="date"
-                  name="auditEndDate"
-                  value={formData.auditEndDate}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Offer Days</label>
-                <input
-                  type="number"
-                  name="offerDays"
-                  value={formData.offerDays}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
-              </div>
-              <div>
-                <label className="block mb-1 font-semibold text-white">Man Day Cost</label>
-                <input
-                  type="number"
-                  name="manDayCost"
-                  value={formData.manDayCost}
-                  onChange={handleChange}
-                  required
-                  className="w-full p-2 border rounded-lg"
-                />
+          <form onSubmit={handleSubmit}>
+            <div className="space-y-8">
+              {/* Audit Information Section */}
+              <div className="bg-gray-700 p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-semibold text-blue-400 mb-6">Audit Information</h3>
+                <div className="grid grid-cols-3 gap-6">
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Custom ID</label>
+                    <input
+                      type="text"
+                      name="customId"
+                      value={formData.customId}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Project Name</label>
+                    <input
+                      type="text"
+                      name="projectName"
+                      value={formData.projectName}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Unit</label>
+                    <input
+                      type="text"
+                      name="unit"
+                      value={formData.unit}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Location</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={formData.location}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Program</label>
+                    <input
+                      type="text"
+                      name="program"
+                      value={formData.program}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Audit Type</label>
+                    <input
+                      type="text"
+                      name="auditType"
+                      value={formData.auditType}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Auditor ID</label>
+                    <input
+                      type="text"
+                      name="auditorId"
+                      value={formData.auditorId}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Auditor Name</label>
+                    <input
+                      type="text"
+                      name="auditorName"
+                      value={formData.auditorName}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                </div>
               </div>
 
-
-              
-
-
-
-              {/* Calculated Fields */}
-              <div className="bg-gray-100 p-3 rounded-lg mt-4">
-                <p className="font-semibold">Audit Duration: {calculatedData.auditDuration} days</p>
-                <p className="font-semibold">Total Cost ($): {calculatedData.totalCost}</p>
-                <p className="font-semibold">Total Cost (LKR): {calculatedData.totalCostLKR}</p>
+              {/* Status and Dates Section */}
+              <div className="bg-gray-700 p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-semibold text-blue-400 mb-6">Status and Dates</h3>
+                <div className="grid grid-cols-4 gap-6">
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Status</label>
+                    <input
+                      type="text"
+                      name="status"
+                      value={formData.status}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Start Date</label>
+                    <input
+                      type="text"
+                      name="auditStartDate"
+                      value={formatDate(formData.auditStartDate)}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">End Date</label>
+                    <input
+                      type="text"
+                      name="auditEndDate"
+                      value={formatDate(formData.auditEndDate)}
+                      readOnly
+                      className="w-full p-3 border rounded-lg bg-gray-600 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Contract Date</label>
+                    <input
+                      type="date"
+                      name="contractDate"
+                      value={formData.contractDate}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-3 border rounded-lg bg-white"
+                    />
+                  </div>
+                </div>
               </div>
 
-              {/* Submit Button */}
-              <div className="sticky bottom-0 bg-gray-700 pt-2 pb-0">
+              {/* Summary Cards Section */}
+              <div className="grid grid-cols-3 gap-6">
+                <div className="bg-gray-700 p-6 rounded-lg shadow-md">
+                  <h3 className="text-purple-400 text-lg font-semibold mb-2">Audit Duration</h3>
+                  <p className="text-white text-2xl font-bold">{calculatedData.auditDuration} days</p>
+                </div>
+                <div className="bg-gray-700 p-6 rounded-lg shadow-md">
+                  <h3 className="text-yellow-400 text-lg font-semibold mb-2">Total Cost ($)</h3>
+                  <p className="text-white text-2xl font-bold">${calculatedData.totalCost.toFixed(2)}</p>
+                </div>
+                <div className="bg-gray-700 p-6 rounded-lg shadow-md">
+                  <h3 className="text-yellow-400 text-lg font-semibold mb-2">Total Cost (LKR)</h3>
+                  <p className="text-white text-2xl font-bold">LKR {calculatedData.totalCostLKR.toFixed(2)}</p>
+                </div>
+              </div>
+
+              {/* Contract Details Section */}
+              <div className="bg-gray-700 p-6 rounded-lg shadow-md">
+                <h3 className="text-xl font-semibold text-blue-400 mb-6">Contract Details</h3>
+                <div className="grid grid-cols-2 gap-6">
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Offer Days</label>
+                    <input
+                      type="number"
+                      name="offerDays"
+                      value={formData.offerDays}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-3 border rounded-lg bg-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block mb-2 font-semibold text-gray-300">Man Day Cost ($)</label>
+                    <input
+                      type="number"
+                      name="manDayCost"
+                      value={formData.manDayCost}
+                      onChange={handleChange}
+                      required
+                      className="w-full p-3 border rounded-lg bg-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex justify-end">
                 <button
                   type="submit"
-                  className="w-full mt-4 bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600"
+                  className="bg-blue-500 text-white py-3 px-8 rounded-lg hover:bg-blue-600 transition-colors text-lg font-semibold"
                 >
-                  Submit Contract
+                  Create Contract
                 </button>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>

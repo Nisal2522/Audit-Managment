@@ -6,7 +6,10 @@ import ContractStatus from './pages/food/Contractor/ContractStatus';
 import UpdateContract from './pages/food/Contractor/UpdateContract';
 import IncomeStatus from './pages/food/Contractor/IncomeStatus';
 import TotIncome from './pages/food/Contractor/TotIncome';
-import TotIncomeLKR from './pages/food/Contractor/TotIncomeLKR';
+import TotIncomeLKR from './pages/food/Contractor/TotIncomeLKR'
+import PlannerAuditsPage from './pages/food/Contractor/PlannerAuditsPage';
+import CustomerPage from './pages/food/Contractor/CustomerPage';
+import PendingContracts from './pages/food/Contractor/PendingContracts';
 
 import Login from './pages/LoginPage';
 // import AdminDashboard from './pages/AdminDashboard';
@@ -46,7 +49,11 @@ function App() {
           <Route path="/IncomeStatus" element={<IncomeStatus />} />
           <Route path="/TotIncome" element={<TotIncome />} />
           <Route path="/TotIncomeLKR" element={<TotIncomeLKR />} />
+          <Route path="/PlannerAuditsPage" element={<PlannerAuditsPage/>} />
+          <Route path="/CustomerPage" element={<CustomerPage/>}/>
+          <Route path="/PendingContracts" element={<PendingContracts/>} />
           <Route path="/login" element={<Login />} />
+          
            {/* <Route path="/" element={<RegisterPage />} />
           <Route path="/admin-dashboard" element={<AdminDashboard />} />
           <Route path="/food/admin" element={<AdminFood />} />

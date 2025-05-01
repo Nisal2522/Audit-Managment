@@ -49,7 +49,6 @@ export default function NavBar({ toggleSidebar }) {
 
       {/* Right Section - Icons & Profile */}
       <div className="flex items-center gap-4">
-        
         <img
           onClick={handleProfileClick} // Call handleProfileClick when clicked
           src={profile}

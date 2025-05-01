@@ -210,149 +210,163 @@ const UpdateContract = () => {
           <div className="max-w-xl mx-auto mt-10 p-6 shadow-lg rounded-2xl bg-gray-700">
             <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500
              bg-clip-text text-transparent mb-4 text-center">Update Contract</h2>
-       
 
-      <form onSubmit={handleSubmit} className="space-y-4 h-[500px] overflow-y-auto relative pr-4">
-        {/* Project ID */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Project ID</label>
-          <input
-            type="text"
-            name="projectID"
-            value={contractData.projectID}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            readOnly
-          />
-        </div>
+            {/* Summary Cards */}
+            <div className="grid grid-cols-3 gap-4 mb-6">
+              <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+                <h3 className="text-purple-400 text-sm font-semibold mb-2">Audit Duration</h3>
+                <p className="text-white text-xl font-bold">{contractData.auditDuration} days</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+                <h3 className="text-yellow-400 text-sm font-semibold mb-2">Total Cost ($)</h3>
+                <p className="text-white text-xl font-bold">{contractData.totalCost}</p>
+              </div>
+              <div className="bg-gray-800 p-4 rounded-lg shadow-md">
+                <h3 className="text-yellow-400 text-sm font-semibold mb-2">Total Cost (LKR)</h3>
+                <p className="text-white text-xl font-bold">{contractData.totalCostLKR}</p>
+              </div>
+            </div>
 
-        {/* Project Name */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Project Name</label>
-          <input
-            type="text"
-            name="projectName"
-            value={contractData.projectName}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+            <form onSubmit={handleSubmit} className="space-y-4 h-[500px] overflow-y-auto relative pr-4">
+              {/* Project ID */}
+              <div>
+                <label className="block mb-1 font-semibold text-white">Project ID</label>
+                <input
+                  type="text"
+                  name="projectID"
+                  value={contractData.projectID}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  readOnly
+                />
+              </div>
 
-        {/* Client ID */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Client ID</label>
-          <input
-            type="text"
-            name="clientID"
-            value={contractData.clientID}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+              {/* Project Name */}
+              <div>
+                <label className="block mb-1 font-semibold text-white">Project Name</label>
+                <input
+                  type="text"
+                  name="projectName"
+                  value={contractData.projectName}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  readOnly
+                />
+              </div>
 
-        {/* Client Name */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Client Name</label>
-          <input
-            type="text"
-            name="clientName"
-            value={contractData.clientName}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+              {/* Client ID
+              <div>
+                <label className="block mb-1 font-semibold text-white">Client ID</label>
+                <input
+                  type="text"
+                  name="clientID"
+                  value={contractData.clientID}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div> */}
 
-        {/* Contract Date */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Contract Date</label>
-          <input
-            type="date"
-            name="contractDate"
-            value={contractData.contractDate}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+              {/* Client Name
+              <div>
+                <label className="block mb-1 font-semibold text-white">Client Name</label>
+                <input
+                  type="text"
+                  name="clientName"
+                  value={contractData.clientName}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div> */}
 
-        {/* Audit Start Date */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Audit Start Date</label>
-          <input
-            type="date"
-            name="auditStartDate"
-            value={contractData.auditStartDate}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+              
 
-        {/* Audit End Date */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Audit End Date</label>
-          <input
-            type="date"
-            name="auditEndDate"
-            value={contractData.auditEndDate}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+              {/* Audit Start Date */}
+              <div>
+                <label className="block mb-1 font-semibold text-white">Audit Start Date</label>
+                <input
+                  type="date"
+                  name="auditStartDate"
+                  value={contractData.auditStartDate}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  readOnly
 
-        {/* Offer Days */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Offer Days</label>
-          <input
-            type="number"
-            name="offerDays"
-            value={contractData.offerDays}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+                />
+              </div>
 
-        {/* Man Day Cost */}
-        <div>
-          <label className="block mb-1 font-semibold text-white">Man Day Cost</label>
-          <input
-            type="number"
-            name="manDayCost"
-            value={contractData.manDayCost}
-            onChange={handleChange}
-            className="w-full p-2 border rounded-lg"
-            required
-          />
-        </div>
+              {/* Audit End Date */}
+              <div>
+                <label className="block mb-1 font-semibold text-white">Audit End Date</label>
+                <input
+                  type="date"
+                  name="auditEndDate"
+                  value={contractData.auditEndDate}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  readOnly
 
-        {/* Calculated Fields */}
-        <div className="bg-gray-100 p-3 rounded-lg mt-4">
-          <p className="font-semibold">Audit Duration: {contractData.auditDuration} days</p>
-          <p className="font-semibold">Total Cost ($): {contractData.totalCost}</p>
-          <p className="font-semibold">Total Cost (LKR): {contractData.totalCostLKR}</p>
-        </div>
-        <div className="sticky bottom-0 bg-gray-700 flex pt-2 pb-0 justify-center">
+                />
+              </div>
 
-        <button type="submit" className="w-1/3 mr-2 ml-2 mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-blue-600">
-          Update Contract
-        </button>
-        
-        <button
-          type="button"
-          onClick={handleDelete}
-          className="w-1/3 mr-2 ml-2 mt-4 mt-4 bg-red-500 text-white p-2 rounded-lg hover:bg-blue-600"
-        >
-          Delete Contract
-        </button>
+              {/* Contract Date */}
+              <div>
+                <label className="block mb-1 font-semibold text-white">Contract Date</label>
+                <input
+                  type="date"
+                  name="contractDate"
+                  value={contractData.contractDate}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+
+              {/* Offer Days */}
+              <div>
+                <label className="block mb-1 font-semibold text-white">Offer Days</label>
+                <input
+                  type="number"
+                  name="offerDays"
+                  value={contractData.offerDays}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+
+              {/* Man Day Cost */}
+              <div>
+                <label className="block mb-1 font-semibold text-white">Man Day Cost</label>
+                <input
+                  type="number"
+                  name="manDayCost"
+                  value={contractData.manDayCost}
+                  onChange={handleChange}
+                  className="w-full p-2 border rounded-lg"
+                  required
+                />
+              </div>
+
+              
+              <div className="sticky bottom-0 bg-gray-700 flex pt-2 pb-0 justify-center">
+
+              <button type="submit" className="w-1/3 mr-2 ml-2 mt-4 bg-green-500 text-white p-2 rounded-lg hover:bg-blue-600">
+                Update Contract
+              </button>
+              
+              <button
+                type="button"
+                onClick={handleDelete}
+                className="w-1/3 mr-2 ml-2 mt-4 mt-4 bg-red-500 text-white p-2 rounded-lg hover:bg-blue-600"
+              >
+                Delete Contract
+              </button>
+              </div>
+            </form>
+          </div>
         </div>
-      </form>
-      </div>
-      </div>
       </div>
     </div>
   );

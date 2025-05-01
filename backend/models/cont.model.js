@@ -2,23 +2,41 @@
 
 import mongoose from "mongoose";
 
+// Drop existing indexes before defining new schema
 const contractorSchema = new mongoose.Schema({
    
-    projectID: {
+    customId: {
         type: String,
-        required: true,  
+        required: true,
+        unique: true  // This will create a new index on customId
     },
     projectName: {
         type: String,
         required: true  
     },
-    clientID: {
+    unit: {
         type: String,
-        required: true  
+        required: true
     },
-    clientName: {
+    location: {
         type: String,
-        required: true  
+        required: true
+    },
+    program: {
+        type: String,
+        required: true
+    },
+    auditType: {
+        type: String,
+        required: true
+    },
+    auditorId: {
+        type: String,
+        required: true
+    },
+    auditorName: {
+        type: String,
+        required: true
     },
     contractDate: {
         type: Date,
@@ -48,13 +66,20 @@ const contractorSchema = new mongoose.Schema({
         type: Number,
         required: false  // This field will be calculated
     },
+    exchangeRate: {
+        type: Number,
+        required: true,
+        default: 300  // Default fallback rate
+    },
     totalCostLKR: {
         type: Number,
         required: false  // This field will be calculated
     },
-
-   
-
+    status: {
+        type: String,
+        required: true,
+        default: "Pending"
+    }
 });
 
 // Pre-save middleware to calculate the auditDuration before saving
@@ -70,9 +95,19 @@ contractorSchema.pre('save', function(next) {
     if (this.manDayCost && this.offerDays) {
         // Calculate total cost as manDayCost x offerDays
         this.totalCost = this.manDayCost * this.offerDays;
+        // Calculate LKR cost using the current exchange rate
+        this.totalCostLKR = this.totalCost * this.exchangeRate;
     }
     next();  // Proceed with saving the document
 });
 
+// Drop the existing collection and recreate with new schema
+mongoose.connection.on('connected', async () => {
+    try {
+        await mongoose.connection.db.collection('contractors').dropIndexes();
+    } catch (err) {
+        console.log('No existing indexes to drop');
+    }
+});
 
 export default mongoose.model('Contractors', contractorSchema);
